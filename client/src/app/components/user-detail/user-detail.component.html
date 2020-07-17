@@ -1,0 +1,196 @@
+<nb-card class="nb-card-dialog">
+    <nb-card-header class="detail-view">
+        <h5>{{ 'admin_manage_users.user_detail.title' | translate }}</h5>
+        <nb-icon style="font-size: 1.5rem; cursor: pointer;" icon="close" (click)="closeDialog()"> </nb-icon>
+    </nb-card-header>
+
+    <nb-card-body *ngIf="isViewing">
+        <nb-list>
+            <nb-list-item *ngFor="let row of rows" style="padding: 1rem;" [ngStyle]="{ display: hiddenColumn.includes(row) ? 'none' : 'flex' }">
+                <div class="label div-data-left">
+                    {{ translate(row) | translate }}
+                </div>
+
+                <div style="display: flex; width: 1rem;"></div>
+
+                <div class="div-data-right">
+                    <span *ngIf="row !== 'column_is_deleted' && row !== 'column_permission_code' && row !== 'column_department_id'">
+                        {{ this.data[row] }}
+                    </span>
+                    <span *ngIf="row === 'column_is_deleted'">
+                        <nb-toggle disabled [checked]="data[row]"></nb-toggle>
+                    </span>
+
+                    <nb-select
+                        *ngIf="row === 'column_permission_code'"
+                        placeholder="Permission"
+                        [selected]="this.data[row]"
+                        style="max-width: 100%; width: 100%;"
+                        disabled
+                    >
+                        <nb-option value="99">Admin</nb-option>
+                        <nb-option value="09">Office</nb-option>
+                        <nb-option value="19">QC Admin</nb-option>
+                        <!-- <nb-option value="01">Office User</nb-option> -->
+                        <nb-option value="11">QC User</nb-option>
+                    </nb-select>
+
+                    <nb-select *ngIf="row === 'column_department_id'" [(selected)]="data[row]" style="max-width: 100%; width: 100%;">
+                        <nb-option disabled [value]="item.id" *ngFor="let item of department.drop_down_data">{{ item.name }} </nb-option>
+                    </nb-select>
+                </div>
+                <!-- <div
+                    style="flex: 1.75; display: flex; justify-content: flex-start; align-items: flex-start; flex-direction: column;"
+                    *ngIf="row === 'folder_structure'"
+                >
+                    <div>
+                        {{ this.data[row].level_1 }}
+                    </div>
+                    <div>
+                        {{ this.data[row].level_2 }}
+                    </div>
+                </div> -->
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+
+    <nb-card-body *ngIf="isEditing || isCreating">
+        <nb-list [formGroup]="editUserFormGroup">
+            <nb-list-item *ngFor="let row of rows" style="padding: 1rem;">
+                <div class="label div-data-left">
+                    {{ translate(row) | translate }}
+                </div>
+
+                <div style="display: flex; width: 1rem;"></div>
+
+                <!-- <div
+                    class="div-data-right"
+                    *ngIf="row !== 'column_group' && row !== 'column_is_deleted' && row !== 'column_permission_code' && row !== 'column_theme'"
+                ></div> -->
+
+                <div class="div-data-right">
+                    <input
+                        *ngIf="inputCondition(row)"
+                        type="{{ inputType }}"
+                        style="margin-top: 0.5rem;"
+                        nbInput
+                        fullWidth
+                        [value]="this.data[row]"
+                        autofocus
+                        [formControlName]="row"
+                        [readonly]="isReadOnly"
+                        (keypress)="checkNumber($event, row)"
+                        [id]="row"
+                        [maxlength]="row ? setMaxLength(row) : 'none'"
+                    />
+                    <div *ngIf="row === 'column_password'" style="display: flex; width: 100%; margin-top: 0.5rem;">
+                        <input
+                            [type]="typePassword ? 'password' : 'text'"
+                            nbInput
+                            fullWidth
+                            [value]="this.data[row]"
+                            [formControlName]="row"
+                            [id]="row"
+                            [maxlength]="row ? setMaxLength(row) : 'none'"
+                        />
+                        <button nbButton>
+                            <nb-icon [icon]="eye_off ? 'eye-off' : 'eye'" (click)="toggleFieldTextType(1)"></nb-icon>
+                        </button>
+                    </div>
+                    <div *ngIf="row === 'column_confirm_password'" style="display: flex; width: 100%; margin-top: 0.5rem;">
+                        <input
+                            [type]="typeConfirmPassword ? 'password' : 'text'"
+                            nbInput
+                            fullWidth
+                            [value]="this.data[row]"
+                            [formControlName]="row"
+                            [id]="row"
+                            [maxlength]="row ? setMaxLength(row) : 'none'"
+                        />
+                        <button nbButton>
+                            <nb-icon [icon]="eye_off2 ? 'eye-off' : 'eye'" (click)="toggleFieldTextType(2)"></nb-icon>
+                        </button>
+                    </div>
+                    <nb-select
+                        *ngIf="row === 'column_permission_code'"
+                        placeholder="Permission"
+                        [formControlName]="row"
+                        [selected]="this.data[row]"
+                        style="max-width: 100%; width: 100%;"
+                        [id]="row"
+                    >
+                        <nb-option value="99">Admin</nb-option>
+                        <nb-option value="09">Office</nb-option>
+                        <nb-option value="19">QC Admin</nb-option>
+                        <!-- <nb-option value="01">Office User</nb-option> -->
+                        <nb-option value="11">QC User</nb-option>
+                    </nb-select>
+
+                    <nb-toggle *ngIf="row === 'column_is_deleted'" disabled [checked]="data[row]"></nb-toggle>
+
+                    <nb-select
+                        *ngIf="row === 'column_group'"
+                        placeholder="Group"
+                        [formControlName]="row"
+                        [selected]="this.data[row]"
+                        style="max-width: 100%; width: 100%;"
+                        [id]="row"
+                    >
+                        <nb-option value="admin">Admin</nb-option>
+                        <nb-option value="office">Office</nb-option>
+                        <nb-option value="qc">QC</nb-option>
+                    </nb-select>
+
+                    <nb-select
+                        placeholder="Theme"
+                        [formControlName]="row"
+                        [selected]="this.data[row]"
+                        style="max-width: 100%; width: 100%;"
+                        *ngIf="row === 'column_theme'"
+                        [id]="row"
+                    >
+                        <nb-option value="default">Default</nb-option>
+                        <nb-option value="dark">Dark</nb-option>
+                        <nb-option value="cosmic">Cosmic</nb-option>
+                    </nb-select>
+
+                    <nb-select
+                        *ngIf="row === 'column_department_id'"
+                        style="max-width: 100%; width: 100%;"
+                        [formControlName]="row"
+                        [selected]="this.data[row]"
+                        [id]="row"
+                    >
+                        <nb-option [value]="item.id" *ngFor="let item of department.drop_down_data">{{ item.name }} </nb-option>
+                    </nb-select>
+                </div>
+
+                <!-- <div
+                    style="flex: 1.75; display: flex; justify-content: flex-start; align-items: flex-start; flex-direction: column;"
+                    *ngIf="row === 'folder_structure'"
+                >
+                    <div style="width: 100%;">
+                        <span>Level 1: </span>
+                        <input style="margin-top: 0.5rem;" nbInput fullWidth [value]="this.data[row].level_1" />
+                    </div>
+                    <div style="margin-top: 1rem; width: 100%;">
+                        <span>Level 2: </span>
+                        <input style="margin-top: 0.5rem;" nbInput fullWidth [value]="this.data[row].level_2" />
+                    </div>
+                </div> -->
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+
+    <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="isEditable">
+        <button *ngIf="!isEditing" style="flex: 0.35" nbButton status="danger" (click)="deleteUser()">
+            {{ (data.column_is_deleted ? 'app.button_un_delete' : 'app.button_delete') | translate }}
+        </button>
+        <button *ngIf="!isEditing" style="flex: 0.35" nbButton status="info" (click)="editUser()">{{ 'app.button_edit' | translate }}</button>
+        <button *ngIf="isEditing" style="flex: 0.3" nbButton status="info" (click)="saveUser()">{{ 'app.button_save' | translate }}</button>
+    </nb-card-footer>
+
+    <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="isCreating">
+        <button style="flex: 0.3" nbButton status="success" (click)="createUser()">{{ 'app.button_create' | translate }}</button>
+    </nb-card-footer>
+</nb-card>

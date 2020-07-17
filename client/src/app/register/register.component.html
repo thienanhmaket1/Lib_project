@@ -1,0 +1,30 @@
+<div class="div-container">
+    <h2 style="margin-right: 5rem;">Register</h2>
+    <div class="div-register" [formGroup]="registerFormGroup">
+        <div style="margin-top: 1rem; width: 100%;">
+            <label>User name</label>
+            <input nbInput fullWidth type="text" name="user_username" formControlName="usernameFormControl" required />
+        </div>
+        <div style="margin-top: 1rem; width: 100%;">
+            <label>Password</label>
+            <input nbInput fullWidth type="password" name="user_password" formControlName="passwordFormControl" required />
+        </div>
+        <div style="margin-top: 1rem; width: 100%;">
+            <label>Last Name</label>
+            <input nbInput fullWidth type="text" name="user_fullname" formControlName="lastnameFormControl" required />
+        </div>
+        <div style="margin-top: 1rem; width: 100%;">
+            <label>Email</label>
+            <input nbInput fullWidth type="email" name="user_email" formControlName="emailFormControl" required />
+        </div>
+        <div style="margin-top: 1rem; width: 100%;">
+            <label>Phone</label>
+            <input nbInput fullWidth type="number" name="user_phone" formControlName="phoneFormControl" required />
+        </div>
+        <div style="margin-top: 1rem; width: 100%;">
+            <label>Permission</label>
+            <input nbInput fullWidth type="number" name="user_permission_code" formControlName="permissionFormControl" required />
+        </div>
+        <button (click)="register()" nbButton style="margin-top: 1rem; width: 100%;">Go</button>
+    </div>
+</div>

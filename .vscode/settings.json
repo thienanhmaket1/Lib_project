@@ -1,0 +1,35 @@
+{
+    "tslint.jsEnable": true,
+    "eslint.workingDirectories": ["./client", "./server"],
+    "javascript.validate.enable": true,
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "editor.renderWhitespace": "all",
+    "editor.detectIndentation": true,
+    "breadcrumbs.enabled": true,
+    "editor.autoIndent": "full",
+    "editor.codeLens": true,
+    "editor.formatOnPaste": false,
+    "editor.formatOnType": false,
+    "search.showLineNumbers": true,
+    "zenMode.centerLayout": false,
+    "formatFiles.excludePattern": "**/node_modules,**/.vscode,**/dist/**,**/.chrome,**/android,**/ios,**/web",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    // Scans builtin modules as well
+    "node-module-intellisense.scanBuiltinModules": true,
+
+    // Scans devDependencies as well
+    "node-module-intellisense.scanDevDependencies": true,
+
+    // Scans file modules as well
+    "node-module-intellisense.scanFileModules": true,
+
+    /**
+     * Scans alternative module paths (eg. Search on ${workspcaceRoot}/lib).
+     * Useful when using packages like (https://www.npmjs.com/package/app-module-path) to manage require paths folder.
+     **/
+    "node-module-intellisense.modulePaths": [],
+    "editor.snippetSuggestions": "bottom"
+}

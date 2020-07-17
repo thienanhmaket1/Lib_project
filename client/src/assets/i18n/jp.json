@@ -1,0 +1,391 @@
+{
+    "app": {
+        "title": "D-CUBE",
+        "footer": "© 2020 Cube System Vietnam Co,.Ltd. ",
+        "button_create": "登録",
+        "button_save": "保存",
+        "button_delete": "削除",
+        "button_un_delete": "削除",
+        "button_edit": "更新",
+        "button_add": "追加",
+        "button_yes": "はい",
+        "button_no": "いいえ",
+        "select_none": "なし",
+        "select_all": "すべて",
+        "toggle": {
+            "activation": {
+                "activating": "削除",
+                "deactivating": "削除",
+                "all": "すべて"
+            }
+        },
+        "button_browse": "添付ファイル..."
+    },
+
+    "menu": {
+        "home": "ホーム",
+        "office": "オフィス",
+        "search_files": "検索",
+        "office_admin": "オフィス管理者",
+        "manage_folders": "台帳",
+        "manage_files": "資料",
+        "manage_office_settings": "設定",
+        "qc": "QC",
+        "barcode-reader": "スキャン",
+        "qc_admin": "QC管理者",
+        "manage_drawings": "図面",
+        "manage_qc_settings": "設定",
+        "admin": "管理者",
+        "manage_users": "ユーザ管理",
+        "manage_messages_path": "掲示板とパス",
+        "log_out": "ログアウト"
+    },
+
+    "login": {
+        "title": "ログイン",
+        "login_form_username": "ユーザ名",
+        "login_form_password": "パスワード",
+        "login_form_submit": "ログイン"
+    },
+
+    "home": {
+        "notification": {
+            "title": "お知らせ",
+            "admin": "管理者",
+            "qc": "QC",
+            "office": "オフィス",
+            "message_form": {
+                "head_title": "メッセージ",
+                "title": "タイトル",
+                "content": "内容",
+                "group": "グループ"
+            },
+            "add_message": "新規登録"
+        },
+        "profile": {
+            "title": "個人情報",
+            "change_image_tooltip": "更新",
+            "form_username": "ユーザ名",
+            "form_firstname": "名",
+            "form_lastname": "姓",
+            "form_fullname": "姓名",
+            "form_email": "メール",
+            "form_phone": "電話番号",
+            "form_theme": "テーマ",
+            "form_password": "パスワード",
+            "form_confirm_password": "パスワードを認証する"
+        }
+    },
+
+    "office_search_file": {
+        "filter_form_choose_folder": "台帳を選択",
+        "filter_form_input": "資料を検索"
+    },
+
+    "office_manage_file": {
+        "filter_form_choose_folder": "台帳を選択",
+        "filter_form_input": "資料を検索",
+        "filter_form_add_file": "ファイルを追加",
+        "file_detail": {
+            "title": "資料明細",
+            "file_file_no": "№",
+            "file_file_name": "文書名",
+            "file_updated_count": "改定№",
+            "file_created_at": "登録日",
+            "file_updated_at": "更新日",
+            "file_authorized_users": "認定ユーザ",
+            "file_is_deleted": "非活性",
+            "file_department_id": "部署名"
+        },
+        "file_history": {
+            "title": "ファイル履歴"
+        },
+        "select_authorized_users": "ユーザを選択",
+        "none_select_authorized_users": "なし",
+        "alert_not_exists_drawing": "資料が存在していない"
+    },
+
+    "office_manage_folder": {
+        "filter_form_input": "台帳を検索",
+        "filter_form_add_folder": "台帳追加",
+        "folder_detail": {
+            "title": "台帳明細",
+            "folder_no": "№",
+            "higher_folder_name": "第１分類",
+            "folder_name": "第２分類",
+            "folder_document_no": "文書№",
+            "folder_created_by": "登録者",
+            "folder_is_show_updated_count": "改定№",
+            "folder_is_show_created_at": "登録日",
+            "folder_is_show_updated_at": "更新日",
+            "folder_authorized_users": "認定ユーザ",
+            "folder_created_at": "作成日",
+            "folder_short_name": "文書番号\n（例：文書略称-年度下二桁-桁数-スタート番号）",
+            "folder_is_deleted": "非活性",
+            "property_data_type": "データ型",
+            "property_is_show_in_list": "一覧表示",
+            "property_is_show_in_detail": "詳細表示",
+            "folder_status_yes": "要",
+            "folder_status_no": "不要",
+            "max_width": "文字数",
+            "file_latest_update": "更新日"
+        },
+        "select_type": "データ型選択",
+        "property_name": "属性名",
+        "select_authorized_users": "ユーザを選択",
+        "none_select_authorized_users": "なし",
+        "dataType": {
+            "text": "テキスト",
+            "memo": "メモ",
+            "dropdown": "ドロップダウン"
+        }
+    },
+
+    "office_settings": {
+        "title": "オフィス管理者設定",
+        "messages": {
+            "title": "掲示板",
+            "new_message_title": "タイトル",
+            "new_message_content": "内容",
+            "new_message_attachment": "添付ファイル"
+        }
+    },
+
+    "qc_barcode_reader": {
+        "search_form_title": "バーコードスキャン",
+        "search_form_input": "バーコードを入力するまたはスキャンしてください"
+    },
+
+    "qc_manage_drawings": {
+        "tabs": {
+            "files_explorer": {
+                "title": "エクスプローラー",
+                "filter_form_input": "図面を検索",
+                "button_back": "戻る",
+                "button_add_drawing_file": "ファイル追加",
+                "button_add_drawing_folder": "フォルダ追加"
+            },
+            "drawings_list": {
+                "title": "図面一覧",
+                "filter_form_choose_drawing_folder": "図面フォルダを選択",
+                "filter_form_input": "図面を検索",
+                "button_reload": "リロード",
+                "button_add_drawing": "追加",
+                "checkbox_show_is_not_on_hardisk": "更新必要"
+            },
+            "update_drawing_by_csv": {
+                "title": "図面アップロード",
+                "drop_zone": {
+                    "title": "ドラッグアンドドロップでファイルを添付してください",
+                    "button_browse": "CSVファイルを選択"
+                },
+                "filter_form_input": "図面を検索",
+                "rows_per_page": "ページごとのアイテム数",
+                "rows_per_page_must_be_greater_than_zero": "ゼロより大きくなければなりません"
+            }
+        },
+        "drawing_detail": {
+            "title": "図面詳細",
+            "drawing_id": "図面ID",
+            "drawing_customer": "顧客名",
+            "drawing_kouban": "工番",
+            "drawing_filename": "図番",
+            "drawing_relative_path": "図面フォルダ",
+            "drawing_created_at": "作成日",
+            "drawing_created_by": "作成者",
+            "drawing_part_name": "図番名",
+            "drawing_updated_by": "更新者",
+            "drawing_updated_at": "更新日",
+            "drawing_updated_count": "改定№",
+            "drawing_is_deleted": "非活性",
+            "drawing_created_by_id": "作成者",
+            "drawing_updated_by_id": "更新者",
+            "alert_no_drawing_file": "ファイルが存在ありませんでした。"
+        },
+        "drawing_history": {
+            "title": "図面更新履歴"
+        },
+        "sync_drawing": {
+            "alert_fail": "図面の同期に失敗しました"
+        },
+        "drop_drawings": {
+            "alert_extension_fail": "PDFファイルしかない",
+            "alert_wrong_file": "図面が正しくないので、再度確認してください。",
+            "alert_not_exists_drawing": "図面が存在していない"
+        },
+        "drop_csv": {
+            "wrong_extension": "ファイル拡張子はサポートされていません",
+            "can_not_read_csv": "ファイルの読み込みが出来ません",
+            "read_csv_success": "ファイルの読み込みが成功しました。"
+        }
+    },
+
+    "qc_settings": {
+        "title": "QC管理者設定",
+        "messages": {
+            "title": "掲示板",
+            "new_message_title": "タイトル",
+            "new_message_content": "内容",
+            "new_message_attachment": "添付ファイル"
+        }
+    },
+
+    "admin_manage_users": {
+        "toggle_activating_status": "活性",
+        "toggle_deactivating_status": "非活性",
+        "filter_form_input": "ユーザを検索",
+        "button_add_user": "ユーザ追加",
+        "user_detail": {
+            "title": "ユーザ詳細",
+            "user_no": "№",
+            "user_name": "ユーザ名",
+            "user_password": "パスワード",
+            "user_confirm_password": "パスワードを認証する",
+            "user_fullname": "姓名",
+            "user_email": "メール",
+            "user_phone": "電話番号",
+            "user_is_deleted": "非活性",
+            "user_permission": "権限",
+            "user_group": "グループ",
+            "user_theme": "テーマ",
+            "user_department_id": "職場名"
+        }
+    },
+
+    "admin_manage_settings": {
+        "messages": {
+            "title": "新掲示板",
+            "new_message_title": "タイトル",
+            "new_message_content": "内容",
+            "new_message_attachment": "添付ファイル"
+        },
+        "path_setting": {
+            "title": "パス設定",
+            "path_office": "オフィス",
+            "path_qc": "QC"
+        },
+        "common_setting": {
+            "title": " システム設定",
+            "logo_label": "ロゴ",
+            "system_label": "システム名",
+            "manual_label": "マニュアル"
+        }
+    },
+
+    "admin_manage_dropdowns": {
+        "filter_form_choose_folder": "台帳を選択",
+        "filter_form_input": "ドロップダウンを検索",
+        "filter_form_add_dropdown": "ドロップダウンを追加",
+        "drop_down_detail": {
+            "title": "ドロップダウン明細",
+            "new_dropdown_no": "№",
+            "new_dropdown_id": "Id",
+            "new_dropdown_folder": "台帳",
+            "new_dropdown_folder_choose_folder": "台帳を選択",
+            "new_dropdown_name": "名",
+            "new_dropdown_data": "データ",
+            "new_dropdown_data_new_item": "新項目 ...",
+            "new_dropdown_created_at": "作成日",
+            "new_dropdown_updated_at": "更新者",
+            "new_dropdown_is_deleted": "非活性"
+        }
+    },
+
+    "confirmation": {
+        "title": "確認",
+        "create_content": "作成しますか？",
+        "update_content": "更新しますか？",
+        "deactivate_content": "非活性に設定しますか？",
+        "activate_content": "活性に設定しますか？",
+        "delete_content": "削除しますか?"
+    },
+
+    "response_text": {
+        "common": {
+            "success": "成功",
+            "error": "エラー",
+            "downloading": "ダウンロード中...",
+            "saved": "保存した",
+
+            "create_success": "{{ param1 }} が作成されました",
+            "create_error": "この{{ param1 }}が作成できません",
+
+            "update_success": "{{ param1 }} が更新されました",
+            "update_error": "この{{ param1 }}が更新できません",
+
+            "delete_success": "{{ param1 }} は非活性となっています",
+            "delete_error": "この{{ param1 }}は非活性に設定できません",
+
+            "undelete_success": "この{{ param1 }} は再活性化されました",
+            "undelete_error": "この{{ param1 }}は再活性できません",
+
+            "upload_success": "{{ param1 }}は既にアップロードされています",
+            "upload_error": "{{ param1 }}がアップロードできません",
+
+            "error_1": "ネットワークエラー !",
+            "unable_to_save_changes": "変更を保存できません。",
+
+            "file_not_found": "ファイルが見つかりません",
+            "file_corrupted_or_not_found": "ファイルが壊れています。または、存在していません",
+
+            "user_latin_chars": "ユーザー名が無効です",
+            "wrong_email": " '@' が必要です",
+            "confirm_pass_not_match": "確認パスワードが一致しません",
+            "folder_already_exists": "台帳名が存在しています。"
+        },
+
+        "login": {
+            "username_password_empty": "ユーザー名とパスワードが必須です",
+            "username_email_password_empty": "ユーザー名とメールとパスワードが必須です",
+            "username_password_incorrect": "ユーザー名またはパスワードが間違っています",
+            "success": "ようこそDMSへ"
+        },
+
+        "manage_files": {
+            "file_name_exist": "{{ param1 }} が存在しています"
+        },
+
+        "manage_folders": {
+            "fields_required": "いくつかのフィールドは必須です。"
+        },
+
+        "manage_users": {
+            "create": {
+                "user_exist": "このユーザー名は既に使用されています",
+                "email_exist": "このメールは既に使用されています"
+            }
+        },
+
+        "manage_drawings": {
+            "file_explorer": {
+                "rename_drawing_folder": "{{ param1 }}は{{ param2 }}に変更されました",
+                "rename_drawing_folder_fail": "{{ param1 }}は{{ param2 }}に変更されなかった",
+                "no_customer": "図面を追加する前に顧客をご選択ください",
+                "delete_drawing_file_success": "{{ param1 }} が削除しました",
+                "delete_drawing_file_error": "{{ param1 }}が削除できません"
+            },
+            "drawing_list": {
+                "no_selected_drawing_folder": "図面フォルダーをご選択ください"
+            },
+            "update_csv": {
+                "show_updating": "{{ param1 }} が更新されました",
+                "show_error": "{{ param1 }}が更新できません",
+                "show_missing": "{{ param1 }}はシステムに存在していません。 後でもう一度お試しください",
+                "show_history_fail": "{{ param1 }}の履歴が作成できません"
+            }
+        }
+    },
+
+    "object": {
+        "user": "ユーザー",
+        "drawing": "図面",
+        "file": "ファイル",
+        "folder": "台帳",
+        "drawing_folder": "顧客",
+        "drawing_file": "図面",
+        "profile": "プロファイル",
+        "message": "メッセージ",
+        "path": "パス",
+        "dropdown": "ドロップダウン"
+    }
+}

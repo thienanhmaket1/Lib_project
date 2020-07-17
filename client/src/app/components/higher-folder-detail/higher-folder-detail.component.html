@@ -1,0 +1,71 @@
+<nb-card class="nb-card-dialog">
+    <nb-card-header
+        style="
+            justify-content: center;
+            align-items: center;
+            display: flex;
+        "
+        class="detail-view"
+    >
+        <h5>{{ 'office_manage_folder.folder_detail.title' | translate }}</h5>
+        <nb-icon style="font-size: 1.5rem; cursor: pointer;" icon="close" (click)="closeDialog()"> </nb-icon>
+    </nb-card-header>
+
+    <nb-card-body *ngIf="isViewing">
+        <nb-list>
+            <nb-list-item *ngFor="let row of rows" style="padding: 1rem;" [ngStyle]="{ display: hiddenColumn.includes(row) ? 'none' : 'flex' }">
+                <div class="div-data-left label">
+                    {{ translate(row) | translate }}
+                </div>
+
+                <div style="display: flex; width: 2.5rem;"></div>
+
+                <div class="div-data-right">
+                    <span *ngIf="row !== 'folder_is_deleted'">
+                        {{ this.data[row] }}
+                    </span>
+
+                    <nb-toggle *ngIf="row === 'folder_is_deleted'" disabled [checked]="data[row]"></nb-toggle>
+                </div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+
+    <nb-card-body *ngIf="isEditing || isCreating">
+        <nb-list [formGroup]="editFolderFormGroup">
+            <nb-list-item *ngFor="let row of rows" style="padding: 1rem;" [ngStyle]="{ display: hiddenColumn.includes(row) ? 'none' : 'flex' }">
+                <div class="div-data-left label">
+                    {{ translate(row) | translate }}
+                </div>
+
+                <div style="display: flex; width: 2.5rem;"></div>
+
+                <div class="div-data-right">
+                    <input
+                        *ngIf="row !== 'folder_is_deleted'"
+                        style="margin-top: 0.5rem;"
+                        nbInput
+                        fullWidth
+                        [value]="this.data[row]"
+                        autofocus
+                        [formControlName]="row"
+                        [id]="row"
+                    />
+                    <nb-toggle *ngIf="row === 'folder_is_deleted'" disabled [checked]="data[row]" [id]="row"></nb-toggle>
+                </div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+
+    <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="isEditable">
+        <button *ngIf="!isEditing" style="flex: 0.35" nbButton [status]="data.folder_is_deleted ? 'success' : 'danger'" (click)="deleteFolder()">
+            {{ (data.folder_is_deleted ? 'app.button_un_delete' : 'app.button_delete') | translate }}
+        </button>
+        <button *ngIf="!isEditing" style="flex: 0.35" nbButton status="info" (click)="editFolder()">{{ 'app.button_edit' | translate }}</button>
+        <button *ngIf="isEditing" style="flex: 0.3" nbButton status="info" (click)="saveFolder()">{{ 'app.button_save' | translate }}</button>
+    </nb-card-footer>
+
+    <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="isCreating">
+        <button style="flex: 0.3" nbButton status="success" (click)="createFolder()">{{ 'app.button_create' | translate }}</button>
+    </nb-card-footer>
+</nb-card>

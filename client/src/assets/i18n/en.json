@@ -1,0 +1,363 @@
+{
+    "app": {
+        "title": "Library",
+        "footer": "HO CHI MINH CITY INDUSTRY AND TRADE COLLEGE ",
+        "button_create": "Create",
+        "button_save": "Save",
+        "button_delete": "Deactivate",
+        "button_un_delete": "Activate",
+        "button_edit": "Edit",
+        "button_add": "Add",
+        "button_yes": "Yes",
+        "button_no": "No",
+        "select_none": "None",
+        "select_all": "All",
+        "toggle": {
+            "activation": {
+                "activating": "Activating",
+                "deactivating": "Deactivating",
+                "all": "All"
+            }
+        },
+        "button_browse": "Browse file ..."
+    },
+    "menu": {
+        "home": "Home",
+        "office": "Office",
+        "search_files": "Search",
+        "office_admin": "Office Admin",
+        "manage_folders": "Categories",
+        "manage_files": "Document",
+        "manage_office_settings": "Settings",
+        "qc": "Bookstore",
+        "barcode-reader": "Scan",
+        "qc_admin": "Bookstore manament",
+        "manage_drawings": "Books",
+        "manage_qc_settings": "Settings",
+        "admin": "Admin",
+        "manage_users": "Users",
+        "manage_messages_path": "Settings",
+        "log_out": "Log Out"
+    },
+    "login": {
+        "title": "Login",
+        "login_form_username": "Username",
+        "login_form_password": "Password",
+        "login_form_submit": "Go"
+    },
+    "home": {
+        "notification": {
+            "title": "Notifications",
+            "admin": "Admin",
+            "qc": "QC",
+            "office": "Office",
+            "message_form": {
+                "head_title": "Message Detail",
+                "title": "Title",
+                "content": "Content",
+                "group": "Group"
+            },
+            "add_message": "Add Message"
+        },
+        "profile": {
+            "title": "My Profile",
+            "change_image_tooltip": "Click here to change",
+            "form_username": "Username",
+            "form_firstname": "Firstname",
+            "form_lastname": "Lastname",
+            "form_fullname": "Fullname",
+            "form_email": "Email",
+            "form_phone": "Phone",
+            "form_theme": "Theme",
+            "form_password": "Password",
+            "form_confirm_password": "Confirm Password"
+        }
+    },
+    "office_search_file": {
+        "filter_form_choose_folder": "Choose a categories",
+        "filter_form_input": "Search"
+    },
+    "office_manage_file": {
+        "filter_form_choose_folder": "Choose a categories",
+        "filter_form_input": "Search",
+        "filter_form_add_file": "Add",
+        "file_detail": {
+            "title": "Document Detail",
+            "file_file_no": "No",
+            "file_file_name": "Document name",
+            "file_updated_count": "Revision",
+            "file_created_at": "Created",
+            "file_updated_at": "Updated",
+            "file_authorized_users": "Authorized users",
+            "file_is_deleted": "Deactivation",
+            "file_department_id": "Department"
+        },
+        "file_history": {
+            "title": "Document History"
+        },
+        "select_authorized_users": "Choose users",
+        "none_select_authorized_users": "None",
+        "alert_not_exists_drawing": "Document is not exist"
+    },
+    "office_manage_folder": {
+        "filter_form_input": "Search",
+        "filter_form_add_folder": "Add",
+        "folder_detail": {
+            "title": "Categories Detail",
+            "folder_no": "No",
+            "higher_folder_name": "Categories",
+            "folder_name": "Documents",
+            "folder_document_no": "Document no",
+            "folder_created_by": "Registered",
+            "folder_is_show_updated_count": "Revision",
+            "folder_is_show_created_at": "Created",
+            "folder_is_show_updated_at": "Updated",
+            "folder_authorized_users": "Authorized users",
+            "folder_created_at": "Created at",
+            "folder_short_name": "Ledger ID\n (Ex: Short name - month and last 2 digits of year - Digit's number - Start number)",
+            "folder_is_deleted": "Deactivation",
+            "property_data_type": "Data type",
+            "property_is_show_in_list": "Show in list",
+            "property_is_show_in_detail": "Show in detail",
+            "folder_status_yes": "Yes",
+            "folder_status_no": "No",
+            "max_width": "Number of Characters",
+            "file_latest_update": "Latest Update"
+        },
+        "select_type": "Select Type",
+        "property_name": "Property Name",
+        "select_authorized_users": "Choose users",
+        "none_select_authorized_users": "None",
+        "dataType": {
+            "text": "Text",
+            "memo": "Memo",
+            "dropdown": "Dropdown"
+        }
+    },
+    "office_settings": {
+        "title": "Office Admin Settings",
+        "messages": {
+            "title": "Messages",
+            "new_message_title": "Title",
+            "new_message_content": "Content",
+            "new_message_attachment": "Attachment"
+        }
+    },
+    "qc_barcode_reader": {
+        "search_form_title": "Barcode Reader",
+        "search_form_input": "Enter or scan the code"
+    },
+    "qc_manage_drawings": {
+        "tabs": {
+            "files_explorer": {
+                "title": "Specialized",
+                "filter_form_input": "Search",
+                "button_back": "Back",
+                "button_add_drawing_file": "Add Books",
+                "button_add_drawing_folder": "Add Specialized"
+            },
+            "drawings_list": {
+                "title": "Books",
+                "filter_form_choose_drawing_folder": "Choose a specialized",
+                "filter_form_input": "Search",
+                "button_reload": "Reload",
+                "button_add_drawing": "Add Book",
+                "checkbox_show_is_not_on_hardisk": "Need Update"
+            },
+            "update_drawing_by_csv": {
+                "title": "Upload Book",
+                "drop_zone": {
+                    "title": "Drop file here",
+                    "button_browse": "Browse csv file ..."
+                },
+                "filter_form_input": "Search",
+                "rows_per_page": "Row each page",
+                "rows_per_page_must_be_greater_than_zero": "Must be greater than zero"
+            }
+        },
+        "drawing_detail": {
+            "title": "Book Detail",
+            "drawing_id": "Book ID",
+            "drawing_customer": "Book Name",
+            "drawing_kouban": "ID Text",
+            "drawing_filename": "Attachments",
+            "drawing_relative_path": "Main Specialized",
+            "drawing_created_at": "Created",
+            "drawing_created_by": "Registered",
+            "drawing_part_name": "Quantity",
+            "drawing_updated_by": "Updated by",
+            "drawing_updated_at": "Updated",
+            "drawing_updated_count": "Revision",
+            "drawing_is_deleted": "Deactivation",
+            "drawing_created_by_id": "Created by ID",
+            "drawing_updated_by_id": "Updated by ID",
+            "alert_no_drawing_file": "No file"
+        },
+        "drawing_history": {
+            "title": "Books History"
+        },
+        "sync_drawing": {
+            "alert_fail": "Sync Books failed"
+        },
+        "drop_drawings": {
+            "alert_extension_fail": "PDF file only",
+            "alert_wrong_file": "Wrong file, please re-select",
+            "alert_not_exists_drawing": "Drawing is not exist."
+        },
+        "drop_csv": {
+            "wrong_extension": "File extension is not supported",
+            "can_not_read_csv": "Can not read file",
+            "read_csv_success": "File has been read successfully"
+        }
+    },
+    "qc_settings": {
+        "title": "QC Admin Settings",
+        "messages": {
+            "title": "Messages",
+            "new_message_title": "Title",
+            "new_message_content": "Content",
+            "new_message_attachment": "Attachment"
+        }
+    },
+    "admin_manage_users": {
+        "toggle_activating_status": "Activating",
+        "toggle_deactivating_status": "Deactivating",
+        "filter_form_input": "Search users",
+        "button_add_user": "Add User",
+        "user_detail": {
+            "title": "User Detail",
+            "user_no": "No.",
+            "user_name": "Username",
+            "user_password": "Password",
+            "user_confirm_password": "Confirm Password",
+            "user_fullname": "Full name",
+            "user_email": "Email",
+            "user_phone": "Phone",
+            "user_is_deleted": "Deactivation",
+            "user_permission": "Permission",
+            "user_group": "Group",
+            "user_theme": "Theme",
+            "user_department_id": "Department"
+        }
+    },
+    "admin_manage_settings": {
+        "messages": {
+            "title": "New message",
+            "new_message_title": "Title",
+            "new_message_content": "Content",
+            "new_message_attachment": "Attachment"
+        },
+        "path_setting": {
+            "title": "Path settings",
+            "path_office": "Office",
+            "path_qc": "QC"
+        },
+        "common_setting": {
+            "title": "System Setting",
+            "logo_label": "Logo",
+            "system_label": "System Name",
+            "manual_label": "Manual"
+        }
+    },
+    "admin_manage_dropdowns": {
+        "filter_form_choose_folder": "Choose a categories",
+        "filter_form_input": "Search dropdowns",
+        "filter_form_add_dropdown": "Add dropdown",
+        "drop_down_detail": {
+            "title": "Dropdown Detail",
+            "new_dropdown_no": "No",
+            "new_dropdown_id": "Id",
+            "new_dropdown_folder": "Categories",
+            "new_dropdown_folder_choose_folder": "Choose categories",
+            "new_dropdown_name": "Name",
+            "new_dropdown_data": "Data",
+            "new_dropdown_data_new_item": "New items ...",
+            "new_dropdown_created_at": "Created at",
+            "new_dropdown_updated_at": "Updated by",
+            "new_dropdown_is_deleted": "Deactivation"
+        },
+        "status_unkown": "Unknown"
+    },
+    "confirmation": {
+        "title": "Confirmation",
+        "create_content": "Are you sure you want to create ?",
+        "update_content": "Are you sure you want to update ?",
+        "deactivate_content": "Are you sure you want to deactivate ?",
+        "activate_content": "Are you sure you want to activate ?",
+        "delete_content": "Are you sure you want to delete ?"
+    },
+    "response_text": {
+        "common": {
+            "success": "Success",
+            "error": "Error",
+            "downloading": "Downloading...",
+            "saved": "Saved",
+            "create_success": "{{ param1 }} has been created",
+            "create_error": "Can not create this {{ param1 }}",
+            "update_success": "{{ param1 }} has been updated",
+            "update_error": "Can not update this {{ param1 }}",
+            "delete_success": "{{ param1 }} has been deactivated",
+            "delete_error": "Can not deactivate this {{ param1 }}",
+            "undelete_success": "{{ param1 }} has been reactivated",
+            "undelete_error": "Can not reactivate this {{ param1 }}",
+            "upload_success": "{{ param1 }} has been uploaded",
+            "upload_error": "Can not upload {{ param1 }}",
+            "error_1": "Network error !",
+            "unable_to_save_changes": "Unable to save changes.",
+            "file_not_found": "File not found",
+            "file_corrupted_or_not_found": "File is corrupted or doesn't exist",
+            "user_latin_chars": "Username is invalid",
+            "wrong_email": "Please include an '@' in the email address",
+            "confirm_pass_not_match": "Confirm Password does not match",
+            "folder_already_exists": "Folder name already exists"
+        },
+        "login": {
+            "username_password_empty": "Username and password is required",
+            "username_email_password_empty": "Username, Email and password is required",
+            "username_password_incorrect": "Username or password is incorrect",
+            "success": "Welcome to DMS"
+        },
+        "manage_folders": {
+            "fields_required": "Some fields are required."
+        },
+        "manage_files": {
+            "file_name_exist": "{{ param1 }} has existed"
+        },
+        "manage_users": {
+            "create": {
+                "user_exist": "Username has been used",
+                "email_exist": "Email has been used"
+            }
+        },
+        "manage_drawings": {
+            "file_explorer": {
+                "rename_drawing_folder": "{{ param1 }} has been renamed to {{ param2 }}",
+                "rename_drawing_folder_fail": "Can not rename {{ param1 }} to {{ param2 }}",
+                "no_customer": "Please select a customer before adding drawings",
+                "delete_drawing_file_success": "{{ param1 }} has been deleted",
+                "delete_drawing_file_error": "Can not delete {{ param1 }}"
+            },
+            "drawing_list": {
+                "no_selected_drawing_folder": "Please choose a drawing ledger"
+            },
+            "update_csv": {
+                "show_updating": "{{ param1 }} has been updated",
+                "show_error": "Can not update {{ param1 }}",
+                "show_missing": "{{ param1 }} is not exist in system, please add it later",
+                "show_history_fail": "Can not create history for {{ param1 }}"
+            }
+        }
+    },
+    "object": {
+        "user": "User",
+        "drawing": "Drawing",
+        "file": "File",
+        "folder": "Ledger",
+        "drawing_folder": "Customer",
+        "drawing_file": "Drawing",
+        "profile": "Profile",
+        "message": "Message",
+        "path": "Path",
+        "dropdown": "Dropdown"
+    }
+}

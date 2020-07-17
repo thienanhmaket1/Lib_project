@@ -1,0 +1,149 @@
+<nb-card class="div-container">
+    <nb-card-header>
+        <div class="div-filter">
+            <div [formGroup]="filterFormGroup" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; flex-direction: row; flex: 1">
+                    <div class="div-go-to">
+                        <a class="btn-go-to" (click)="goToHigherFolder()" status="primary">
+                            {{ 'object.folder' | translate }}
+                        </a>
+                        <span style="margin-right: 0.5rem;">/</span>
+                        <a class="btn-go-to" (click)="goToFolder()" status="primary">
+                            {{ currentHigherFolder }}
+                        </a>
+                        <span style="margin-right: 0.5rem;">/</span>
+                        <a class="btn-go-to" status="primary">
+                            {{ currentFolder }}
+                        </a>
+                    </div>
+
+                    <!-- <nb-select
+                        [placeholder]="'office_manage_file.filter_form_choose_folder' | translate"
+                        formControlName="selectedFolder"
+                        filled
+                        status="primary"
+                        style="width: 100%;"
+                    >
+                        <nb-option [value]="null">{{ 'app.select_none' | translate }}</nb-option>
+                        <nb-option *ngFor="let folder of folders" [value]="folder">{{ folder.folder_name }} </nb-option>
+                    </nb-select> -->
+                    <input
+                        nbInput
+                        style="flex: 1; max-width: none; margin-left: 1rem;"
+                        formControlName="searchFileFormControl"
+                        [placeholder]="'office_manage_file.filter_form_input' | translate"
+                        id="input-search-file"
+                    />
+                    <button *ngIf="checkPermission()" style="margin-left: 1rem" (click)="addFile()" nbButton status="primary">
+                        {{ 'office_manage_file.filter_form_add_file' | translate }}
+                    </button>
+                    <nb-toggle style="margin-left: 1rem;" formControlName="activationFormControl" id="toggle-show-activate">
+                        {{ (activationToggleStatus ? 'app.toggle.activation.all' : 'app.toggle.activation.activating') | translate }}
+                    </nb-toggle>
+                </div>
+            </div>
+        </div>
+    </nb-card-header>
+
+    <nb-card-body *ngIf="allColumns.length !== 0" class="div-files nb-card-body-has-fixed-header">
+        <table
+            class="nb-tree-grid-table-fixed-header"
+            [nbTreeGrid]="dataSource"
+            [nbSort]="dataSource"
+            (sort)="updateSort($event)"
+            *ngIf="filterFormGroup.get('selectedFolder').value !== null"
+        >
+            <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+
+            <ng-container *ngFor="let column of leftFakeColumns; let index = index" [nbTreeGridColumnDef]="column">
+                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+                    <button nbButton status="primary">{{ createLeftRealColumns(column) | translate }}</button>
+                </th>
+                <td style="cursor: pointer;" (click)="openDetail(row.data)" nbTreeGridCell *nbTreeGridCellDef="let row">
+                    <span *ngIf="column !== 'file_department_id'">{{ row.data[column] }}</span>
+                    <span *ngIf="column === 'file_department_id'">{{ row.data[column]['name'] }}</span>
+                </td>
+            </ng-container>
+
+            <ng-container *ngFor="let column of middleFakeColumns; let index = index" [nbTreeGridColumnDef]="column">
+                <th
+                    nbTreeGridHeaderCell
+                    [nbSortHeader]="getSortDirection(column)"
+                    *nbTreeGridHeaderCellDef
+                    [ngStyle]="{ display: !displayColumn(column) ? 'none' : 'table-cell' }"
+                >
+                    <button nbButton status="primary">{{ createMiddleRealColumns(column) | translate }}</button>
+                </th>
+                <td
+                    [id]="column"
+                    style="cursor: pointer;"
+                    (click)="openDetail(row.data)"
+                    nbTreeGridCell
+                    *nbTreeGridCellDef="let row"
+                    [ngStyle]="{ display: !displayColumn(column) ? 'none' : 'table-cell' }"
+                    [style.white-space]="row.data[column] && row.data[column].property_data_type === 'text' ? 'nowrap' : 'pre-wrap'"
+                >
+                    <div *ngIf="column.includes('column_*_')">
+                        <div *ngIf="checkProperty(row.data[column])" class="shorten-text">
+                            <span
+                                *ngIf="!row.data[column].hasOwnProperty('dropdown_id')"
+                                [nbTooltip]="row.data[column] ? row.data[column].property_value : ''"
+                                nbTooltipStatus="success"
+                            >
+                                <!-- {{ row.data[column].property_value || '-' }} -->
+                                {{ setValue(row.data[column] || '-') }}
+                            </span>
+                            <span *ngIf="row.data[column].hasOwnProperty('dropdown_id')">
+                                <mat-chip-list #chipList aria-label="Item selection">
+                                    <mat-chip *ngFor="let item of dropdownDetail(row.data[column])">
+                                        {{ item }}
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </span>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container *ngFor="let column of rightFakeColumns; let index = index" [nbTreeGridColumnDef]="column">
+                <th
+                    [ngStyle]="{ display: !displayColumn(column) ? 'none' : 'table-cell' }"
+                    nbTreeGridHeaderCell
+                    [nbSortHeader]="getSortDirection(column)"
+                    *nbTreeGridHeaderCellDef
+                >
+                    <button nbButton status="primary">
+                        {{ createRightRealColumns(column) | translate }}
+                    </button>
+                </th>
+                <td
+                    [ngStyle]="{ display: !displayColumn(column) ? 'none' : 'table-cell' }"
+                    style="cursor: pointer; white-space: nowrap;"
+                    nbTreeGridCell
+                    *nbTreeGridCellDef="let row"
+                >
+                    <span *ngIf="check(column)" class="data" (click)="openDetail(row.data)">
+                        {{ row.data[column] || '-' }}
+                    </span>
+                    <span *ngIf="check2(column)" class="data" (click)="openDetail(row.data)">
+                        {{ row.data[column] ? sharedService.dateTimeInString(row.data[column]) : '-' }}
+                    </span>
+                    <div *ngIf="column === 'file_file_name'">
+                        <a
+                            *ngFor="let item of row.data[column]"
+                            (click)="openFileName(item)"
+                            style="display: block; margin-bottom: 4px; text-decoration: none;"
+                            class="data"
+                        >
+                            {{ item.file_title }}
+                        </a>
+                    </div>
+                    <div *ngIf="column === 'file_is_deleted'" (click)="openDetail(row.data)">
+                        <nb-toggle disabled [checked]="row.data[column]"></nb-toggle>
+                    </div>
+                </td>
+            </ng-container>
+        </table>
+    </nb-card-body>
+</nb-card>

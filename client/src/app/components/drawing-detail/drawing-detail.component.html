@@ -1,0 +1,208 @@
+<nb-card class="nb-card-dialog">
+    <nb-card-header style="
+            justify-content: center;
+            align-items: center;
+            display: flex;
+        " class="detail-view">
+        <div style="display: flex;">
+            <h5>{{ (historyStatus === 'hide' ? 'qc_manage_drawings.drawing_detail.title' : 'qc_manage_drawings.drawing_history.title') | translate }}
+            </h5>
+            <mat-icon [@openClose1]="historyStatus === 'show' ? 'open' : 'closed'"
+                style="font-size: 1.75rem; cursor: pointer; margin-left: 15px;" *ngIf="isViewing"
+                icon="arrow-circle-down" (click)="showHistory()">
+                {{ historyStatus === 'show' ? 'info' : 'history' }}
+            </mat-icon>
+        </div>
+
+        <nb-icon style="font-size: 1.5rem; cursor: pointer;" icon="close" (click)="closeDialog()"> </nb-icon>
+    </nb-card-header>
+    <!-- <div *ngFor="let row of rows">
+            <div class="each-row" style="display: flex; flex-direction: row; padding: 1rem">
+                <div style="flex: 1; display: flex; justify-content: flex-start; align-items: center;">{{ row }}</div>
+                <div style="flex: 1; display: flex; justify-content: flex-start; align-items: center;">{{ file[row] }}</div>
+            </div>
+        </div> -->
+    <nb-card-body *ngIf="isViewing">
+        <nb-list [@openClose]="historyStatus === 'show' ? 'open' : 'closed'">
+            <nb-list-item *ngFor="let history of drawing_histories" style="padding: 1rem;">
+                <div style="
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        flex: 1;
+                        align-items: center;
+                    ">
+                    <div>
+                        <span>{{ sharedService.dateTimeInString(history.drawing_updated_at) }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <span>by</span>
+                        <img [src]="sharedService.getAvatar(history.drawing_updated_by)" alt="" style="
+                                width: 2rem;
+                                height: 2rem;
+                                border-radius: 1rem;
+                                margin: 0 1rem 0 1rem;
+                            " onerror="this.src='assets/images/default.png'" />
+                        <span style="font-weight: bold;">{{ history.drawing_updated_by_full_name }}</span>
+                    </div>
+                </div>
+            </nb-list-item>
+        </nb-list>
+
+        <nb-list [@openClose]="historyStatus === 'show' ? 'closed' : 'open'">
+            <nb-list-item *ngFor="let row of rows" style="padding: 1rem;"
+                [ngStyle]="{ display: hiddenColumns.includes(row) ? 'none' : 'flex' }">
+                <div class="label div-data-left">
+                    {{ createRealColumns(row) | translate }}
+                </div>
+
+                <div style="display: flex; width: 1rem;"></div>
+
+                <div class="div-data-right">
+                    <div *ngIf="inputColumns.includes(row)" style="
+                            padding: 1rem;
+                            font-weight: bold;
+                        ">
+                        <span>{{ drawing[row] || '-' }}</span>
+                    </div>
+                    <!-- <input readonly *ngIf="inputColumns.includes(row)" nbInput fullWidth [value]="drawing[row]" autofocus /> -->
+                    <div *ngIf="disabledColumns.includes(row)" style="
+                            padding: 1rem;
+                            flex: 1;
+                            font-weight: bold;
+                        ">
+                        <span>{{ drawing[row] || '-' }}</span>
+                    </div>
+
+                    <div *ngIf="dateTimeColumns.includes(row)" style="
+                            padding: 1rem;
+                            flex: 1;
+                            font-weight: bold;
+                        ">
+                        <span>{{ sharedService.dateTimeInString(drawing[row]) || '-' }}</span>
+                    </div>
+                    <div *ngIf="fileColumns.includes(row)" style="flex: 1; padding: 1rem; font-weight: bold;">
+                        <span>{{ drawing[row] || '-' }}</span>
+                        <button (click)="openAndDownloadDrawingFile(drawing[row])" style="
+                            flex: 1;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            width: 100%;
+                            margin-top: 0.5rem;
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: center;
+                        " nbButton status="warning">
+                            <img
+                                [src]="drawing[row] && drawing['drawing_is_exist_on_hardisk'] ? '../../../assets/file-type-icons/pdf.png' : ''" />
+                            <!--src drawing[row].split('.')[drawing[row].split('.').length - 1].toLowerCase()-->
+                            {{ buttonUploadDrawingName }}
+                        </button>
+                    </div>
+
+                    <div *ngIf="toggleColumns.includes(row)" style="
+                            padding: 1rem;
+                            flex: 1;
+                            font-weight: bold;
+                        ">
+                        <nb-toggle disabled [checked]="drawing[row]"></nb-toggle>
+                    </div>
+                </div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+
+    <nb-card-body *ngIf="isEditing || isCreating">
+        <nb-list [formGroup]="drawingFormGroup">
+            <nb-list-item *ngFor="let row of rows"
+                [ngStyle]="{ display: hiddenColumns.includes(row) ? 'none' : 'flex' }">
+                <div class="label div-data-left">
+                    {{ createRealColumns(row) | translate }}
+                </div>
+
+                <div style="display: flex; width: 1rem;"></div>
+
+                <div class="div-data-right">
+                    <input *ngIf="inputColumns.includes(row)" nbInput fullWidth [value]="drawing[row]" autofocus
+                        [formControlName]="row" [id]="row" />
+
+                    <div *ngIf="disabledColumns.includes(row)" class="non-input">
+                        <span>{{ drawing[row] || '-' }}</span>
+                    </div>
+
+                    <div *ngIf="dateTimeColumns.includes(row)" class="non-input">
+                        <span>{{ sharedService.dateTimeInString(drawing[row]) || '-' }}</span>
+                    </div>
+                    <div *ngIf="fileColumns.includes(row)" style="flex: 1; font-weight: bold;">
+                        <span>{{ drawing[row] || '-' }}</span>
+                        <ngx-file-drop style="margin-bottom: 0.5rem;" dropZoneLabel="Drop csv files here"
+                            (onFileDrop)="droppedDrawings($event)" (onFileOver)="fileOverDrawings()"
+                            (onFileLeave)="fileLeaveDrawings()">
+                            <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                <button (click)="addDrawingFile()" style="
+                                    flex: 1;
+                                    text-overflow: ellipsis;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    width: 100%;
+                                    margin-top: 0.5rem;
+                                    display: flex;
+                                    justify-content: flex-start;
+                                    align-items: center;
+                                " nbButton status="warning">
+                                    <img [src]="
+                                            fileToUpload || (drawing[row] && drawing['drawing_is_exist_on_hardisk'])
+                                                ? '../../../assets/file-type-icons/' +
+                                                  buttonUploadDrawingName.split('.')[buttonUploadDrawingName.split('.').length - 1] +
+                                                  '.png'
+                                                : ''
+                                        " />
+                                    {{ buttonUploadDrawingName }}
+                                </button>
+                            </ng-template>
+                        </ngx-file-drop>
+                    </div>
+
+                    <div *ngIf="toggleColumns.includes(row)" style="
+                            padding: 1rem;
+                            flex: 1;
+                            font-weight: bold;
+                        ">
+                        <nb-toggle disabled [checked]="drawing[row]"></nb-toggle>
+                    </div>
+                </div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+
+    <nb-card-footer style="display: flex; justify-content: space-evenly;"
+        *ngIf="isEditable && historyStatus === 'hide'">
+        <button *ngIf="!isEditing" style="flex: 0.35" nbButton [status]="data.drawing_is_deleted ? 'success' : 'danger'"
+            (click)="deleteDrawing()">
+            {{ (data.drawing_is_deleted ? 'app.button_un_delete' : 'app.button_delete') | translate }}
+        </button>
+        <button *ngIf="!isEditing" style="flex: 0.35" nbButton status="info"
+            (click)="editDrawing()">{{ 'app.button_edit' | translate }}</button>
+        <button *ngIf="isEditing" style="flex: 0.3" nbButton status="info"
+            (click)="saveDrawing()">{{ 'app.button_save' | translate }}</button>
+    </nb-card-footer>
+
+    <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="isCreating">
+        <button style="flex: 0.3" nbButton status="success"
+            (click)="createDrawing()">{{ 'app.button_create' | translate }}</button>
+    </nb-card-footer>
+    <!-- <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="isRestrictedEditable">
+        <button *ngIf="!isEditing" style="flex: 0.35" nbButton status="info" (click)="editFile()">Edit</button>
+        <button *ngIf="isEditing" style="flex: 0.3" nbButton status="info" (click)="saveFile()">Save</button>
+    </nb-card-footer> -->
+
+    <!-- <form [formGroup]="createFileFormGroup" (ngSubmit)="createFile()">
+        <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="isCreating">
+            <button style="flex: 0.3" nbButton status="success" (click)="createFile()">Create</button>
+            <button style="flex: 0.3" nbButton status="success">Create</button>
+        </nb-card-footer>
+        <input #editFileFakeInput type="file" name="fileUpload" style="display: none;" (change)="handleFileInput($event.target.files)" />
+    </form> -->
+    <input #fileFakeInput type="file" name="fileUpload" style="display: none;" (change)="handleFileFakeInput($event)" />
+</nb-card>

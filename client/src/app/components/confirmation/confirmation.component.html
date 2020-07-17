@@ -1,0 +1,22 @@
+<nb-card class="nb-card-mini-dialog">
+    <nb-card-header>
+        <h6>{{ 'confirmation.title' | translate | uppercase }}</h6>
+    </nb-card-header>
+
+    <nb-card-body
+        style="
+            justify-content: flex-start;
+            align-items: center;
+            display: flex;
+            flex: 1;
+            margin: 1rem;
+        "
+    >
+        {{ getTranslateIDByContentType(data.contentType) | translate }}
+    </nb-card-body>
+
+    <nb-card-footer style="display: flex; justify-content: space-around;">
+        <button nbButton status="danger" (click)="onYes()">{{ 'app.button_yes' | translate }}</button>
+        <button nbButton status="primary" (click)="onNo()">{{ 'app.button_no' | translate }}</button>
+    </nb-card-footer>
+</nb-card>

@@ -1,0 +1,17 @@
+.div-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.div-left {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    margin-left: 0.5rem;
+    overflow: hidden;
+}
+
+.div-right {
+    height: 100%;
+}

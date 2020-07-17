@@ -1,0 +1,220 @@
+<!--Tạo message-->
+<nb-card class="div-container">
+    <nb-card-body>
+        <!-- <nb-card status="primary">
+            <nb-card-header>{{ 'admin_manage_settings.messages.title' | translate }}</nb-card-header>
+            <nb-card-body>
+                <div class="div-header" style="display: flex; width: 100%; flex-direction: column;" [formGroup]="adminMessageFormGroup">
+                    <div style="display: flex; width: 100%; flex-direction: row;">
+                        <div class="div-header-label">
+                            <label>{{ 'admin_manage_settings.messages.new_message_title' | translate }}</label>
+                        </div>
+                        <div class="div-header-input">
+                            <input nbInput fullWidth formControlName="adminMessageTitleFormControl" id="admin-message-title" />
+                        </div>
+                    </div>
+                    <div style="display: flex; width: 100%; flex-direction: row; margin-top: 1rem;">
+                        <div class="div-header-label">
+                            <label>{{ 'admin_manage_settings.messages.new_message_content' | translate }}</label>
+                        </div>
+                        <div class="div-header-input">
+                            <textarea nbInput fullWidth formControlName="adminMessageFormControl" id="admin-message-content"></textarea>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; width: 100%; flex-direction: row; margin-top: 1rem;">
+                        <div class="div-header-label">
+                            {{ 'office_settings.messages.new_message_attachment' | translate }}
+                        </div>
+                        <div class="div-header-input">
+                            <input
+                                #fileUploadInput
+                                type="file"
+                                id="fileUpload"
+                                name="fileUpload"
+                                style="display: none;"
+                                (change)="handleAttachmentInput($event)"
+                            />
+                            <ngx-file-drop
+                                dropZoneLabel="Drop files here"
+                                (onFileDrop)="droppedFile($event, 'fileUploadInput')"
+                                (onFileOver)="fileOver()"
+                                (onFileLeave)="fileLeave()"
+                                style="margin-top: 0.5rem;"
+                            >
+                                <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                    <button
+                                        (click)="uploadFileAttachment()"
+                                        style="
+                                            flex: 1;
+                                            text-overflow: ellipsis;
+                                            white-space: nowrap;
+                                            overflow: hidden;
+                                            width: 100%;
+                                            display: flex;
+                                            justify-content: flex-start;
+                                            align-items: flex-start;
+                                        "
+                                        nbButton
+                                        status="primary"
+                                    >
+                                        <img
+                                            [src]="
+                                                btnUploadAttachment
+                                                    ? '../../../assets/file-type-icons/' +
+                                                      btnUploadAttachment.split('.')[btnUploadAttachment.split('.').length - 1] +
+                                                      '.png'
+                                                    : ''
+                                            "
+                                        />
+                                        <span>{{ btnUploadAttachment !== '' ? btnUploadAttachment : ('app.button_browse' | translate) }}</span>
+                                    </button>
+                                </ng-template>
+                            </ngx-file-drop>
+                        </div>
+                    </div>
+                </div>
+            </nb-card-body>
+            <nb-card-footer class="div-footer">
+                <button (click)="saveMessage()" nbButton status="primary">{{ 'app.button_save' | translate }}</button>
+            </nb-card-footer>
+        </nb-card> -->
+
+        <!--Thiết lập đường dẫn thư mục-->
+        <nb-card style="margin-top: 1rem" status="primary">
+            <nb-card-header>{{ 'admin_manage_settings.path_setting.title' | translate }}</nb-card-header>
+            <nb-card-body>
+                <div class="div-header" [formGroup]="rootFolderOfficeFormGroup">
+                    <div class="div-header-label">
+                        <label>{{ 'admin_manage_settings.path_setting.path_office' | translate }}</label>
+                    </div>
+                    <div class="div-header-input">
+                        <input nbInput fullWidth formControlName="rootFolderOfficeFormControl" id="admin-root-folder-office" />
+                    </div>
+                </div>
+
+                <div class="div-header" style="margin-top: 1rem;" [formGroup]="rootFolderQCFormGroup">
+                    <div class="div-header-label">
+                        <label>{{ 'admin_manage_settings.path_setting.path_qc' | translate }}</label>
+                    </div>
+                    <div class="div-header-input">
+                        <input nbInput fullWidth formControlName="rootFolderQCFormControl" id="admin-root-folder-qc" />
+                    </div>
+                </div>
+                <!-- <div>
+                    <input
+                        id="fileselector"
+                        #folderInput
+                        type="file"
+                        (change)="browseResult(folderInput.files)"
+                        webkitdirectory
+                        directory
+                        multiple="false"
+                        style="display:none"
+                    />
+                    <button onclick="getElementById('fileselector').click()">browse</button>
+                </div> -->
+            </nb-card-body>
+
+            <nb-card-footer class="div-footer">
+                <button nbButton status="primary" (click)="savePath()">{{ 'app.button_save' | translate }}</button>
+            </nb-card-footer>
+        </nb-card>
+
+        <!--Thiết lập hệ thống-->
+        <nb-card style="margin-top: 1rem" status="primary">
+            <nb-card-header>{{ 'admin_manage_settings.common_setting.title' | translate }}</nb-card-header>
+            <nb-card-body>
+                <div class="div-header" style="display: flex; width: 100%; flex-direction: column;" [formGroup]="adminCommonFormGroup">
+                    <div style="display: flex; width: 100%; flex-direction: row;">
+                        <div class="div-header-label">
+                            {{ 'admin_manage_settings.common_setting.logo_label' | translate }}
+                        </div>
+                        <div class="div-header-input">
+                            <!-- <input
+                                #uploadLogo
+                                type="file"
+                                id="uploadLogo"
+                                name="uploadLogo"
+                                accept="image/x-png,image/gif,image/jpeg"
+                                (change)="handleLogoInput($event)"
+                            /> -->
+                            <img [src]="logoImg" style="cursor: pointer; height: 3rem;" (click)="uploadImage()" nbTooltip="Click here to change" />
+                            <input
+                                #uploadLogo
+                                type="file"
+                                id="uploadLogo"
+                                name="uploadLogo"
+                                style="display: none;"
+                                accept="image/*"
+                                (change)="handleLogoInput($event)"
+                            />
+                        </div>
+                    </div>
+                    <div style="display: flex; width: 100%; flex-direction: row; margin-top: 1rem;">
+                        <div class="div-header-label">
+                            <label>{{ 'admin_manage_settings.common_setting.system_label' | translate }}</label>
+                        </div>
+                        <div class="div-header-input">
+                            <input nbInput fullWidth formControlName="adminCommonTitleFormControl" id="admin-common-title" maxlength="12" />
+                        </div>
+                    </div>
+                    <div style="display: flex; width: 100%; flex-direction: row; margin-top: 1rem;">
+                        <div class="div-header-label">
+                            <label>{{ 'admin_manage_settings.common_setting.manual_label' | translate }}</label>
+                        </div>
+                        <div class="div-header-input">
+                            <input
+                                #uploadManual
+                                type="file"
+                                id="uploadManual"
+                                name="uploadManual"
+                                style="display: none;"
+                                (change)="handleManualInput($event)"
+                            />
+                            <ngx-file-drop
+                                dropZoneLabel="Drop files here"
+                                (onFileDrop)="droppedFile($event, 'uploadManual')"
+                                (onFileOver)="fileOver()"
+                                (onFileLeave)="fileLeave()"
+                                style="margin-top: 0.5rem;"
+                            >
+                                <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                    <button
+                                        (click)="uploadFileManual()"
+                                        style="
+                                            flex: 1;
+                                            text-overflow: ellipsis;
+                                            white-space: nowrap;
+                                            overflow: hidden;
+                                            width: 100%;
+                                            display: flex;
+                                            justify-content: flex-start;
+                                            align-items: flex-start;
+                                        "
+                                        nbButton
+                                        status="primary"
+                                    >
+                                        <img
+                                            [src]="
+                                                btnUploadManual
+                                                    ? '../../../assets/file-type-icons/' +
+                                                      btnUploadManual.split('.')[btnUploadManual.split('.').length - 1] +
+                                                      '.png'
+                                                    : ''
+                                            "
+                                        />
+                                        <span>{{ btnUploadManual !== '' ? btnUploadManual : ('app.button_browse' | translate) }}</span>
+                                    </button>
+                                </ng-template>
+                            </ngx-file-drop>
+                        </div>
+                    </div>
+                </div>
+            </nb-card-body>
+            <nb-card-footer class="div-footer">
+                <button (click)="saveCommonSettings()" nbButton status="primary">{{ 'app.button_save' | translate }}</button>
+            </nb-card-footer>
+        </nb-card>
+    </nb-card-body>
+</nb-card>

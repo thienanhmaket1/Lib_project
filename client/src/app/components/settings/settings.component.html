@@ -1,0 +1,28 @@
+<!-- <p>settings works!</p>
+<form [formGroup]="colorFormGroup">
+    <select id="theme" formControlName="colorFormControl">
+        <option value="default">default</option>
+        <option value="cosmic">cosmic</option>
+        <option value="dark">dark</option>
+    </select>
+</form> -->
+<nb-card class="div-container">
+    <nb-card>
+        <nb-card-header>
+            Theme Settings
+        </nb-card-header>
+        <nb-card-body>
+            <div class="div-filter">
+                <div [formGroup]="colorFormGroup" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; flex-direction: row; flex: 1">
+                        <nb-select placeholder="Choose a folder" formControlName="colorFormControl" filled status="primary" style="width: 100%;">
+                            <nb-option value="default">Default</nb-option>
+                            <nb-option value="cosmic">Cosmic</nb-option>
+                            <nb-option value="dark">Dark</nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+            </div>
+        </nb-card-body>
+    </nb-card>
+</nb-card>

@@ -1,0 +1,19 @@
+<nb-card class="div-container">
+    <nb-card-header>
+        {{ 'qc_barcode_reader.search_form_title' | translate }}
+    </nb-card-header>
+    <nb-card-body>
+        <div class="div-body">
+            <form [formGroup]="barCodeFormGroup" style="width: 100%">
+                <input
+                    nbInput
+                    fullWidth
+                    [placeholder]="'qc_barcode_reader.search_form_input' | translate"
+                    autofocus="true"
+                    (keyup.enter)="onKeydown($event)"
+                    formControlName="barCodeFormControl"
+                />
+            </form>
+        </div>
+    </nb-card-body>
+</nb-card>

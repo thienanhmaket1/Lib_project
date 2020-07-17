@@ -1,0 +1,361 @@
+{
+    "app": {
+        "title": "Thư viện",
+        "footer": "TRƯỜNG CAO ĐẲNG CÔNG THƯƠNG TP.HCM",
+        "button_create": "Đăng Ký",
+        "button_save": "Lưu",
+        "button_delete": "Vô Hiệu Hóa",
+        "button_un_delete": "Kích Hoạt",
+        "button_edit": "Cập Nhật",
+        "button_add": "Thêm Mới",
+        "button_yes": "Có",
+        "button_no": "Không",
+        "select_none": "Không có",
+        "select_all": "Tất cả",
+        "toggle": {
+            "activation": {
+                "activating": "Kích Hoạt",
+                "deactivating": "Vô Hiệu Hóa",
+                "all": "Tất Cả"
+            }
+        },
+        "button_browse": "Tài liệu đính kèm..."
+    },
+    "menu": {
+        "home": "Trang Chủ",
+        "office": "Văn Phòng",
+        "search_files": "Tìm Kiếm",
+        "office_admin": "Quản Lý VP",
+        "manage_folders": "Chuyên mục",
+        "manage_files": "Tài Liệu",
+        "manage_office_settings": "Thiết Lập",
+        "qc": "Hiệu Sách",
+        "barcode-reader": "Quét Mã Vạch",
+        "qc_admin": "Quản Lý Hiệu Sách",
+        "manage_drawings": "Quản lý sách",
+        "manage_qc_settings": "Thiết Lập",
+        "admin": "Quản Lý",
+        "manage_users": "Nhân Viên",
+        "manage_messages_path": "Thông Báo và Đường dẫn",
+        "log_out": "Thoát"
+    },
+    "login": {
+        "title": "Đăng Nhập",
+        "login_form_username": "Tên Người Dùng",
+        "login_form_password": "Mật Khẩu",
+        "login_form_submit": "Đăng Nhập"
+    },
+    "home": {
+        "notification": {
+            "title": "Thông Báo",
+            "admin": "Quản Lý",
+            "qc": "Hiệu Sách",
+            "office": "Văn Phòng",
+            "message_form": {
+                "head_title": "Chi tiết Thông Báo",
+                "title": "Tiêu Đề",
+                "content": "Nội Dung",
+                "group": "Nhóm"
+            },
+            "add_message": "Tạo Thông báo"
+        },
+        "profile": {
+            "title": "Thông Tin Cá Nhân",
+            "change_image_tooltip": "Cập Nhật",
+            "form_username": "Tên Người Dùng",
+            "form_firstname": "Tên",
+            "form_lastname": "Họ",
+            "form_fullname": "Tên Đầy Đủ",
+            "form_email": "Địa Chỉ Hộp Thư",
+            "form_phone": "Số Điện Thoại",
+            "form_theme": "Nền",
+            "form_password": "Mật Khẩu",
+            "form_confirm_password": "Xác nhận Mật khẩu"
+        }
+    },
+    "office_search_file": {
+        "filter_form_choose_folder": "Tìm kiếm",
+        "filter_form_input": "Tìm Kiếm Tài Liệu"
+    },
+    "office_manage_file": {
+        "filter_form_choose_folder": "Chọn chuyên mục",
+        "filter_form_input": "Tìm Kiếm Tài Liệu",
+        "filter_form_add_file": "Thêm Tài Liệu",
+        "file_detail": {
+            "title": "Tiêu Đề Tài Liệu",
+            "file_file_no": "STT",
+            "file_file_name": "Tiêu Đề",
+            "file_updated_count": "Số Lần Cập Nhật",
+            "file_created_at": "Ngày Tạo",
+            "file_updated_at": "Ngày Cập Nhật",
+            "file_authorized_users": "Người Ủy Quyền",
+            "file_is_deleted": "Vô Hiệu Hóa",
+            "file_department_id": "Phòng ban"
+        },
+        "file_history": {
+            "title": "Lịch Sử"
+        },
+        "select_authorized_users": "Chọn Người Dùng",
+        "none_select_authorized_users": "Không có",
+        "alert_not_exists_drawing": "Tài liệu chưa có"
+    },
+    "office_manage_folder": {
+        "filter_form_input": "Tìm kiếm",
+        "filter_form_add_folder": "Tạo mới",
+        "folder_detail": {
+            "title": "Chi Tiết",
+            "folder_no": "STT",
+            "higher_folder_name": "Chuyên mục",
+            "folder_name": "Tên tài liệu",
+            "folder_document_no": "Mã Tài Liệu",
+            "folder_created_by": "Người Tạo",
+            "folder_is_show_updated_count": "Số lần cập nhật",
+            "folder_is_show_created_at": "Ngày tạo",
+            "folder_is_show_updated_at": "Ngày cập nhật",
+            "folder_authorized_users": "Người Ủy Quyền",
+            "folder_created_at": "Ngày Tạo",
+            "folder_short_name": "Mã Số văn bản\n(Ví dụ: Mã Viết tắt - tháng và hai chữ số cuối của năm - số bắt đầu)",
+            "folder_is_deleted": "Vô Hiệu Hóa",
+            "property_data_type": "Kiểu Dữ Liệu",
+            "property_is_show_in_list": "Hiển thị ở màn hình Danh Sách",
+            "property_is_show_in_detail": "Hiển thị ở màn hình Chi Tiết",
+            "folder_status_yes": "Hiển thị",
+            "folder_status_no": "Không hiển thị",
+            "max_width": "Số Ký Tự",
+            "file_latest_update": "Cập nhật gần đây nhất"
+        },
+        "select_type": "Chọn kiểu dữ liệu",
+        "property_name": "Tên thuộc tính",
+        "select_authorized_users": "Chọn người dùng",
+        "none_select_authorized_users": "Không có",
+        "dataType": {
+            "text": "Text",
+            "memo": "Memo",
+            "dropdown": "Dropdown"
+        }
+    },
+    "office_settings": {
+        "title": "Thiết lập cho Văn Phòng",
+        "messages": {
+            "title": "Bảng Thông Báo",
+            "new_message_title": "Tiêu Đề",
+            "new_message_content": "Nội Dung",
+            "new_message_attachment": "Tài liệu đính kèm"
+        }
+    },
+    "qc_barcode_reader": {
+        "search_form_title": "Quét Mã Vạch",
+        "search_form_input": "Nhập mã vạch hoặc dùng máy quét"
+    },
+    "qc_manage_drawings": {
+        "tabs": {
+            "files_explorer": {
+                "title": "Chuyên Ngành",
+                "filter_form_input": "Tìm Kiếm",
+                "button_back": "Quay lại",
+                "button_add_drawing_file": "Thêm mới",
+                "button_add_drawing_folder": "Thêm mục mới"
+            },
+            "drawings_list": {
+                "title": "Sách Chuyên Ngành",
+                "filter_form_choose_drawing_folder": "Chọn Chuyên Ngành",
+                "filter_form_input": "Tìm Kiếm",
+                "button_reload": "Tải lại trang",
+                "button_add_drawing": "Thêm mới",
+                "checkbox_show_is_not_on_hardisk": "Cần cập nhật"
+            },
+            "update_drawing_by_csv": {
+                "title": "Tải lên file đính kèm",
+                "drop_zone": {
+                    "title": "Kéo và Thả tài liệu vào đây",
+                    "button_browse": "Chọn tài liệu .csv"
+                },
+                "filter_form_input": "Tìm kiếm",
+                "rows_per_page": "Số dòng mỗi trang",
+                "rows_per_page_must_be_greater_than_zero": "Phải lớn hơn không"
+            }
+        },
+        "drawing_detail": {
+            "title": "Chi Tiết",
+            "drawing_id": "ID Sách",
+            "drawing_customer": "Tên Sách",
+            "drawing_kouban": "Mã văn bản",
+            "drawing_filename": "Tệp đính kèm",
+            "drawing_relative_path": "Chuyên ngành chính",
+            "drawing_created_at": "Ngày Tạo",
+            "drawing_created_by": "Người Tạo",
+            "drawing_part_name": "Số lượng",
+            "drawing_updated_by": "Người Cập Nhật",
+            "drawing_updated_at": "Ngày Cập Nhật",
+            "drawing_updated_count": "Số lần Cập Nhật",
+            "drawing_is_deleted": "Vô Hiệu Hóa",
+            "drawing_created_by_id": "Người Tạo",
+            "drawing_updated_by_id": "Người Cập Nhật",
+            "alert_no_drawing_file": "Tệp đính kèm đã không còn tồn tại"
+        },
+        "drawing_history": {
+            "title": "Lịch Sử cập nhật"
+        },
+        "sync_drawing": {
+            "alert_fail": "Đồng bộ Thông tin đã thất bại"
+        },
+        "drop_drawings": {
+            "alert_extension_fail": "Chỉ chấp nhận tài liệu PDF",
+            "alert_wrong_file": "Bản vẽ không đúng, xin chọn lại",
+            "alert_not_exists_drawing": "Bản vẽ chưa có"
+        },
+        "drop_csv": {
+            "wrong_extension": "Tập tin không được hỗ trợ",
+            "can_not_read_csv": "Không thể đọc được tập tin",
+            "read_csv_success": "Tập tin đã được đọc thành công"
+        }
+    },
+    "qc_settings": {
+        "title": "Thiết lập QC",
+        "messages": {
+            "title": "Bảng Thông Báo",
+            "new_message_title": "Tiêu Đề",
+            "new_message_content": "Nội Dung",
+            "new_message_attachment": "Tài Liệu Đính Kèm"
+        }
+    },
+    "admin_manage_users": {
+        "toggle_activating_status": "Kích Hoạt",
+        "toggle_deactivating_status": "Vô Hiệu Hóa",
+        "filter_form_input": "Tìm Kiếm Người Dùng",
+        "button_add_user": "Thêm Người Dùng",
+        "user_detail": {
+            "title": "Chi Tiết Người Dùng",
+            "user_no": "STT",
+            "user_name": "Tên Người Dùng",
+            "user_password": "Mật Khẩu",
+            "user_confirm_password": "Xác nhận Mật khẩu",
+            "user_fullname": "Tên Đầy Đủ",
+            "user_email": "Địa chỉ Hộp Thư",
+            "user_phone": "Số Điện Thoại",
+            "user_is_deleted": "Vô Hiệu Hóa",
+            "user_permission": "Quyền Hạn",
+            "user_group": "Nhóm",
+            "user_theme": "Theme",
+            "user_department_id": "Phòng ban"
+        }
+    },
+    "admin_manage_settings": {
+        "messages": {
+            "title": "Bảng Thông Báo",
+            "new_message_title": "Tiêu Đề",
+            "new_message_content": "Nội Dung",
+            "new_message_attachment": "Tài Liệu Đính Kèm"
+        },
+        "path_setting": {
+            "title": "Thiết Lập Đường Dẫn",
+            "path_office": "Thư viện",
+            "path_qc": "Hiệu sách"
+        },
+        "common_setting": {
+            "title": " Thiết Lập Hệ Thống",
+            "logo_label": "LOGO",
+            "system_label": "Tên Hệ Thống",
+            "manual_label": "Hướng Dẫn"
+        }
+    },
+    "admin_manage_dropdowns": {
+        "filter_form_choose_folder": "Chọn Sổ",
+        "filter_form_input": "Tìm Kiếm Dropdown",
+        "filter_form_add_dropdown": "Thêm Mới Dropdown",
+        "drop_down_detail": {
+            "title": "Nội Dung Của Dropdown",
+            "new_dropdown_no": "STT",
+            "new_dropdown_id": "Id",
+            "new_dropdown_folder": "Sổ",
+            "new_dropdown_folder_choose_folder": "Chọn Sổ",
+            "new_dropdown_name": "Tên",
+            "new_dropdown_data": "Dữ Liệu",
+            "new_dropdown_data_new_item": "Mục Mới ...",
+            "new_dropdown_created_at": "Ngày Tạo",
+            "new_dropdown_updated_at": "Người Cập Nhật"
+        }
+    },
+    "confirmation": {
+        "title": "Xác nhận",
+        "create_content": "Có Tạo Mới không?",
+        "update_content": "Có Cập Nhật không?",
+        "deactivate_content": "Có thiết lập Vô Hiệu Hóa không?",
+        "activate_content": "Có Kích Hoạt không?",
+        "delete_content": "Có Xóa không ?"
+    },
+    "response_text": {
+        "common": {
+            "success": "Thành Công",
+            "error": "Lỗi",
+            "downloading": "Đang tải xuống...",
+            "saved": "Đã lưu",
+            "create_success": "{{ param1 }} đã được tạo",
+            "create_error": "{{ param1 }} không thể tạo",
+            "update_success": "{{ param1 }} đã được cập nhật",
+            "update_error": "{{ param1 }} không thể cập nhật",
+            "delete_success": "{{ param1 }} đã vô hiệu hóa",
+            "delete_error": "{{ param1 }} không thể vô hiệu hóa",
+            "undelete_success": "{{ param1 }} đã được kích hoạt lại",
+            "undelete_error": "{{ param1 }} không thể kích hoạt lại",
+            "upload_success": "{{ param1 }} đã tải lên",
+            "upload_error": "{{ param1 }} không thể tải lên",
+            "error_1": "Bị lỗi Network !",
+            "unable_to_save_changes": "Không thể lưu được những thay đổi",
+            "file_not_found": "Không tìm thấy tài liệu",
+            "file_corrupted_or_not_found": "Tài liệu bị hư hoặc không tồn tại",
+            "user_latin_chars": "Tên đăng nhập không hợp lệ",
+            "wrong_email": "Xin gõ thêm '@' cho địa chỉ email",
+            "confirm_pass_not_match": "Mật khẩu xác nhận không trùng khớp",
+            "folder_already_exists": "Tên của tài liệu đã tồn tại"
+        },
+        "login": {
+            "username_password_empty": "Tên người dùng và mật khẩu là bắt buộc",
+            "username_email_password_empty": "Tên người dùng,Email,Mật khẩu là bắt buộc",
+            "username_password_incorrect": "Tên người dùng hoặc mật khẩu không chính xác",
+            "success": "Chào mừng đến với Trang Thư Viện"
+        },
+        "manage_files": {
+            "file_name_exist": "{{ param1 }} đang tồn tại"
+        },
+        "manage_folders": {
+            "fields_required": "Còn vài nơi chưa được nhập liệu"
+        },
+        "manage_users": {
+            "create": {
+                "user_exist": "Ngườidùng này đang tồn tại",
+                "email_exist": "Email này đang được sử dụng"
+            }
+        },
+        "manage_drawings": {
+            "file_explorer": {
+                "rename_drawing_folder": "{{ param1 }} thì đã cập nhật thành {{ param2 }}",
+                "rename_drawing_folder_fail": "{{ param1 }} thì không cập nhật thành {{ param2 }} được",
+                "no_customer": "Chọn Khách Hàng trước khi thêm bản vẽ",
+                "delete_drawing_file_success": "{{ param1 }} đã được xóa",
+                "delete_drawing_file_error": "Không thể xóa {{ param1 }}"
+            },
+            "drawing_list": {
+                "no_selected_drawing_folder": "Chọn Chuyên ngành"
+            },
+            "update_csv": {
+                "show_updating": "{{ param1 }} đã được cập nhật",
+                "show_error": "{{ param1 }} không thể cập nhật",
+                "show_missing": "{{ param1 }} không có tồn tại trên hệ thống.Hảy thử lại một lần nữa",
+                "show_history_fail": "{{ param1 }} thì phần lịch sử không thể tạo được"
+            }
+        }
+    },
+    "object": {
+        "user": "Người Dùng",
+        "drawing": "Chuyên ngành",
+        "file": "Tài Liệu",
+        "folder": "Chuyên mục",
+        "drawing_folder": "Chuyên ngành",
+        "drawing_file": "Sách",
+        "profile": "Thông Tin",
+        "message": "Thông Báo",
+        "path": "Đường Dẫn",
+        "dropdown": "Dropdown"
+    }
+}

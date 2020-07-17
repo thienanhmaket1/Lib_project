@@ -1,0 +1,61 @@
+<nb-card class="div-container" *ngIf="allColumns.length !== 0">
+    <nb-card-header>
+        <div class="div-filter">
+            <div [formGroup]="filterFormGroup" style="display: flex; width: 100%; flex-direction: row;">
+                <input
+                    nbInput
+                    (keyup)="searchUser()"
+                    formControlName="searchFormControl"
+                    [placeholder]="'admin_manage_users.filter_form_input' | translate"
+                    style="flex: 1; max-width: none;"
+                    id="input-search-user"
+                />
+                <button style="margin-left: 1rem; margin-right: 1rem;" (click)="addUser()" nbButton status="primary">
+                    {{ 'app.button_add' | translate }}
+                </button>
+                <nb-toggle [checked]="checked" labelPosition="{{ labelPosition }}" (change)="updateValue($event)" id="toggle-show-activate">
+                    {{ viewType | translate }}
+                </nb-toggle>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body class="nb-card-body-has-fixed-header">
+        <table class="nb-tree-grid-table-fixed-header" [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+            <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+
+            <!-- <ng-container [nbTreeGridColumnDef]="customColumn">
+                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
+                    {{ customColumn }}
+                </th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                    {{ row.data[customColumn] }}
+                </td>
+            </ng-container> -->
+
+            <ng-container *ngFor="let column of allColumns; let index = index" [nbTreeGridColumnDef]="column">
+                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+                    <button nbButton status="primary">{{ createRealColumns(column) | translate }}</button>
+                </th>
+                <td (click)="openDetail(row.data)" style="cursor: pointer;" nbTreeGridCell *nbTreeGridCellDef="let row">
+                    <span
+                        style="
+                            justify-content: flex-start;
+                            align-items: center;
+                            display: flex;
+                        "
+                        *ngIf="column !== 'column_is_deleted' && column !== 'column_department_id'"
+                    >
+                        {{ row.data[column] || '-' }}
+                    </span>
+                    <span class="data" *ngIf="column === 'column_department_id'">
+                        {{ row.data[column]['name'] || '-' }}
+                    </span>
+                    <span class="data" *ngIf="column === 'column_is_deleted'">
+                        <nb-toggle disabled [checked]="row.data[column]"></nb-toggle>
+                    </span>
+                </td>
+            </ng-container>
+        </table>
+    </nb-card-body>
+</nb-card>

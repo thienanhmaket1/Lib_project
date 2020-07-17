@@ -1,0 +1,164 @@
+.div-container {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.div-body {
+    overflow-x: hidden;
+    flex: 1;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.div-each-folder {
+    height: 12.5rem;
+    width: 10rem;
+    float: left;
+    margin: 0.5rem;
+    padding: 1.5rem;
+    cursor: pointer;
+}
+
+.div-each-folder:hover {
+    height: 14rem;
+    width: 10rem;
+    float: left;
+    margin: 0.5rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    border-radius: 10px;
+    background-color: lightskyblue;
+}
+
+.div-each-file {
+    height: 12.5rem;
+    width: 10rem;
+    float: left;
+    margin: 0.5rem;
+    padding: 1.5rem;
+    cursor: pointer;
+}
+
+.div-each-file:hover {
+    height: 12.5rem;
+    width: 10rem;
+    float: left;
+    margin: 0.5rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    border-radius: 10px;
+    background-color: lightskyblue;
+}
+
+/* ===============================*/
+.div-container2 {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.div-filter {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+button[nbTreeGridRowToggle] {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.search-label {
+    display: block;
+}
+.search-input {
+    margin-bottom: 1rem;
+}
+
+.nb-column-name {
+    width: 100%;
+}
+
+
+
+.div-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nb-tabset {
+    height: 100%;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.nb-tab {
+    padding: 1rem;
+    flex: 1;
+}
+
+
+
+.data {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+:root {
+    /* Not my favorite that line-height has to be united, but needed */
+    --lh: 1.4rem;
+}
+
+.file-name {
+    max-width: 8rem;
+    // margin: 2rem auto;
+    // line-height: var(--lh);
+}
+
+.folder-name {
+    max-width: 8rem;
+    // margin: 2rem auto;
+    // line-height: var(--lh);
+}
+
+.truncate-overflow {
+    // --max-lines: 3;
+    // position: relative;
+    max-height: calc(var(--lh) * var(--max-lines));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 0.5rem;
+    // padding-right: 1rem; /* space for ellipsis */
+    font-size: 0.8rem;
+    color: inherit;
+}
+
+
+
+.icon-container {
+    display: flex;
+    padding: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    border: 1.5px solid;
+    border-radius: 6px;
+}
+
+.icon-delete {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // color: red;
+    cursor: pointer;
+}

@@ -1,0 +1,66 @@
+Nội dung cuộc họp
+
+Anh Tuấn, giới thiệu về HRM System
+    Máy chấm công > Web > Report
+
+    Đặc biệt: Có thể quản lý nhân sự bên Office và các Ca làm việc trong nhà máy,
+        các nhân viên từ office tới nhà máy, vẫn có thể chấm công.
+    
+    Softbank Hỏi: Language nào? Database nào?
+
+    Language: PHP
+    Database: Postgres
+
+    Có thể Chỉnh sửa theo mong muốn của từng khách hàng.
+
+    Softbank giới thiệu qua về Phàn mềm Indivi HR System:
+        Quản lý nhân sự, chấm công, bảng lương,...
+        Có nhiều gói: Cơ bản, nâng cao(Customize thoe ý khách hàng)
+
+
+        Điểm yếu: Chưa đưa lên Cloud,
+
+    Softbank hỏi HRM này có thể customize thành Quản lý kho bãi, sản xuất được không?
+        Gợi ý Tham khảo EZManage của Fujitsu
+        Có 1 KH có 500, dự kiến
+        Báo giá về gói cơ bản của HRM của CUBE để so sánh
+
+    CUBE tiếp tục thuyết trình:
+        Do CUBE là cty IT nên có thêm 1 mục: Quản lý dự án
+        Sofbank nhận thấy HRM có khả năng Customize lớn.
+        HRM Có thể thông báo về việc hợp đồng sắp hết hạn.
+
+    Softbank hỏi về customize Reports.
+        Đề nghị HRM của CUBE viết thêm 1 bản giới thiệu sản phẩm bằng tiếng Nhật.
+
+    Softbank hỏi về sự đồng bộ của các máy chấm công với HRM.
+    Softbank hỏi bên mình có thể xử lý được các data từ máy chấm công không?
+
+    Softbank hỏi về Gói cơ bản là tầm bao nhiêu? 
+        CUBE trả lời: 200tr VND
+    
+    Gói Cơ bản nếu gửi lên Cloud thì cần bao nhiêu dung lượng trên Cloud?
+
+    Gợi ý phê duyệt:
+    - Phê duyệt Mua sắm đc ko 
+    - Phê duyệt theo Rank. 
+    - Phê duyệt book xe,...
+
+    Softbank yêu cầu 1 đường link Demo web HRM
+        Nhờ bố trí 1 bạn giải thích các vấn đề về HRM.
+
+===============================================
+    FAAS: Quản lý phòng họp, xe
+
+    Softbank gợi ý thêm: Phê duyệt phòng họp, phương tiện.
+
+========================================================
+    NISSIN:
+    Giới thiệu sản phẩm D-CUBE
+    
+    Các bác Nhật nói rất nhiều về phía Drawing, 
+        có vẻ nói về cách import file Zumen.csv để update, và format của file Zumen.csv
+
+    Có vẻ như các bác muốn D-CUBE có thêm Tiếng Việt 
+
+

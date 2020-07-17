@@ -1,0 +1,18 @@
+.div-container {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.div-files {
+    overflow: auto;
+}
+
+.data {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}

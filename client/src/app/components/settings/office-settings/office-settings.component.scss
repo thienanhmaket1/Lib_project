@@ -1,0 +1,36 @@
+.div-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 1;
+}
+
+.div-header {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    flex: 1;
+}
+
+.div-header-label {
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+    flex: 0.1;
+}
+
+.div-header-input {
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+    flex: 0.9;
+}
+
+.div-footer {
+    display: flex;
+    justify-content: center;
+}
+
+textarea.ng-invalid {
+    border: 1px lightcoral solid !important;
+}

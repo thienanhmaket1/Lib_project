@@ -1,0 +1,147 @@
+<nb-card class="div-container">
+    <nb-card-header style="display: flex; justify-content: space-between;">
+        <h5>{{ 'home.notification.title' | translate }}</h5>
+        <button nbButton status="primary" (click)="createMessage()">{{ 'home.notification.add_message' | translate }}</button>
+    </nb-card-header>
+    <nb-card-body style="overflow: hidden; padding: 1rem">
+        <div style="display: flex; flex-direction: row; height: 100%; overflow: auto;">
+            <div
+                *ngFor="let notification of notifications"
+                style="flex: 1; margin: 0.5rem;"
+                [ngStyle]="{ 'max-width': notification.max_width ? notification.max_width : 'none' }"
+                [ngStyle]="{ display: notification.max_width === '0%' ? 'none' : 'block' }"
+            >
+                <!--; max-width: 33%;-->
+                <nb-card *ngIf="notification.info.length !== 0" style="height: 100%" status="primary">
+                    <nb-card-header>
+                        <!-- <span>{{ notification.title | translate | uppercase }}</span> -->
+                        <!-- <nb-icon icon="plus" style="font-size: 1.5rem;"></nb-icon> -->
+                    </nb-card-header>
+                    <nb-card-body style="padding: 1rem">
+                        <nb-card
+                            accent="primary"
+                            *ngFor="let noti of notification.info"
+                            style="
+                                margin-bottom: 0.5rem !important;
+                                border-radius: 0.5rem;
+                                max-height: 10%;
+                            "
+                        >
+                            <nb-card-body class="header-each-noti" [ngStyle]="{ color: themeService.currentTheme === 'default' ? 'black' : 'white' }">
+                                <div
+                                    style="
+                                        display: flex;
+                                        flex-direction: row;
+                                        justify-content: center;
+                                        align-items: center;
+                                    "
+                                >
+                                    <div
+                                        style="
+                                            flex: 1;
+                                            text-align: start;
+                                            font-weight: bold;
+                                            white-space: pre-wrap;
+                                            cursor: pointer;
+                                        "
+                                        [nbTooltip]="noti.message_title"
+                                        nbTooltipStatus="primary"
+                                        (click)="openMessageDetail(noti, 'view')"
+                                    >
+                                        ・{{ noti.message_title }}
+                                    </div>
+                                    <div
+                                        style="display: inline-flex; cursor: pointer; margin-right: 1rem;"
+                                        *ngIf="noti.message_attachment_name"
+                                        (click)="downloadAttachment(noti)"
+                                    >
+                                        <nb-icon icon="attach-outline" [nbTooltip]="noti.message_attachment_name" nbTooltipStatus="primary"></nb-icon>
+                                    </div>
+                                </div>
+
+                                <div
+                                    style="
+                                        display: flex;
+                                        flex-direction: row;
+                                        justify-content: center;
+                                        align-items: center;
+                                    "
+                                >
+                                    <div
+                                        nbPopoverTrigger="click"
+                                        nbPopoverPlacement="top"
+                                        [nbPopover]="tabs"
+                                        style="
+                                            justify-content: center;
+                                            display: flex;
+                                            align-items: center;
+                                            cursor: pointer;
+                                            margin-right: 1rem;
+                                        "
+                                    >
+                                        <!-- <img
+                                            [nbTooltip]="noti.fullname_updator ? noti.fullname_updator : noti.fullname_creator"
+                                            [src]="noti.img"
+                                            style="
+                                                width: 1.5rem;
+                                                height: 1.5rem;
+                                                border-radius: 0.75rem;
+                                                margin-left: 1rem;
+                                            "
+                                            onerror="this.src='assets/images/default.png'"
+                                        /> -->
+                                        <span *ngIf="noti.fullname_creator">
+                                            ({{ noti.user_department_name }}) {{ noti.fullname_updator ? noti.fullname_updator : noti.fullname_creator }}
+                                        </span>
+                                    </div>
+                                    <span>
+                                        <!-- {{ sharedService.dateTimeInString(noti.updated_at ? noti.updated_at : noti.created_at) }} -->
+                                        {{ noti.updated_at ? (noti.updated_at | date: 'dd/MM/yyyy') : (noti.created_at | date: 'dd/MM/yyyy') }}
+                                    </span>
+
+                                    <!--click to Avatar on each message-->
+                                    <ng-template #tabs>
+                                        <nb-card class="margin-bottom-0" style="width:350px;">
+                                            <nb-card-header class="detail-view">
+                                                <div>
+                                                    <span>{{ noti.fullname_updator ? noti.fullname_updator : noti.fullname_creator }}</span>
+                                                </div>
+                                                <img
+                                                    [src]="noti.img"
+                                                    style="
+                                                        width: 3rem;
+                                                        height: 3rem;
+                                                        border-radius: 1.5rem;
+                                                    "
+                                                    onerror="this.src='assets/images/default.png'"
+                                                />
+                                            </nb-card-header>
+                                            <nb-card-footer
+                                                style="
+                                                    display: flex;
+                                                    justify-content: center;
+                                                    align-items: center;
+                                                "
+                                            >
+                                                <button nbButton size="small" status="info" (click)="openProfile(noti.user_id)">Profile</button>
+                                            </nb-card-footer>
+                                        </nb-card>
+                                    </ng-template>
+                                    <!--click to Avatar on each message-->
+                                    <!-- <div style="display: inline-flex; cursor: pointer;" *ngIf="noti.editable" (click)="openMessageDetail(noti, 'edit')">
+                                        <nb-icon style="margin-left: 1rem;" icon="edit-2-outline"></nb-icon>
+                                    </div> -->
+                                </div>
+                            </nb-card-body>
+                            <!-- <nb-card-body style="padding: 1rem; white-space: pre-wrap;">
+                                <span>
+                                    {{ noti.message_content }}
+                                </span>
+                            </nb-card-body> -->
+                        </nb-card>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

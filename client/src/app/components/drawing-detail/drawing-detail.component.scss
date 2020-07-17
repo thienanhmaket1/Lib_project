@@ -1,0 +1,31 @@
+.non-input {
+    padding: 0.5rem;
+    flex: 1;
+    font-weight: bold;
+}
+
+.label {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.div-data-right {
+    flex: 1.75;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 2.5rem;
+    overflow: hidden;
+}
+
+.div-data-left {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 2.5rem;
+}

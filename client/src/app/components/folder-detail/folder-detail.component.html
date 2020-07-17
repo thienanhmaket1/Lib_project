@@ -1,0 +1,351 @@
+<nb-card class="nb-card-dialog">
+    <nb-card-header
+        style="
+            justify-content: center;
+            align-items: center;
+            display: flex;
+        "
+        class="detail-view"
+    >
+        <h5>{{ 'office_manage_folder.folder_detail.title' | translate }}</h5>
+        <nb-icon style="font-size: 1.5rem; cursor: pointer;" icon="close" (click)="closeDialog()"> </nb-icon>
+    </nb-card-header>
+
+    <nb-card-body *ngIf="isViewing">
+        <nb-list>
+            <nb-list-item *ngFor="let row of rows" style="padding: 1rem;" [ngStyle]="{ display: hiddenColumn.includes(row) ? 'none' : 'flex' }">
+                <div class="div-data-left label">
+                    {{ translate(row) | translate }}
+                </div>
+
+                <div style="display: flex; width: 2.5rem;"></div>
+
+                <div class="div-data-right">
+                    <span
+                        *ngIf="row !== 'folder_structure' && row !== 'folder_authorized_users' && !booleanColumn.includes(row) && row !== 'folder_is_deleted'"
+                    >
+                        {{ this.data[row] }}
+                    </span>
+                    <div *ngIf="row === 'folder_structure'">
+                        {{ this.data[row].level_1 + '/' + this.data[row].level_2 }}
+                    </div>
+
+                    <nb-select
+                        *ngIf="row === 'folder_authorized_users'"
+                        multiple
+                        [placeholder]="'office_manage_folder.none_select_authorized_users' | translate"
+                        [(selected)]="this.data[row]"
+                        style="max-width: 100% !important; width: 100%;"
+                    >
+                        <nb-option disabled [value]="item.user_id" *ngFor="let item of userList">{{ item.fullname }} </nb-option>
+                    </nb-select>
+
+                    <nb-toggle *ngIf="row === 'folder_is_deleted'" disabled [checked]="data[row]"></nb-toggle>
+
+                    <nb-toggle *ngIf="booleanColumn.includes(row)" disabled [checked]="this.folder[row] === 'true'"></nb-toggle>
+                </div>
+            </nb-list-item>
+
+            <nb-list-item *ngFor="let row of secondRows" style="padding: 1rem;">
+                <div class="div-data-left label">
+                    <!-- {{ translatePropertyName(row.property_name) }} -->
+                    {{ row.property_name }}
+                </div>
+
+                <div style="display: flex; width: 2.5rem;"></div>
+
+                <div class="div-data-right" style="flex-direction: column; align-items: flex-start;">
+                    <div class="div-data-right-property">
+                        <span class="label">{{ translate('property_data_type') | translate }}</span>
+                        <!-- <span>{{ row.property_data_type }}</span> -->
+                        <nb-select
+                            disabled
+                            [placeholder]="'office_manage_folder.select_type' | translate"
+                            [(selected)]="row.property_data_type"
+                            style="width: 100%; max-width: 100%;"
+                        >
+                            <nb-option value="text">{{ 'office_manage_folder.dataType.text' | translate }}</nb-option>
+                            <nb-option value="textarea">{{ 'office_manage_folder.dataType.memo' | translate }}</nb-option>
+                            <nb-option [value]="'dropdown_' + item.drop_down_id" *ngFor="let item of listOfDropDown">
+                                {{ 'office_manage_folder.dataType.dropdown' | translate }}: {{ item.drop_down_name }}
+                            </nb-option>
+                            <!-- <nb-option value="radio">Radio Button</nb-option> -->
+                        </nb-select>
+                    </div>
+
+                    <div class="div-data-right-property">
+                        <span class="label">{{ translate('property_is_show_in_list') | translate }}</span>
+                        <nb-toggle disabled [checked]="!!toNumber(row.property_is_show_in_list)"></nb-toggle>
+                    </div>
+
+                    <div class="div-data-right-property">
+                        <span class="label">{{ translate('property_is_show_in_detail') | translate }}</span>
+                        <nb-toggle disabled [checked]="!!toNumber(row.property_is_show_in_detail)"></nb-toggle>
+                    </div>
+
+                    <div class="div-data-right-property">
+                        <span class="label">{{ translate('max_width') | translate }}</span>
+                        <span>{{ row.max_width }}</span>
+                    </div>
+                </div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+
+    <nb-card-body *ngIf="isEditing">
+        <nb-list [formGroup]="editFolderFormGroup">
+            <nb-list-item *ngFor="let row of rows" style="padding: 1rem;" [ngStyle]="{ display: hiddenColumn.includes(row) ? 'none' : 'flex' }">
+                <div class="div-data-left label">
+                    {{ translate(row) | translate }}
+                </div>
+
+                <div style="display: flex; width: 2.5rem;"></div>
+
+                <div class="div-data-right">
+                    <input
+                        *ngIf="
+                            row !== 'folder_structure' &&
+                            row !== 'folder_report' &&
+                            row !== 'folder_note' &&
+                            row !== 'folder_authorized_users' &&
+                            row !== 'folder_is_deleted' &&
+                            !booleanColumn.includes(row)
+                        "
+                        style="margin-top: 0.5rem;"
+                        nbInput
+                        fullWidth
+                        [value]="this.data[row]"
+                        autofocus
+                        [formControlName]="row"
+                        [id]="row"
+                    />
+                    <nb-toggle *ngIf="row === 'folder_is_deleted'" disabled [checked]="data[row]" [id]="row"></nb-toggle>
+                    <nb-toggle *ngIf="booleanColumn.includes(row)" [formControlName]="row" [id]="row"></nb-toggle>
+                    <nb-select
+                        *ngIf="row === 'folder_authorized_users'"
+                        multiple
+                        [placeholder]="'office_manage_file.select_authorized_users' | translate"
+                        [formControlName]="row"
+                        style="width: 100%; max-width: 100%;;"
+                        [id]="row"
+                    >
+                        <nb-option [disabled]="isReadOnly" [value]="item.user_id" *ngFor="let item of userList"> {{ item.fullname }}</nb-option>
+                    </nb-select>
+                </div>
+            </nb-list-item>
+
+            <nb-list-item *ngFor="let row of secondRows" style="padding: 1rem;">
+                <div class="div-data-left" style="flex-direction: column; align-items: flex-start;">
+                    <span class="label">{{ 'office_manage_folder.property_name' | translate }}</span>
+                    <!-- <input
+                        style="margin-top: 0.5rem;"
+                        nbInput
+                        fullWidth
+                        placeholder="English name"
+                        [formControlName]="'property_name_en_' + getPosition(row)"
+                        autofocus
+                        [id]="'property_name_en_' + getPosition(row)"
+                    />
+                    <input
+                        style="margin-top: 5px;"
+                        nbInput
+                        fullWidth
+                        placeholder="日本の名前"
+                        [formControlName]="'property_name_jp_' + getPosition(row)"
+                        autofocus
+                        [id]="'property_name_jp_' + getPosition(row)"
+                    /> -->
+
+                    <input style="margin-top: 5px;" nbInput fullWidth [formControlName]="'property_name_' + getPosition(row)" autofocus />
+                </div>
+
+                <div style="display: flex; width: 25px;"></div>
+
+                <div class="div-data-right" style="flex-direction: column; align-items: flex-start;">
+                    <div style="width: 100%;">
+                        <div class="label" style="margin-bottom: 0.5rem;">{{ translate('property_data_type') | translate }}</div>
+                        <nb-select
+                            [placeholder]="'office_manage_folder.select_type' | translate"
+                            [formControlName]="'property_data_type_' + getPosition(row)"
+                            style="width: 100%; max-width: 100%;"
+                            [id]="'property_data_type_' + getPosition(row)"
+                        >
+                            <nb-option value="text">{{ 'office_manage_folder.dataType.text' | translate }}</nb-option>
+                            <nb-option value="textarea">{{ 'office_manage_folder.dataType.memo' | translate }}</nb-option>
+                            <nb-option [value]="'dropdown_' + item.drop_down_id" *ngFor="let item of listOfDropDown">
+                                {{ 'office_manage_folder.dataType.dropdown' | translate }}: {{ item.drop_down_name }}
+                            </nb-option>
+                            <!-- <nb-option value="radio">Radio Button</nb-option> -->
+                        </nb-select>
+                    </div>
+                    <div style="display: flex; flex-direction: row;">
+                        <div style="margin-top: 1.5rem; width: 100%;">
+                            <div class="label" style="margin-bottom: 0.5rem;">{{ translate('property_is_show_in_list') | translate }}</div>
+                            <nb-toggle
+                                [formControlName]="'property_is_show_in_list_' + getPosition(row)"
+                                [id]="'property_is_show_in_list_' + getPosition(row)"
+                            ></nb-toggle>
+                        </div>
+
+                        <div style="margin-top: 1.5rem; width: 100%;">
+                            <div class="label" style="margin-bottom: 0.5rem;">{{ translate('property_is_show_in_detail') | translate }}</div>
+                            <nb-toggle
+                                [formControlName]="'property_is_show_in_detail_' + getPosition(row)"
+                                [id]="'property_is_show_in_detail_' + getPosition(row)"
+                            ></nb-toggle>
+                        </div>
+                        <div style="margin-top: 0.5rem; width: 100%;">
+                            <div class="label" style="margin-top: 0.5rem;">{{ translate('max_width') | translate }}</div>
+                            <input
+                                nbInput
+                                fullWidth
+                                placeholder="{{ translate('max_width') | translate }}"
+                                [formControlName]="'max_width_' + getPosition(row)"
+                                [id]="'max_width_' + getPosition(row)"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </nb-list-item>
+
+            <nb-list-item>
+                <nb-icon icon="plus-square" (click)="addProperty()" style="cursor: pointer; font-size: xxx-large;" id="add-property"></nb-icon>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+
+    <nb-card-body *ngIf="isCreating">
+        <nb-list [formGroup]="editFolderFormGroup">
+            <nb-list-item *ngFor="let row of rows" style="padding: 1rem;" [ngStyle]="{ display: hiddenColumn.includes(row) ? 'none' : 'flex' }">
+                <div class="div-data-left label">
+                    {{ translate(row) | translate }}
+                </div>
+
+                <div style="display: flex; width: 25px;"></div>
+
+                <div class="div-data-right">
+                    <input
+                        style="margin-top: 0.5rem;"
+                        *ngIf="
+                            row !== 'folder_structure' &&
+                            row !== 'folder_report' &&
+                            row !== 'folder_note' &&
+                            row !== 'folder_authorized_users' &&
+                            row !== 'folder_is_deleted' &&
+                            !booleanColumn.includes(row)
+                        "
+                        nbInput
+                        fullWidth
+                        [value]="this.data[row]"
+                        autofocus
+                        [formControlName]="row"
+                        [id]="row"
+                    />
+                    <nb-toggle *ngIf="row === 'folder_is_deleted'" disabled [checked]="data[row]" [id]="row"></nb-toggle>
+                    <nb-toggle *ngIf="booleanColumn.includes(row)" [formControlName]="row" [id]="row"></nb-toggle>
+                    <nb-select
+                        *ngIf="row === 'folder_authorized_users'"
+                        multiple
+                        [placeholder]="'office_manage_file.select_authorized_users' | translate"
+                        [formControlName]="row"
+                        style="width: 100%; max-width: 100%;"
+                        [id]="row"
+                    >
+                        <nb-option [disabled]="isReadOnly" [value]="item.user_id" *ngFor="let item of userList"> {{ item.fullname }}</nb-option>
+                    </nb-select>
+                </div>
+            </nb-list-item>
+
+            <nb-list-item *ngFor="let row of secondRows" style="padding: 1rem;">
+                <div *ngIf="row !== null" class="div-data-left" style="flex-direction: column; align-items: flex-start;">
+                    <!-- <nb-icon *ngIf="secondRows.length > 1" icon="minus-square" (click)="removeProperty(row)" style="cursor: pointer;"></nb-icon> -->
+                    <span class="label">{{ 'office_manage_folder.property_name' | translate }}</span>
+                    <!-- <input
+                        style="margin-top: 5px;"
+                        nbInput
+                        fullWidth
+                        placeholder="English name"
+                        [formControlName]="'property_name_en_' + getPosition(row)"
+                        autofocus
+                        [id]="'property_name_en_' + getPosition(row)"
+                    />
+                    <input
+                        style="margin-top: 5px;"
+                        nbInput
+                        fullWidth
+                        placeholder="日本語名"
+                        [formControlName]="'property_name_jp_' + getPosition(row)"
+                        [id]="'property_name_jp_' + getPosition(row)"
+                    /> -->
+
+                    <input style="margin-top: 5px;" nbInput fullWidth [formControlName]="'property_name_' + getPosition(row)" autofocus />
+                </div>
+
+                <div style="display: flex; width: 2.5rem;"></div>
+
+                <div class="div-data-right" style="flex-direction: column; align-items: flex-start;">
+                    <div style="width: 100%;">
+                        <div class="label" style="margin-bottom: 0.5rem;">{{ translate('property_data_type') | translate }}</div>
+                        <nb-select
+                            [placeholder]="'office_manage_folder.select_type' | translate"
+                            [formControlName]="'property_data_type_' + getPosition(row)"
+                            style="width: 100%; max-width: 100%;"
+                            [id]="'property_data_type_' + getPosition(row)"
+                        >
+                            <nb-option value="text">{{ 'office_manage_folder.dataType.text' | translate }}</nb-option>
+                            <nb-option value="textarea">{{ 'office_manage_folder.dataType.memo' | translate }}</nb-option>
+                            <nb-option [value]="'dropdown_' + item.drop_down_id" *ngFor="let item of listOfDropDown">
+                                {{ 'office_manage_folder.dataType.dropdown' | translate }}: {{ item.drop_down_name }}
+                            </nb-option>
+                            <!-- <nb-option value="radio">Radio Button</nb-option> -->
+                        </nb-select>
+                    </div>
+                    <div style="display: flex; flex-direction: row; width: 100%;">
+                        <div style="margin-top: 1.5rem; width: 100%;">
+                            <div class="label" style="margin-bottom: 0.5rem;">{{ translate('property_is_show_in_list') | translate }}</div>
+                            <nb-toggle
+                                [formControlName]="'property_is_show_in_list_' + getPosition(row)"
+                                [id]="'property_is_show_in_list_' + getPosition(row)"
+                            ></nb-toggle>
+                        </div>
+
+                        <div style="margin-top: 1.5rem; width: 100%;">
+                            <div class="label" style="margin-bottom: 0.5rem;">{{ translate('property_is_show_in_detail') | translate }}</div>
+                            <nb-toggle
+                                [formControlName]="'property_is_show_in_detail_' + getPosition(row)"
+                                [id]="'property_is_show_in_detail_' + getPosition(row)"
+                            ></nb-toggle>
+                        </div>
+                        <div style="margin-top: 1rem; width: 100%;">
+                            <div class="label" style="margin-top: 0.5rem;">{{ translate('max_width') | translate }}</div>
+                            <input
+                                nbInput
+                                type="number"
+                                fullWidth
+                                placeholder="{{ translate('max_width') | translate }}"
+                                [formControlName]="'max_width_' + getPosition(row)"
+                                [id]="'max_width_' + getPosition(row)"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </nb-list-item>
+
+            <nb-list-item>
+                <nb-icon icon="plus-square" (click)="addProperty()" style="cursor: pointer; font-size: xxx-large;" id="add-property"></nb-icon>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+
+    <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="isEditable">
+        <button *ngIf="!isEditing" style="flex: 0.35" nbButton [status]="data.folder_is_deleted ? 'success' : 'danger'" (click)="deleteFolder()">
+            {{ (data.folder_is_deleted ? 'app.button_un_delete' : 'app.button_delete') | translate }}
+        </button>
+        <button *ngIf="!isEditing" style="flex: 0.35" nbButton status="info" (click)="editFolder()">{{ 'app.button_edit' | translate }}</button>
+        <button *ngIf="isEditing" style="flex: 0.3" nbButton status="info" (click)="saveFolder()">{{ 'app.button_save' | translate }}</button>
+    </nb-card-footer>
+
+    <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="isCreating">
+        <button style="flex: 0.3" nbButton status="success" (click)="createFolder()">{{ 'app.button_create' | translate }}</button>
+    </nb-card-footer>
+</nb-card>

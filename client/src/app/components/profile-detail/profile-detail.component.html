@@ -1,0 +1,108 @@
+<nb-card class="nb-card-dialog">
+    <nb-card-header class="detail-view">
+        <h5>{{ 'home.profile.title' | translate }}</h5>
+        <nb-icon style="font-size: 1.5rem; cursor: pointer;" icon="close" (click)="closeDialog()"> </nb-icon>
+    </nb-card-header>
+
+    <nb-card-body *ngIf="!editable">
+        <div style="display: flex; justify-content: center;">
+            <img class="dot" [src]="srcImg" onerror="this.src='assets/images/default.png'" />
+        </div>
+        <nb-list>
+            <nb-list-item
+                *ngFor="let row of rows"
+                style="padding: 1rem; display: flex; flex-direction: row;"
+                [ngStyle]="{ display: row === 'user_id' || row === 'user_password' ? 'none' : 'flex' }"
+            >
+                <div style="flex: 0.25" class="label">
+                    {{ translate(row) | translate }}
+                </div>
+                <div style="flex: 0.75; display: flex; justify-content: flex-start; align-items: center;" *ngIf="row !== 'user_theme'">
+                    <span style="margin-top: 0.5rem;" fullWidth>
+                        {{ this.userInfo[row] }}
+                    </span>
+                </div>
+                <div style="flex: 0.75; display: flex; justify-content: flex-start; align-items: center;" *ngIf="row === 'user_theme'">
+                    <nb-select disabled fullWidth placeholder="Theme" style="margin-top: 0.5rem;" [selected]="this.userInfo[row]">
+                        <nb-option value="default">Default</nb-option>
+                        <nb-option value="dark">Dark</nb-option>
+                        <nb-option value="cosmic">Cosmic</nb-option>
+                    </nb-select>
+                </div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+
+    <nb-card-body *ngIf="editable">
+        <div style="display: flex; justify-content: center; ">
+            <img class="dot" [src]="srcImg" (click)="uploadImage()" nbTooltip="Click here to change" onerror="this.src='assets/images/default.png'" />
+            <input #editFileFakeInput type="file" name="fileUpload" style="display: none;" accept="image/*" (change)="preview(editFileFakeInput.files)" />
+        </div>
+        <nb-list [formGroup]="editUserFormGroup">
+            <nb-list-item
+                *ngFor="let row of rows"
+                style="padding: 1rem; display: flex; flex-direction: row;"
+                [ngStyle]="{ display: row === 'user_id' ? 'none' : 'flex' }"
+            >
+                <div style="flex: 0.25" class="label">
+                    {{ translate(row) | translate }}
+                </div>
+                <div class="div-data-right" *ngIf="inputCondition(row)">
+                    <input
+                        type="{{ inputType }}"
+                        style="margin-top: 0.5rem;"
+                        nbInput
+                        fullWidth
+                        [value]="this.userInfo[row]"
+                        [readonly]="isReadOnly"
+                        autofocus
+                        [formControlName]="row"
+                        [id]="row"
+                        [maxlength]="row ? setMaxLength(row) : 'none'"
+                    />
+                </div>
+                <div *ngIf="row === 'user_password'" class="div-data-right" style="margin-top: 0.5rem;">
+                    <input
+                        [type]="typePassword ? 'password' : 'text'"
+                        nbInput
+                        fullWidth
+                        [value]="this.userInfo[row]"
+                        autofocus
+                        [formControlName]="row"
+                        [id]="row"
+                        [maxlength]="row ? setMaxLength(row) : 'none'"
+                    />
+                    <button nbButton>
+                        <nb-icon [icon]="eye_off ? 'eye-off' : 'eye'" (click)="toggleFieldTextType(1)"></nb-icon>
+                    </button>
+                </div>
+                <div *ngIf="row === 'user_confirm_password'" class="div-data-right" style="margin-top: 0.5rem;">
+                    <input
+                        [type]="typeConfirmPassword ? 'password' : 'text'"
+                        nbInput
+                        fullWidth
+                        [value]="this.userInfo[row]"
+                        autofocus
+                        [formControlName]="row"
+                        [id]="row"
+                        [maxlength]="row ? setMaxLength(row) : 'none'"
+                    />
+                    <button nbButton>
+                        <nb-icon [icon]="eye_off2 ? 'eye-off' : 'eye'" (click)="toggleFieldTextType(2)"></nb-icon>
+                    </button>
+                </div>
+                <div class="div-data-right" *ngIf="row === 'user_theme'">
+                    <nb-select fullWidth placeholder="Theme" style="margin-top: 0.5rem;" [formControlName]="row" [selected]="this.userInfo[row]" [id]="row">
+                        <nb-option value="default">Default</nb-option>
+                        <nb-option value="dark">Dark</nb-option>
+                        <nb-option value="cosmic">Cosmic</nb-option>
+                    </nb-select>
+                </div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+
+    <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="editable">
+        <button style="flex: 0.3" nbButton status="info" (click)="saveUser()">{{ 'app.button_save' | translate }}</button>
+    </nb-card-footer>
+</nb-card>

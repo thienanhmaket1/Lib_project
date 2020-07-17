@@ -1,0 +1,48 @@
+<!-- <nb-card class="div-container">
+    <div class="div-bar-code-reader">
+        <div
+            (click)="openScanner()"
+            style="
+                height: 100%;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            "
+        >
+            <img
+                src="../../../../assets/images/scanner.jpg"
+                alt=""
+                style="
+                    height: 40%;
+                    width: 40%;
+                    box-shadow: 0.5rem 1rem 1rem black;
+                "
+            />
+        </div>
+    </div>
+</nb-card> -->
+<nb-card class="div-container">
+    <nb-card-body>
+        <nb-card status="primary">
+            <nb-card-header>
+                {{ 'qc_barcode_reader.search_form_title' | translate }}
+            </nb-card-header>
+            <nb-card-body>
+                <div class="div-body">
+                    <form [formGroup]="barCodeFormGroup" style="width: 100%">
+                        <input
+                            #barCodeInput
+                            nbInput
+                            fullWidth
+                            [placeholder]="'qc_barcode_reader.search_form_input' | translate"
+                            autofocus="true"
+                            (keyup.enter)="onKeyup($event)"
+                            formControlName="barCodeFormControl"
+                        />
+                    </form>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </nb-card-body>
+</nb-card>

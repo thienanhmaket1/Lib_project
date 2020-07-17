@@ -1,0 +1,13 @@
+<nb-card style="width: 100%; height: 100%; overflow: hidden; border-radius: 0;">
+    <div *ngIf="menuStatus === 'normal'" (click)="changeToMiniMode()" style="text-align: end; padding: 1rem 0 1rem 0; cursor: pointer;">
+        <!-- <nb-icon style="font-size: 20.5rem; margin: 0 0.5rem 0 0;" icon="arrow-back-outline"></nb-icon> -->
+        <nb-icon style="margin: 0 0.5rem 0 0;" icon="arrow-back-outline"></nb-icon>
+    </div>
+    <div *ngIf="menuStatus === 'mini'" (click)="changeToNormalMode()" style="text-align: center; padding: 1rem 0 1rem 0; cursor: pointer;">
+        <!-- <nb-icon style="font-size: 20.5rem; margin: 0 0.5rem 0 0;" icon="menu"></nb-icon> -->
+        <nb-icon style="margin: 0 0.5rem 0 0;" icon="menu"></nb-icon>
+    </div>
+    <nb-card style="box-shadow: none; overflow: auto;">
+        <nb-menu [items]="items"></nb-menu>
+    </nb-card>
+</nb-card>

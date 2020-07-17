@@ -1,0 +1,177 @@
+<nb-card class="nb-card-dialog">
+    <nb-card-header
+        style="
+            justify-content: center;
+            align-items: center;
+            display: flex;
+        "
+        class="detail-view"
+    >
+        <h5>{{ 'admin_manage_dropdowns.drop_down_detail.title' | translate }}</h5>
+        <nb-icon style="font-size: 1.5rem; cursor: pointer;" icon="close" (click)="closeDialog()"> </nb-icon>
+    </nb-card-header>
+
+    <nb-card-body>
+        <nb-list *ngIf="isViewing">
+            <nb-list-item *ngFor="let row of rows" style="padding: 1rem;" [ngStyle]="{ display: hiddenRow.includes(row) ? 'none' : 'flex' }">
+                <div class="div-data-left label">
+                    {{ createRealColumns(row) | translate }}
+                </div>
+
+                <div class="div-data-right">
+                    <span *ngIf="row !== 'drop_down_data' && row !== 'folder_id' && row !== 'drop_down_is_deleted'">{{ this.dropdown[row] }}</span>
+                    <!-- <nb-toggle *ngIf="row === 'drop_down_is_deleted'" disabled [checked]="dropdown[row]"></nb-toggle> -->
+                    <mat-chip-list #chipList aria-label="Item selection" *ngIf="row === 'drop_down_data'">
+                        <mat-chip *ngFor="let item of data.drop_down_data">
+                            {{ item.name }}
+                        </mat-chip>
+                    </mat-chip-list>
+
+                    <nb-select
+                        disabled
+                        *ngIf="row === 'folder_id'"
+                        style="display:flex; flex: 1"
+                        [placeholder]="'admin_manage_dropdowns.drop_down_detail.new_dropdown_folder_choose_folder' | translate"
+                        style="max-width: 100%; width: 100%;"
+                        [(selected)]="dropdown[row]"
+                    >
+                        <nb-option [value]="item.folder_id" *ngFor="let item of allFolders">{{ item.folder_name }} </nb-option>
+                    </nb-select>
+                </div>
+            </nb-list-item>
+        </nb-list>
+
+        <nb-list *ngIf="isEditing || isCreating" [formGroup]="dropdownFormGroup">
+            <!-- <nb-list-item>
+                <div class="label div-data-left">
+                    {{ 'admin_manage_dropdowns.drop_down_detail.new_dropdown_folder' | translate }}
+                </div>
+
+                <div class="div-data-right"></div>
+            </nb-list-item> -->
+            <nb-list-item *ngFor="let row of rows" style="padding: 1rem;" [ngStyle]="{ display: hiddenRow.includes(row) ? 'none' : 'flex' }">
+                <div class="label div-data-left">
+                    {{ createRealColumns(row) | translate }}
+                </div>
+
+                <div class="div-data-right">
+                    <input
+                        *ngIf="row !== 'drop_down_data' && row !== 'folder_id' && row !== 'drop_down_is_deleted'"
+                        nbInput
+                        fullWidth
+                        [value]="dropdown[row]"
+                        autofocus
+                        [formControlName]="row"
+                        [id]="row"
+                    />
+                    <!-- <nb-toggle *ngIf="row === 'drop_down_is_deleted'" disabled [checked]="dropdown[row]"></nb-toggle> -->
+                    <input
+                        *ngIf="row === 'drop_down_data'"
+                        nbInput
+                        fullWidth
+                        [placeholder]="'admin_manage_dropdowns.drop_down_detail.new_dropdown_data_new_item' | translate"
+                        [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="add($event)"
+                        style="margin: 0;"
+                        [id]="row"
+                    />
+
+                    <nb-select
+                        *ngIf="row === 'folder_id'"
+                        style="display:flex; flex: 1"
+                        [placeholder]="'admin_manage_dropdowns.drop_down_detail.new_dropdown_folder_choose_folder' | translate"
+                        [formControlName]="row"
+                        style="max-width: 100%; width: 100%;"
+                        [id]="row"
+                    >
+                        <nb-option [value]="null">{{ 'app.select_none' | translate }}</nb-option>
+                        <nb-option [value]="item.folder_id" *ngFor="let item of allFolders">{{ item.folder_name }} </nb-option>
+                    </nb-select>
+                </div>
+            </nb-list-item>
+            <nb-list-item
+                style="
+                    border-bottom: none;
+                "
+            >
+                <div class="label div-data-left"></div>
+                <div class="label div-data-right">
+                    <mat-chip-list #chipList aria-label="Item selection">
+                        <mat-chip
+                            *ngFor="let item of dropdown.drop_down_data"
+                            [selectable]="selectable"
+                            [removable]="removable"
+                            (removed)="remove(item)"
+                            (click)="remove(item)"
+                        >
+                            {{ item.name }}
+                            <nb-icon matChipRemove *ngIf="removable" icon="close-outline">cancel</nb-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </nb-list-item>
+        </nb-list>
+
+        <!-- <div
+            style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex: 1;
+                width: 100%;
+                flex-direction: row;
+                padding: 1rem;
+            "
+        >
+            <div class="label div-data-left"></div>
+            <div class="label div-data-right">
+                <mat-chip-list #chipList aria-label="Item selection">
+                    <mat-chip
+                        *ngFor="let item of dropdown.drop_down_data"
+                        [selectable]="selectable"
+                        [removable]="removable"
+                        (removed)="remove(item)"
+                        (click)="remove(item)"
+                    >
+                        {{ item.name }}
+                        <nb-icon matChipRemove *ngIf="removable" icon="close-outline">cancel</nb-icon>
+                    </mat-chip>
+                </mat-chip-list>
+            </div>
+        </div> -->
+    </nb-card-body>
+
+    <!-- <nb-card-body>
+        <div style="flex: 1; display: flex; justify-content: flex-start; align-items: center;" [formGroup]="folderFormGroup">
+            <span style="flex: 1; display: flex; ">Folder</span>
+            <nb-select style="display:flex; flex: 1" placeholder="Choose folder" formControlName="folderFormControl">
+                <nb-option [value]="item.folder_id" *ngFor="let item of allFolders">{{ item.folder_name }} </nb-option>
+            </nb-select>
+        </div>
+    </nb-card-body> -->
+
+    <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="isEditable">
+        <button *ngIf="!isEditing" style="flex: 0.35" nbButton status="danger" (click)="deleteDropdown()">
+            {{ (data.drop_down_is_deleted ? 'app.button_un_delete' : 'app.button_delete') | translate }}
+        </button>
+        <button *ngIf="!isEditing" style="flex: 0.35" nbButton status="info" (click)="editDropdown()">
+            {{ 'app.button_edit' | translate }}
+        </button>
+        <button *ngIf="isEditing" style="flex: 0.3" nbButton status="info" (click)="saveDropdown()">
+            {{ 'app.button_save' | translate }}
+        </button>
+    </nb-card-footer>
+
+    <form [formGroup]="createDropdownFormGroup" (ngSubmit)="createDropdown()">
+        <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="isCreating">
+            <!-- <button style="flex: 0.3" nbButton status="success" (click)="createFile()">Create</button> -->
+            <button style="flex: 0.3" nbButton status="success">
+                {{ 'app.button_create' | translate }}
+            </button>
+        </nb-card-footer>
+        <!-- <input #editFileFakeInput type="file" name="fileUpload" style="display: none;" (change)="handleFileInput($event.target.files)" /> -->
+        <!-- <input #editFileFakeInput type="file" name="fileUpload" style="display: none;" (change)="handleFileInput($event)" /> -->
+    </form>
+</nb-card>

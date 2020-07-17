@@ -1,0 +1,30 @@
+<div class="div-container">
+    <div class="div-login" [formGroup]="loginFormGroup">
+        <h1>{{ 'login.title' | translate }}</h1>
+        <div style="margin-top: 2rem; width: 100%;">
+            <input
+                (keyup.enter)="login()"
+                nbInput
+                fullWidth
+                [placeholder]="'login.login_form_username' | translate"
+                formControlName="usernameFormControl"
+                required
+            />
+        </div>
+        <div style="margin-top: 1rem; width: 100%; display: flex;">
+            <input
+                [type]="typePassword ? 'password' : 'text'"
+                (keyup.enter)="login()"
+                nbInput
+                fullWidth
+                [placeholder]="'login.login_form_password' | translate"
+                formControlName="passwordFormControl"
+                required
+            />
+            <button nbButton>
+                <nb-icon [icon]="eye_off ? 'eye-off' : 'eye'" (click)="toggleFieldTextType()"></nb-icon>
+            </button>
+        </div>
+        <button (click)="login()" status="primary" nbButton style="margin-top: 1rem; width: 100%;">{{ 'login.login_form_submit' | translate }}</button>
+    </div>
+</div>

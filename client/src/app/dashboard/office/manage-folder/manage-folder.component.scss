@@ -1,0 +1,27 @@
+.div-container {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.div-files {
+    overflow: auto;
+}
+
+.data {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.div-go-to {
+    margin: 0.5rem 0rem;
+}
+
+.btn-go-to {
+    cursor: pointer;
+    text-decoration: none;
+}

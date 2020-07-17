@@ -1,0 +1,127 @@
+<nb-card class="div-container nb-card-dialog">
+    <nb-card-header class="detail-view">
+        <h5>{{ 'home.notification.message_form.head_title' | translate | uppercase }}</h5>
+        <nb-icon style="font-size: 1.5rem; cursor: pointer;" icon="close" (click)="closeDialog()"> </nb-icon>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="div-header" style="display: flex; width: 100%; flex-direction: column;" [formGroup]="messageFormGroup">
+            <div style="display: flex; flex: 1; flex-direction: row;">
+                <div class="div-header-label label">
+                    <label>{{ 'home.notification.message_form.title' | translate }}</label>
+                </div>
+                <div class="div-header-input" style="margin-left: 1rem;">
+                    <input [readonly]="status === 'view' ? true : false" nbInput fullWidth formControlName="messageTitleFormControl" id="message-title" />
+                </div>
+            </div>
+            <div style="display: flex; flex: 1; flex-direction: row; margin-top: 1rem;">
+                <div class="div-header-label label">
+                    <label>{{ 'home.notification.message_form.content' | translate }}</label>
+                </div>
+                <div class="div-header-input" style="margin-left: 1rem;">
+                    <textarea
+                        [readonly]="status === 'view' ? true : false"
+                        nbInput
+                        fullWidth
+                        formControlName="messageContentFormControl"
+                        id="message-content"
+                    ></textarea>
+                </div>
+            </div>
+            <!-- <div style="display: flex; flex: 1; flex-direction: row; margin-top: 1rem;" *ngIf="canSwitchGroup">
+                <div class="div-header-label label">
+                    <label>{{ 'home.notification.message_form.group' | translate }}</label>
+                </div>
+                <div class="div-header-input" style="margin-left: 1rem;">
+                    <nb-select placeholder="Select Group" formControlName="messageGroupFormControl" style="max-width: 100%; width: 100%;" id="message-group">
+                        <nb-option value="admin">All</nb-option>
+                        <nb-option value="office">Office</nb-option>
+                        <nb-option value="qc">QC</nb-option>
+                    </nb-select>
+                </div>
+            </div> -->
+            <div style="display: flex; width: 100%; flex-direction: row; margin-top: 1rem;">
+                <div class="div-header-label">
+                    {{ 'office_settings.messages.new_message_attachment' | translate }}
+                </div>
+                <div class="div-header-input" *ngIf="status === 'view'" style="margin-left: 1rem; margin-top: 0.5rem;">
+                    <!-- <input nbInput [value]="btnUploadAttachment" readonly fullWidth /> -->
+                    <button
+                        (click)="downloadAttachment()"
+                        style="
+                            flex: 1;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            width: 100%;
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: center;
+                            "
+                        nbButton
+                        status="primary"
+                    >
+                        <img
+                            [src]="
+                                btnUploadAttachment
+                                    ? '../../../assets/file-type-icons/' +
+                                      btnUploadAttachment.split('.')[btnUploadAttachment.split('.').length - 1].toLowerCase() +
+                                      '.png'
+                                    : ''
+                            "
+                        />
+                        <span>{{ btnUploadAttachment !== '' ? btnUploadAttachment : ('app.button_browse' | translate) }}</span>
+                    </button>
+                </div>
+
+                <div class="div-header-input" *ngIf="status === 'create' || status === 'edit'">
+                    <input #fileUploadInput type="file" id="fileUpload" name="fileUpload" style="display: none;" (change)="handleAttachmentInput($event)" />
+                    <ngx-file-drop
+                        dropZoneLabel="Drop files here"
+                        (onFileDrop)="droppedFile($event, 'fileUploadInput')"
+                        (onFileOver)="fileOver()"
+                        (onFileLeave)="fileLeave()"
+                        style="margin-top: 0.5rem; width: 100%;"
+                    >
+                        <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                            <button
+                                (click)="uploadFileAttachment()"
+                                style="
+                                    flex: 1;
+                                    text-overflow: ellipsis;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    width: 100%;
+                                    display: flex;
+                                    justify-content: flex-start;
+                                    align-items: center;
+                                "
+                                nbButton
+                                status="primary"
+                            >
+                                <img
+                                    [src]="
+                                        btnUploadAttachment
+                                            ? '../../../assets/file-type-icons/' +
+                                              btnUploadAttachment.split('.')[btnUploadAttachment.split('.').length - 1] +
+                                              '.png'
+                                            : ''
+                                    "
+                                />
+                                <span>{{ btnUploadAttachment !== '' ? btnUploadAttachment : ('app.button_browse' | translate) }}</span>
+                            </button>
+                        </ng-template>
+                    </ngx-file-drop>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer class="div-footer">
+        <button *ngIf="status === 'view' && data.editable" style="flex: 0.35" nbButton status="info" (click)="editFile()">
+            {{ 'app.button_edit' | translate }}
+        </button>
+        <button *ngIf="status === 'edit'" style="flex: 0.35" (click)="saveMessage()" nbButton status="primary">{{ 'app.button_save' | translate }}</button>
+        <button *ngIf="status === 'create'" style="flex: 0.35" (click)="createMessage()" nbButton status="success">
+            {{ 'app.button_create' | translate }}
+        </button>
+    </nb-card-footer>
+</nb-card>

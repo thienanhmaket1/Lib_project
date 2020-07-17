@@ -1,0 +1,90 @@
+<nb-card style="overflow: auto;" class="div-container">
+    <nb-card-header>
+        <div class="div-filter">
+            <div [formGroup]="filterFormGroup" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; flex-direction: row; flex: 1">
+                    <nb-select
+                        [placeholder]="'admin_manage_dropdowns.filter_form_choose_folder' | translate"
+                        formControlName="selectedFolder"
+                        filled
+                        status="primary"
+                        style="width: 100%;"
+                    >
+                        <nb-option [value]="null">{{ 'app.select_all' | translate }}</nb-option>
+                        <nb-option *ngFor="let folder of folders" [value]="folder">{{ folder.folder_name }} </nb-option>
+                    </nb-select>
+                    <input
+                        nbInput
+                        style="margin-left: 1rem;"
+                        fullWidth
+                        formControlName="searchDropdownFormControl"
+                        [placeholder]="'admin_manage_dropdowns.filter_form_input' | translate"
+                    />
+                </div>
+                <button style="margin-left: 1rem" (click)="addDropdown()" nbButton status="primary">
+                    {{ 'admin_manage_dropdowns.filter_form_add_dropdown' | translate }}
+                </button>
+                <nb-toggle style="margin-left: 1rem;" formControlName="activationFormControl" id="toggle-show-activate">
+                    {{ (activationToggleStatus ? 'app.toggle.activation.all' : 'app.toggle.activation.activating') | translate }}
+                </nb-toggle>
+            </div>
+        </div>
+    </nb-card-header>
+
+    <nb-card-body *ngIf="allColumns.length !== 0" class="div-dropdown nb-card-body-has-fixed-header">
+        <table class="nb-tree-grid-table-fixed-header" [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+            <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+
+            <ng-container *ngFor="let column of leftFakeColumns; let index = index" [nbTreeGridColumnDef]="column">
+                <th
+                    nbTreeGridHeaderCell
+                    [nbSortHeader]="getSortDirection(column)"
+                    *nbTreeGridHeaderCellDef
+                    [ngStyle]="{ display: hiddenColumns.includes(column) ? 'none' : 'table-cell' }"
+                >
+                    <button nbButton status="primary">{{ createLeftRealColumns(column) | translate }}</button>
+                </th>
+                <td
+                    style="cursor: pointer;"
+                    (click)="openDetail(row.data)"
+                    nbTreeGridCell
+                    *nbTreeGridCellDef="let row"
+                    [ngStyle]="{ display: hiddenColumns.includes(column) ? 'none' : 'table-cell' }"
+                >
+                    <span *ngIf="column !== 'drop_down_created_at' && column !== 'drop_down_updated_at' && column !== 'drop_down_is_deleted'">
+                        {{ row.data[column] || '-' }}
+                    </span>
+                    <span *ngIf="column === 'drop_down_created_at' || column === 'drop_down_updated_at'">
+                        {{ row.data[column] ? sharedService.dateTimeInString(row.data[column]) : '-' }}
+                    </span>
+                    <div *ngIf="column === 'drop_down_is_deleted'">
+                        <nb-toggle disabled [checked]="row.data[column]"></nb-toggle>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- <ng-container *ngFor="let column of middleFakeColumns; let index = index" [nbTreeGridColumnDef]="column" >
+                    <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+                        {{ createRealMiddleColumns(column) }}
+                    </th>
+                    <td style="cursor: pointer;" (click)="openDetail(row.data)" nbTreeGridCell *nbTreeGridCellDef="let row">
+                        {{ row.data[column]  }}
+                    </td>
+                </ng-container> -->
+            <ng-container *ngFor="let column of rightFakeColumns; let index = index" [nbTreeGridColumnDef]="column">
+                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+                    <button nbButton status="primary">{{ createRightRealColumns(column) | translate }}</button>
+                </th>
+                <td style="cursor: pointer; height: 1rem" (click)="openDetail(row.data)" nbTreeGridCell *nbTreeGridCellDef="let row">
+                    <!-- <div *ngFor="let item of row.data[column]">{{ item.name }}</div> -->
+                    <mat-chip-list #chipList aria-label="Item selection">
+                        <mat-chip *ngFor="let item of row.data[column]">
+                            {{ item.name }}
+                        </mat-chip>
+                    </mat-chip-list>
+                </td>
+            </ng-container>
+        </table>
+    </nb-card-body>
+</nb-card>

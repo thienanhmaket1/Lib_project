@@ -1,0 +1,356 @@
+<div class="div-container" [nbSpinner]="isLoadingSomething" nbSpinnerStatus="control">
+    <nb-card style="margin-bottom: 0; height: 100%;">
+        <nb-tabset class="nb-tabset">
+            <!-- <nb-tab *ngIf="user.user_permission_code === '99' || user.user_permission_code === '19'"
+                [tabTitle]="'qc_manage_drawings.tabs.update_drawing_by_csv.title' | translate" class="nb-tab"> -->
+            <!-- <nb-card style="margin-bottom: 0; height: 100%;">
+                    <nb-card-header style="display: flex; flex-direction: row; width: 100%;">
+                        <div style="
+                                display: flex;
+                                flex: 1;
+                                flex-direction: column;
+                            ">
+                            <ngx-file-drop *ngIf="isShowUpdateByCSV" dropZoneLabel="Drop csv files here"
+                                (onFileDrop)="droppedCSV($event)" (onFileOver)="fileOverCSV()"
+                                (onFileLeave)="fileLeaveCSV()" style="margin-bottom: 1rem;">
+                                <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                    <span>{{ 'qc_manage_drawings.tabs.update_drawing_by_csv.drop_zone.title' | translate }}</span>
+                                    <button (click)="openFileSelector()" status="primary" nbButton
+                                        style="margin-top: 1rem; width: 100%;">
+                                        {{ 'qc_manage_drawings.tabs.update_drawing_by_csv.drop_zone.button_browse' | translate }}
+                                    </button>
+                                </ng-template>
+                            </ngx-file-drop>
+
+                            <div [formGroup]="updateCSVViewFilterFormGroup"
+                                style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; flex-direction: row; flex: 1">
+                                    <input nbInput fullWidth formControlName="drawingsFormControl"
+                                        [placeholder]="'qc_manage_drawings.tabs.update_drawing_by_csv.filter_form_input' | translate" />
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: center; align-items: center; padding-left: 1rem; cursor: pointer;"
+                            (click)="this.isShowUpdateByCSV = !this.isShowUpdateByCSV">
+                            <nb-icon [icon]="isShowUpdateByCSV ? 'arrow-circle-up' : 'arrow-circle-down'"
+                                style="font-size: 2rem;"></nb-icon>
+                        </div>
+                    </nb-card-header>
+
+                    <nb-card-body *ngIf="allColumns.length !== 0 && showCSV" class="nb-card-body-has-fixed-header">
+                        <table class="nb-tree-grid-table-fixed-header" [nbTreeGrid]="dataSourceCSV"
+                            [nbSort]="dataSourceCSV" (sort)="updateSort($event)">
+                            <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+                            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [ngStyle]="{
+                                    color: !row.data.drawing_is_exist_on_hardisk && 'white',
+                                    'font-weight': !row.data.drawing_is_exist_on_hardisk && 'bold'
+                                }"></tr>
+
+                            <ng-container *ngFor="let column of leftFakeColumns; let index = index"
+                                [nbTreeGridColumnDef]="column">
+                                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)"
+                                    *nbTreeGridHeaderCellDef>
+                                    <button nbButton
+                                        status="primary">{{ createDrawingLeftRealColumns(column) | translate }}</button>
+                                </th>
+                                <td style="cursor: pointer;" (click)="openDrawing(row.data)" nbTreeGridCell
+                                    *nbTreeGridCellDef="let row">
+                                    {{ row.data[column] }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container *ngFor="let column of middleFakeColumns; let index = index"
+                                [nbTreeGridColumnDef]="column">
+                                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)"
+                                    *nbTreeGridHeaderCellDef>
+                                    <button nbButton
+                                        status="primary">{{ createDrawingRealMiddleColumns(column) | translate }}</button>
+                                </th>
+                                <td style="cursor: pointer;" nbTreeGridCell *nbTreeGridCellDef="let row"
+                                    (click)="fileColumns.includes(column) ? openFileAtDrawingList(row.data) : openDrawing(row.data)">
+                                    <span class="data" *ngIf="inputColumns.includes(column)">
+                                        {{ row.data[column] || '-' }}
+                                    </span>
+                                    <span class="data" *ngIf="fileColumns.includes(column)">
+                                        {{ row.data[column] || '-' }}
+                                    </span>
+                                    <span class="data" *ngIf="disabledColumns.includes(column)">
+                                        {{ row.data[column] || '-' }}
+                                    </span>
+                                    <span class="data" *ngIf="dateTimeColumns.includes(column)">
+                                        {{ sharedService.dateTimeInString(row.data[column]) || '-' }}
+                                    </span>
+                                    <span class="data" *ngIf="toggleColumns.includes(column)">
+                                        <nb-toggle disabled [checked]="row.data[column]"></nb-toggle>
+                                    </span>
+                                </td>
+                            </ng-container>
+                        </table>
+                    </nb-card-body>
+                </nb-card> -->
+            <!-- </nb-tab> -->
+
+            <nb-tab [tabTitle]="'qc_manage_drawings.tabs.drawings_list.title' | translate" class="nb-tab">
+                <nb-card style="margin-bottom: 0; height: 100%;">
+                    <nb-card-header>
+                        <div class="div-filter">
+                            <div [formGroup]="detailViewFilterFormGroup"
+                                style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                                <nb-select
+                                    [placeholder]="'qc_manage_drawings.tabs.drawings_list.filter_form_choose_drawing_folder' | translate"
+                                    formControlName="selectedFolderFormControl" filled status="primary"
+                                    style="width: 100%; margin-right: 1rem;">
+                                    <nb-option [value]="null">{{ 'app.select_all' | translate }}</nb-option>
+                                    <nb-option *ngFor="let folder of baseFolders" [value]="folder">{{ folder }}
+                                    </nb-option>
+                                </nb-select>
+                                <div style="display: flex; flex-direction: row; flex: 1">
+                                    <input nbInput fullWidth formControlName="drawingsFormControl"
+                                        [placeholder]="'qc_manage_drawings.tabs.drawings_list.filter_form_input' | translate"
+                                        id="input-search-drawing" />
+                                </div>
+                                <nb-toggle style="margin-left: 1rem;" formControlName="activationFormControl"
+                                    id="toggle-show-activate">
+                                    {{ (activationToggleStatus ? 'app.toggle.activation.all' : 'app.toggle.activation.activating') | translate }}
+                                </nb-toggle>
+                                <!-- <nb-checkbox style="margin-left: 1rem;" formControlName="isNotExistOnHardiskControl"
+                                    id="checkbox-show-not-exist-on-hardisk">
+                                    {{ 'qc_manage_drawings.tabs.drawings_list.checkbox_show_is_not_on_hardisk' | translate }}
+                                </nb-checkbox> -->
+                            </div>
+                        </div>
+                    </nb-card-header>
+
+                    <nb-card-body class="nb-card-body-has-fixed-header">
+                        <table class="nb-tree-grid-table-fixed-header" *ngIf="allColumns.length !== 0 && show"
+                            [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+                            <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+                            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [ngStyle]="{
+                                    color: !row.data.drawing_is_exist_on_hardisk && 'white',
+                                    'font-weight': !row.data.drawing_is_exist_on_hardisk && 'bold'
+                                }"></tr>
+
+                            <ng-container *ngFor="let column of leftFakeColumns; let index = index"
+                                [nbTreeGridColumnDef]="column">
+                                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)"
+                                    *nbTreeGridHeaderCellDef>
+                                    <button nbButton
+                                        status="primary">{{ createDrawingLeftRealColumns(column) }}</button>
+                                </th>
+                                <td style="cursor: pointer;" (click)="openDrawing(row.data)" nbTreeGridCell
+                                    *nbTreeGridCellDef="let row">
+                                    {{ row.data[column] }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container *ngFor="let column of middleFakeColumns; let index = index"
+                                [nbTreeGridColumnDef]="column">
+                                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)"
+                                    *nbTreeGridHeaderCellDef>
+                                    <button nbButton
+                                        status="primary">{{ createDrawingRealMiddleColumns(column) | translate }}</button>
+                                </th>
+                                <td style="cursor: pointer;" nbTreeGridCell *nbTreeGridCellDef="let row"
+                                    (click)="fileColumns.includes(column) ? openFileAtDrawingList(row.data) : openDrawing(row.data)">
+                                    <span class="data" *ngIf="inputColumns.includes(column)">
+                                        {{ row.data[column] || '-' }}
+                                    </span>
+                                    <span class="data" *ngIf="fileColumns.includes(column)">
+                                        {{ row.data[column] || '-' }}
+                                    </span>
+                                    <span class="data" *ngIf="disabledColumns.includes(column)">
+                                        {{ row.data[column] || '-' }}
+                                    </span>
+                                    <span class="data" *ngIf="dateTimeColumns.includes(column)">
+                                        {{ sharedService.dateTimeInString(row.data[column]) || '-' }}
+                                    </span>
+                                    <span class="data" *ngIf="toggleColumns.includes(column)">
+                                        <nb-toggle disabled [checked]="row.data[column]"></nb-toggle>
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <!-- <ng-container *ngFor="let column of rightFakeColumns; let index = index" [nbTreeGridColumnDef]="column" >
+                                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+                                    <button nbButton>{{ createDrawingRightRealColumns(column) }}</button>
+                                </th>
+                                <td style="cursor: pointer;" (click)="openDetail(row.data)" nbTreeGridCell *nbTreeGridCellDef="let row">
+                                    {{ dateTimeInString(row.data[column]) }}
+                                </td>
+                            </ng-container> -->
+                        </table>
+                    </nb-card-body>
+
+                    <nb-card-footer>
+                        <div class="div-footer">
+                            <button (click)="reloadDetailView()" status="danger" nbButton>
+                                {{ 'qc_manage_drawings.tabs.drawings_list.button_reload' | translate }}
+                            </button>
+
+                            <!-- <div
+                                *ngIf="pages.length > 1"
+                                style="display: flex; flex-direction: row; justify-content: center; align-items: center; padding: 1rem; flex: 1; overflow-x: auto;"
+                            >
+                                <div
+                                    (click)="changePage(page)"
+                                    *ngFor="let page of pages"
+                                    style="font-weight: normal; margin: 0 15px; background-color: rgb(215, 215, 215); padding: 0.5rem; cursor: pointer; border-radius: 0.5rem;"
+                                    [ngStyle]="{
+                                        'font-weight': currentPage === page ? 'bold' : 'normal',
+                                        'background-color': currentPage === page ? 'black' : 'rgb(215, 215, 215)',
+                                        color: currentPage === page ? 'white' : 'black'
+                                    }"
+                                >
+                                    {{ page }}
+                                </div>
+                            </div> -->
+                            <div style="display: flex;
+                                flex-direction: row;
+                                justify-content: flex-end;
+                                align-items: center;
+                                padding: 1rem;
+                                flex: 0.5;
+                                overflow-x: auto;
+                                margin: 0 1rem;">
+                                <div (click)="changePage(-1)" style="
+                                        padding: 0.5rem;
+                                        background-color: grey;
+                                        border-radius: 0.4rem;
+                                        margin-right: 1rem;
+                                        font-weight: bold;
+                                        cursor: pointer;
+                                    ">
+                                    <nb-icon icon="arrow-left"></nb-icon>
+                                </div>
+                                <div>
+                                    {{ currentShowing }}
+                                </div>
+                                <div (click)="changePage(1)" style="
+                                        padding: 0.5rem;
+                                        background-color: grey;
+                                        border-radius: 0.4rem;
+                                        margin-left: 1rem;
+                                        font-weight: bold;
+                                        cursor: pointer;
+                                    ">
+                                    <nb-icon icon="arrow-right"></nb-icon>
+                                </div>
+                            </div>
+                            <div style="display: flex; flex: 0.5;">
+                                <span
+                                    style="align-self: center;">{{ 'qc_manage_drawings.tabs.update_drawing_by_csv.rows_per_page' | translate }}</span>
+                                <input type="number" nbInput [formControl]="rowsPerPageFormControl"
+                                    style="margin: 0 1rem; width: 4.5rem;" />
+                            </div>
+                            <!--Add-->
+                            <button (click)="addDrawing()" nbButton status="primary">
+                                {{ 'qc_manage_drawings.tabs.drawings_list.button_add_drawing' | translate }}
+                            </button>
+                        </div>
+                    </nb-card-footer>
+                </nb-card>
+            </nb-tab>
+
+            <nb-tab *ngIf="user.user_permission_code === '99' || user.user_permission_code === '19'"
+                [tabTitle]="'qc_manage_drawings.tabs.files_explorer.title' | translate" class="nb-tab">
+                <nb-card style="margin-bottom: 0; height: 100%;">
+                    <nb-card-header>
+                        <!-- <div class="div-header" style="display: flex; width: 100%; flex-direction: row;" [formGroup]="folderViewFilterFormGroup">
+                            <div style="justify-content: center; align-items: center; display: flex; margin-right: 1rem;">
+                                <label>Search</label>
+                            </div>
+                        </div> -->
+
+                        <div class="div-filter">
+                            <div style="display: flex; flex-direction: row; margin-right: 1rem; flex: 0.3"
+                                *ngIf="arrRelativePath.length !== 0" (click)="editCustomer()">
+                                <input id="customerName" [readonly]="!isEditCustomer" nbInput fullWidth
+                                    [value]="arrRelativePath.join('/')" (blur)="renameDrawingFolder()" />
+                            </div>
+                            <div [formGroup]="folderViewFilterFormGroup"
+                                style="flex:1; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; flex-direction: row; flex: 1;">
+                                    <input nbInput fullWidth (keyup)="getDirectory()"
+                                        formControlName="drawingsFormControl"
+                                        [placeholder]="'qc_manage_drawings.tabs.files_explorer.filter_form_input' | translate" />
+                                </div>
+                            </div>
+                        </div>
+                    </nb-card-header>
+
+                    <nb-card-body>
+                        <ngx-file-drop class="ngx-file-drop-full-height" dropZoneLabel="Drop csv files here"
+                            (onFileDrop)="droppedDrawings($event)" (onFileOver)="fileOverDrawings()"
+                            (onFileLeave)="fileLeaveDrawings()">
+                            <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                <div id="div-body-manage-drawing" class="div-body" style="overflow-x: hidden;">
+                                    <div *ngFor="let folder of folders" [nbTooltip]="folder" style="
+                                            display: flex;
+                                            flex-direction: column;
+                                            width: 10rem;
+                                            height: 14.5rem;
+                                            float: left;
+                                        ">
+                                        <div class="div-each-folder" (click)="selectFolder(folder)">
+                                            <div class="icon-container">
+                                                <nb-icon icon="folder" style="font-size: 5rem;"></nb-icon>
+                                            </div>
+                                            <div class="folder-name">
+                                                <p class="truncate-overflow">{{ folder }}</p>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="icon-delete" (click)="deleteFolder(folder)">
+                                            <nb-icon icon="trash-2" style="font-size: 1.5rem;"></nb-icon>
+                                        </div> -->
+                                    </div>
+                                    <div *ngFor="let file of files" [nbTooltip]="file.relativePath" style="
+                                            display: flex;
+                                            flex-direction: column;
+                                            width: 10rem;
+                                            height: 14.5rem;
+                                            float: left;
+                                        ">
+                                        <div class="div-each-file" (click)="openFile(file)">
+                                            <div class="icon-container">
+                                                <nb-icon icon="file-outline" style="font-size: 5rem;"></nb-icon>
+                                            </div>
+                                            <div class="file-name">
+                                                <p class="truncate-overflow">{{ file.relativePath }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="icon-delete" (click)="deleteFile(file.relativePath)">
+                                            <nb-icon icon="trash-2" style="font-size: 1.5rem;"></nb-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngx-file-drop>
+                    </nb-card-body>
+
+                    <nb-card-footer>
+                        <div class="div-footer">
+                            <button (click)="goBack()" [disabled]="arrRelativePath.length === 0" nbButton
+                                status="primary">
+                                {{ 'qc_manage_drawings.tabs.files_explorer.button_back' | translate }}
+                            </button>
+                            <!-- <button (click)="openAddDrawingFile()" status="primary" nbButton [disabled]="arrRelativePath.length === 0">
+                                {{ 'qc_manage_drawings.tabs.files_explorer.button_add_drawing_file' | translate }}
+                            </button> -->
+                            <button (click)="addDrawingFolder()" status="primary" nbButton
+                                [disabled]="arrRelativePath.length !== 0"
+                                [ngStyle]="{ display: arrRelativePath.length !== 0 ? 'none' : 'inline-flex' }">
+                                {{ 'qc_manage_drawings.tabs.files_explorer.button_add_drawing_folder' | translate }}
+                            </button>
+                        </div>
+                    </nb-card-footer>
+                </nb-card>
+            </nb-tab>
+        </nb-tabset>
+    </nb-card>
+</div>
+
+<div>
+    <input #addDrawingFileFakeInput type="file" name="addDrawingFile" style="display: none;"
+        (change)="handleAddDrawingFileInput($event.target.files)" />
+    <!-- <input #addDrawingFakeInput type="file" name="addDrawing" style="display: none;" (change)="handleAddDrawingInput($event.target.files)" /> -->
+</div>

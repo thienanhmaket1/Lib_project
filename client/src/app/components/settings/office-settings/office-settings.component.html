@@ -1,0 +1,86 @@
+<nb-card class="div-container">
+    <nb-card-body>
+        <nb-card status="primary">
+            <nb-card-header>
+                {{ 'office_settings.messages.title' | translate }}
+            </nb-card-header>
+
+            <nb-card-body>
+                <div class="div-header" [formGroup]="officeMessageFormGroup">
+                    <div style="display: flex; width: 100%; flex-direction: row;">
+                        <div class="div-header-label">{{ 'office_settings.messages.new_message_title' | translate }}</div>
+
+                        <div class="div-header-input">
+                            <input nbInput fullWidth formControlName="officeMessageTitleFormControl" id="office-message-title" />
+                        </div>
+                    </div>
+                    <div style="display: flex; width: 100%; flex-direction: row; margin-top: 1rem;">
+                        <div class="div-header-label">{{ 'office_settings.messages.new_message_content' | translate }}</div>
+
+                        <div class="div-header-input">
+                            <textarea nbInput fullWidth formControlName="officeMessageFormControl" id="office-message-content"></textarea>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; width: 100%; flex-direction: row; margin-top: 1rem;">
+                        <div class="div-header-label">
+                            {{ 'office_settings.messages.new_message_attachment' | translate }}
+                        </div>
+                        <div class="div-header-input">
+                            <input
+                                #fileUploadInput
+                                status="primary"
+                                nbButton
+                                type="file"
+                                id="fileUpload"
+                                name="fileUpload"
+                                style="display: none;"
+                                (change)="handleFileInput($event)"
+                            />
+                            <ngx-file-drop
+                                dropZoneLabel="Drop files here"
+                                (onFileDrop)="droppedFile($event, 'fileUploadInput')"
+                                (onFileOver)="fileOver()"
+                                (onFileLeave)="fileLeave()"
+                                style="margin-top: 0.5rem;"
+                            >
+                                <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                    <button
+                                        (click)="uploadFileAttachment()"
+                                        style="
+                                            flex: 1;
+                                            text-overflow: ellipsis;
+                                            white-space: nowrap;
+                                            overflow: hidden;
+                                            width: 100%;
+                                            display: flex;
+                                            justify-content: flex-start;
+                                            align-items: flex-start;
+                                        "
+                                        nbButton
+                                        status="primary"
+                                    >
+                                        <img
+                                            [src]="
+                                                btnUploadAttachment
+                                                    ? '../../../assets/file-type-icons/' +
+                                                      btnUploadAttachment.split('.')[btnUploadAttachment.split('.').length - 1] +
+                                                      '.png'
+                                                    : ''
+                                            "
+                                        />
+                                        <span>{{ btnUploadAttachment !== '' ? btnUploadAttachment : ('app.button_browse' | translate) }}</span>
+                                    </button>
+                                </ng-template>
+                            </ngx-file-drop>
+                        </div>
+                    </div>
+                </div>
+            </nb-card-body>
+
+            <nb-card-footer class="div-footer">
+                <button (click)="saveMessage()" nbButton status="primary">{{ 'app.button_save' | translate }}</button>
+            </nb-card-footer>
+        </nb-card>
+    </nb-card-body>
+</nb-card>

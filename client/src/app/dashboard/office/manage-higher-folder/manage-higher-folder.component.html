@@ -1,0 +1,61 @@
+<nb-card class="div-files" class="div-container">
+    <nb-card-header>
+        <div class="div-filter">
+            <div class="div-header" style="display: flex; width: 100%; flex-direction: row;" [formGroup]="filterFormGroup">
+                <input
+                    nbInput
+                    style="flex: 1; max-width: none;"
+                    (keyup)="searchFolder()"
+                    formControlName="folderFormControl"
+                    [placeholder]="'office_manage_folder.filter_form_input' | translate"
+                    id="input-search-folder"
+                />
+                <button *ngIf="user.user_permission_code === '99'" style="margin-left: 1rem" (click)="addFolder()" nbButton status="primary">
+                    {{ 'office_manage_folder.filter_form_add_folder' | translate }}
+                </button>
+                <nb-toggle style="margin-left: 1rem;" formControlName="activationFormControl" id="toggle-show-activate">
+                    {{ (activationToggleStatus ? 'app.toggle.activation.all' : 'app.toggle.activation.activating') | translate }}
+                </nb-toggle>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body *ngIf="allColumns.length !== 0" class="nb-card-body-has-fixed-header">
+        <table class="nb-tree-grid-table-fixed-header" [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+            <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+
+            <ng-container *ngFor="let column of fixedColumns; let index = index" [nbTreeGridColumnDef]="column">
+                <th
+                    [ngStyle]="{ display: column === 'folder_authorized_users' ? 'none' : 'table-cell' }"
+                    nbTreeGridHeaderCell
+                    [nbSortHeader]="getSortDirection(column)"
+                    *nbTreeGridHeaderCellDef
+                >
+                    <button nbButton status="primary">{{ createFixedRealColumns(column) | translate }}</button>
+                </th>
+                <td
+                    [ngStyle]="{ display: column === 'folder_authorized_users' ? 'none' : 'table-cell' }"
+                    style="cursor: pointer;"
+                    nbTreeGridCell
+                    *nbTreeGridCellDef="let row"
+                    (click)="column === 'higher_folder_name' ? goToChildFolder(row.data.folder_id) : openDetail(row.data)"
+                >
+                    <!--(click)="openDetail(row.data)"-->
+                    <span class="data" *ngIf="column === 'no'">
+                        {{ row.data[column] || '-' }}
+                    </span>
+                    <a class="data" *ngIf="column === 'higher_folder_name'" style="text-decoration: none;">
+                        {{ row.data[column] || '-' }}
+                    </a>
+                    <span class="data" *ngIf="column === 'folder_created_at'">
+                        <!-- {{ dateTimeInString(row.data[column]) }} -->
+                        {{ row.data[column] ? sharedService.dateTimeInString(row.data[column]) : '-' }}
+                    </span>
+                    <span class="data" *ngIf="column === 'folder_is_deleted'">
+                        <nb-toggle disabled [checked]="row.data[column]"></nb-toggle>
+                    </span>
+                </td>
+            </ng-container>
+        </table>
+    </nb-card-body>
+</nb-card>

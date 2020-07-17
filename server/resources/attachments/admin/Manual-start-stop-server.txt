@@ -1,0 +1,10 @@
+1. DB: Postgres
+    Tên db: dms
+
+2. Vị trí Source code: D:/DCube
+
+Cách khởi động server:
+  Double click vao file: start-server-forever.bat
+
+Cách tắt server:
+  Double click vao file: stop-server-forever.bat

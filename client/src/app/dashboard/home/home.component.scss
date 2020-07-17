@@ -1,0 +1,70 @@
+@import '../../../themes.scss';
+
+.div-container {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.div-notification {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+// .div-each-notification {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     width: 90%;
+//     height: 44;
+// }
+
+.noti-body {
+    width: 90%;
+}
+
+.noti-time {
+    display: flex;
+    justify-content: flex-end;
+    top: 0.5rem;
+    font-style: italic;
+    margin-top: 0.5rem;
+}
+
+.shorten-text {
+    // display: inline-block;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}
+
+.nb-user-tooltip {
+    display: inline-flex;
+}
+
+.header-each-noti {
+    text-align: end;
+    padding: 1rem;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    // align-items: center;
+    background-color: transparent !important;
+    // color: nb-theme(text-control-color) !important;
+}
+
+.testcontainer {
+    height: 28%;
+    overflow: hidden;
+}
+
+.show {
+    overflow: visible;
+    height: auto;
+}
