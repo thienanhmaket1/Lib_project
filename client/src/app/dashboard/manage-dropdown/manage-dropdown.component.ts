@@ -116,7 +116,7 @@ export class ManageDropdownComponent implements OnInit {
     // }
 
     getDropdownsAndFoldersList() {
-        this.foldersService.getChildFolders().subscribe((res) => {
+        this.foldersService.getFolders().subscribe((res) => {
             this.folders = res.data
             this.dropdownService.getDropDown().subscribe((res2) => {
                 this.dropDown = res2.data

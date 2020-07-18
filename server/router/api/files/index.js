@@ -9,7 +9,6 @@ const filesRouter = express.Router()
 const manageFilesRouter = require('./manage-files')
 const middleWares = require('../../../middlewares')
 
-/** Mở file thuộc Office */
 filesRouter.get('/get-office-file/:filename', async (req, res) => {
     try {
         const query = `
@@ -21,11 +20,6 @@ filesRouter.get('/get-office-file/:filename', async (req, res) => {
         })
 
         if (result) {
-            /**
-             * Trong tbl_settings có cột office_path_value chứa đường dẫn gốc của thư mục office
-             * Cộng đường dẫn từ office_path_value và đường dẫn nhận vào từ client
-             * Ta được 1 đường dẫn đầy đủ. Dùng hàm sendFile để mở file dựa trên đường dẫn
-             */
             const { rows } = result
             const filePath = rows[0].office_path_value || `${environment.assetPath}/office`
             return res.sendFile(path.join(filePath, req.params.filename))
@@ -52,11 +46,6 @@ filesRouter.get('/get-qc-file/:filename', async (req, res) => {
         })
 
         if (result) {
-            /**
-             * Trong tbl_settings có cột qc_path_value chứa đường dẫn gốc của thư mục qc
-             * Cộng đường dẫn từ qc_path_value và đường dẫn nhận vào từ client
-             * Ta được 1 đường dẫn đầy đủ. Dùng hàm sendFile để mở file dựa trên đường dẫn
-             */
             const { rows } = result
             const filePath = rows[0].qc_path_value || `${environment.assetPath}/qc`
 
@@ -305,7 +294,7 @@ filesRouter.post('/update-file-by-authorized-user', async (req, res) => {
             const resultCheck = await Promise.all(
                 tasks.map((e) =>
                     e.catch((error1) => {
-                        console.log(error1)
+                        console.log('error1', error1)
                     })
                 )
             )
@@ -379,8 +368,9 @@ filesRouter.post('/update-file-by-authorized-user', async (req, res) => {
                             file_authorized_users = $4,
                             file_rule_id = $5
                         WHERE file_id = $6
-                    `
-                    const result = await db.postgre.runWithPrepare(query, arrCells).catch(() => {
+                        --RETURNING *;
+            `
+                    const result = await db.postgre.runWithPrepare(query, arrCells).catch((err) => {
                         return null
                     })
 
@@ -410,6 +400,6 @@ filesRouter.post('/update-file-by-authorized-user', async (req, res) => {
     }
 })
 
-// filesRouter.use('/manage-files', middleWares.permissionsMiddleWare.officeAdminMiddleware, manageFilesRouter)
-filesRouter.use('/manage-files', manageFilesRouter)
+filesRouter.use('/manage-files', middleWares.permissionsMiddleWare.officeAdminMiddleware, manageFilesRouter)
+
 module.exports = filesRouter

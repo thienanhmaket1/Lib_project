@@ -1,5 +1,5 @@
 import { office } from './../../../../common/constants'
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, Input } from '@angular/core'
 import { FormGroup, FormControl } from '@angular/forms'
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder, NbDialogService } from '@nebular/theme'
 import { FileDetailComponent } from 'src/app/components/file-detail/file-detail.component'
@@ -7,6 +7,7 @@ import { createMiddleFakeColumns, createMiddleRealColumns, createLeftRealColumns
 import { FileDetailService } from 'src/app/services/file-detail.service'
 import { AuthenticationService } from 'src/app/authentication/authentication.service'
 import { ManageUserService } from 'src/app/services/manage-user.service'
+import { dateTimeInString } from './../../../../common/functions'
 import { FolderDetailService } from '@app/services/folder-detail.service'
 import { SharedService } from '@app/services/shared.service'
 import { TranslateService } from '@ngx-translate/core'
@@ -56,84 +57,72 @@ export class SearchFileComponent implements OnInit {
         private translateService: TranslateService,
         private dropdownService: DropdownService
     ) {
-        // this.getFolderList()
-        // this.getUserList()
-        this.filterFormGroup.valueChanges.subscribe((res) => {
-            this._filter(res)
-        })
-    }
-
-    async _filter(input) {
-        const { selectedFolder, searchFileFormControl } = input
-        // const response = await this.fileService.getFilesByUser('office').toPromise()
-        // this.files = response.files
-        // const responseDropdownList = await this.dropdownService.getDropDownByUser().toPromise()
-        // this.dropdownList = responseDropdownList.data
-
-        if (selectedFolder) {
-            this.middleFakeColumns = [...createMiddleFakeColumns(selectedFolder.folder_properties, this.translateService.currentLang)]
-            const index = this.leftFakeColumns.indexOf(`file_rule_id`)
-            if (index > -1) {
-                this.leftFakeColumns.splice(index, 1)
-            }
-
-            if (this.leftRealColumns[this.leftRealColumns.length - 1] !== 'office_manage_file.file_detail.file_file_no') {
-                this.leftRealColumns.pop()
-            }
-            this.leftFakeColumns.push(`file_rule_id`)
-            this.leftRealColumns.push(`${selectedFolder.folder_document_no}`)
-
-            this.allColumns = [...this.leftFakeColumns, ...this.middleFakeColumns, ...this.rightFakeColumns]
-            const searchFileFormControlLow = searchFileFormControl.toString().toLocaleLowerCase()
-            const data = this.files.filter((e) => {
-                const folderSearching = e.folder_id === selectedFolder.folder_id
-                const fileSearching =
-                    (e.file_rule_id &&
-                        e.file_rule_id
-                            .toString()
-                            .toLocaleLowerCase()
-                            .includes(searchFileFormControlLow)) ||
-                    (e.file_file_name &&
-                        e.file_file_name.find((e2) => {
-                            return e2.file_title
-                                .toString()
-                                .toLocaleLowerCase()
-                                .includes(searchFileFormControlLow)
-                        })) ||
-                    (e.file_created_by &&
-                        e.file_created_by
-                            .toString()
-                            .toLocaleLowerCase()
-                            .includes(searchFileFormControlLow)) ||
-                    (e.file_properties &&
-                        e.file_properties.find((e1) => {
-                            return e1.property_value
-                                .toString()
-                                .toLocaleLowerCase()
-                                .includes(searchFileFormControlLow)
-                        }))
-
-                return folderSearching && fileSearching
-            })
-            this.data = this.convertDataToDisplayableData(data, selectedFolder)
-            this.applyNewData(this.data)
-
-            return
-        }
-
-        this.middleFakeColumns = []
-    }
-
-    ngOnInit(): void {
         this.getFolderList()
         this.getUserList()
-        this.getDropdown()
-        this.getFiles()
-        this.translateService.onLangChange.subscribe(() => {
-            const filteredFormGroup = this.filterFormGroup.getRawValue()
-            this._filter(filteredFormGroup)
+        this.filterFormGroup.valueChanges.subscribe(async (res) => {
+            const { selectedFolder, searchFileFormControl } = res
+            const response = await this.fileService.getFilesByUser('office').toPromise()
+            this.files = response.files
+            const responseDropdownList = await this.dropdownService.getDropDownByUser().toPromise()
+            this.dropdownList = responseDropdownList.data
+
+            if (selectedFolder) {
+                this.middleFakeColumns = [...createMiddleFakeColumns(selectedFolder.folder_properties, this.translateService.currentLang)]
+                this.measureWidth(selectedFolder)
+                const index = this.leftFakeColumns.indexOf(`file_rule_id`)
+                if (index > -1) {
+                    this.leftFakeColumns.splice(index, 1)
+                }
+
+                if (this.leftRealColumns[this.leftRealColumns.length - 1] !== 'office_manage_file.file_detail.file_file_no') {
+                    this.leftRealColumns.pop()
+                }
+                this.leftFakeColumns.push(`file_rule_id`)
+                this.leftRealColumns.push(`${selectedFolder.folder_document_no}`)
+
+                this.allColumns = [...this.leftFakeColumns, ...this.middleFakeColumns, ...this.rightFakeColumns]
+                const searchFileFormControlLow = searchFileFormControl.toString().toLocaleLowerCase()
+                const data = this.files.filter((e) => {
+                    const folderSearching = e.folder_id === selectedFolder.folder_id
+                    const fileSearching =
+                        (e.file_file_name &&
+                            e.file_file_name.find((e2) =>
+                                e2.file_title
+                                    .toString()
+                                    .toLocaleLowerCase()
+                                    .includes(searchFileFormControlLow)
+                            )) ||
+                        (e.file_created_by &&
+                            e.file_created_by
+                                .toString()
+                                .toLocaleLowerCase()
+                                .includes(searchFileFormControlLow)) ||
+                        (e.file_properties &&
+                            e.file_properties.find((e1) =>
+                                e1.property_value
+                                    .toString()
+                                    .toLocaleLowerCase()
+                                    .includes(searchFileFormControlLow)
+                            )) ||
+                        (e.file_rule_id &&
+                            e.file_rule_id
+                                .toString()
+                                .toLocaleLowerCase()
+                                .includes(searchFileFormControlLow))
+
+                    return folderSearching && fileSearching
+                })
+                this.data = this.convertDataToDisplayableData(data)
+                this.applyNewData(this.data)
+
+                return
+            }
+
+            this.middleFakeColumns = []
         })
     }
+
+    ngOnInit(): void { }
 
     getUserList() {
         this.manageUserService.getSpecificGroupUser('office').subscribe((res) => {
@@ -141,21 +130,9 @@ export class SearchFileComponent implements OnInit {
         })
     }
 
-    getFiles() {
-        this.fileService.getFilesByUser('office').subscribe((res) => {
-            this.files = res.files
-        })
-    }
-
     getFolderList() {
         this.foldersService.getFoldersByUser().subscribe((res) => {
             this.folders = res.data
-        })
-    }
-
-    getDropdown() {
-        this.dropdownService.getDropDownByUser().subscribe((res) => {
-            this.dropdownList = res.data
         })
     }
 
@@ -175,29 +152,24 @@ export class SearchFileComponent implements OnInit {
         return createRightRealColumns(flagColumnName)
     }
 
-    convertDataToDisplayableData(data, selectedFolder) {
+    convertDataToDisplayableData(data) {
         let no = 0
         return data.map((e) => {
             no += 1
             const newE = {}
             const authorized_user_with_name = []
             e.file_properties.forEach((e1) => {
-                const find = selectedFolder.folder_properties.find((e3) => e3.id === e1.id)
-                newE[`column_*_${find ? find.property_name : e1.property_name}`] = {
+                newE[`column_*_${e1.property_name}`] = {
                     property_value: e1.property_value,
-                    property_data_type: find ? find.property_data_type : e1.property_data_type,
-                    property_is_show_in_detail: find ? find.property_is_show_in_detail : e1.property_is_show_in_detail,
-                    max_width: find ? find.max_width : e1.max_width,
-                    id: e1.id,
+                    property_data_type: e1.property_data_type,
+                    max_width: e1.max_width,
                 }
                 if (e1.hasOwnProperty('dropdown_id')) {
-                    newE[`column_*_${find ? find.property_name : e1.property_name}`] = {
+                    newE[`column_*_${e1.property_name}`] = {
                         property_value: e1.property_value,
-                        dropdown_id: find ? find.property_data_type.split('dropdown_')[1] : e1.dropdown_id,
-                        property_data_type: find ? find.property_data_type : e1.property_data_type,
-                        property_is_show_in_detail: find ? find.property_is_show_in_detail : e1.property_is_show_in_detail,
-                        max_width: find ? find.max_width : e1.max_width,
-                        id: e1.id,
+                        dropdown_id: e1.dropdown_id,
+                        property_data_type: e1.property_data_type,
+                        max_width: e1.max_width,
                     }
                 }
             })
@@ -264,12 +236,12 @@ export class SearchFileComponent implements OnInit {
                 hasBackdrop: true,
                 autoFocus: false,
             })
-            .onClose.subscribe(async () => {
+            .onClose.subscribe(async (res) => {
                 // this.files = this.files.concat([res.data])
                 const response = await this.fileService.getFilesByUser('office').toPromise()
                 this.files = response.files
                 const data = this.files.filter((e) => e.folder_id === selectedFolder.folder_id)
-                this.data = this.convertDataToDisplayableData(data, selectedFolder)
+                this.data = this.convertDataToDisplayableData(data)
                 this.applyNewData(this.data)
             })
     }
@@ -277,16 +249,13 @@ export class SearchFileComponent implements OnInit {
     dropdownDetail(input) {
         const findDropdown = this.dropdownList.find((e) => e.drop_down_id === Number(input.dropdown_id))
         const list = []
-        if (findDropdown) {
-            input.property_value.forEach((element) => {
-                findDropdown.drop_down_data.find((e2) => {
-                    if (e2.id === element) {
-                        list.push(e2.name)
-                    }
-                })
+        input.property_value.forEach((element) => {
+            findDropdown.drop_down_data.find((e2) => {
+                if (e2.id === element) {
+                    list.push(e2.name)
+                }
             })
-        }
-
+        })
         return list
     }
 
@@ -298,14 +267,14 @@ export class SearchFileComponent implements OnInit {
         return input
     }
 
-    // measureWidth(input) {
-    //     const fontSize = '12'
-    //     input.folder_properties.map((e) => {
-    //         e.max_width = this.getTextWidth('i'.repeat(e.max_width))
-    //         return { ...e }
-    //     })
-    //     // return this.maxWidth
-    // }
+    measureWidth(input) {
+        const fontSize = '12'
+        input.folder_properties.map((e) => {
+            e.max_width = this.getTextWidth('a'.repeat(e.max_width))
+            return { ...e }
+        })
+        // return this.maxWidth
+    }
 
     getTextWidth(text, font = '14pt roboto') {
         // if given, use cached canvas for better performance
@@ -315,64 +284,5 @@ export class SearchFileComponent implements OnInit {
         context.font = font
         const metrics = context.measureText(text)
         return metrics.width
-    }
-
-    setWidth(input) {
-        return this.getTextWidth('a'.repeat(input.max_width))
-    }
-
-    check(column) {
-        const { selectedFolder } = this.filterFormGroup.getRawValue()
-        if (column !== 'file_created_at' && column !== 'file_updated_at' && column !== 'file_file_name' && column !== 'file_is_deleted') {
-            if (column === 'file_updated_count') {
-                return selectedFolder.folder_is_show_updated_count
-            }
-        }
-        return false
-    }
-
-    check2(column) {
-        // console.log(column)
-        const { selectedFolder } = this.filterFormGroup.getRawValue()
-        if (column === 'file_created_at') {
-            return selectedFolder.folder_is_show_created_at
-        }
-        if (column === 'file_updated_at') {
-            return selectedFolder.folder_is_show_updated_at
-        }
-        return false
-    }
-
-    checkProperty(input) {
-        const { selectedFolder } = this.filterFormGroup.getRawValue()
-        if (input) {
-            const find = selectedFolder.folder_properties.find((e3) => e3.id === input.id)
-            return find ? find.property_is_show_in_list : true
-        }
-        return false
-    }
-
-    displayColumn(column) {
-        const { selectedFolder } = this.filterFormGroup.getRawValue()
-        if (column === 'file_authorized_users') {
-            return false
-        }
-        if (column === 'file_created_at') {
-            return selectedFolder.folder_is_show_created_at
-        }
-        if (column === 'file_updated_at') {
-            return selectedFolder.folder_is_show_updated_at
-        }
-        if (column === 'file_updated_count') {
-            return selectedFolder.folder_is_show_updated_count
-        }
-        if (column.includes('column_*_')) {
-            const propertyName = column.split('column_*_')[1]
-            if (propertyName) {
-                const find = selectedFolder.folder_properties.find((e3) => e3.property_name === propertyName)
-                return find ? find.property_is_show_in_list : true
-            }
-        }
-        return true
     }
 }

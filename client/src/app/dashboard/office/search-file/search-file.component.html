@@ -23,13 +23,12 @@
             </div>
         </div>
     </nb-card-header>
-
     <nb-card-body *ngIf="allColumns.length !== 0" class="div-files nb-card-body-has-fixed-header">
         <table class="nb-tree-grid-table-fixed-header" [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
             <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
-            <ng-container *ngFor="let column of leftFakeColumns; let index = index" [nbTreeGridColumnDef]="column">
+            <ng-container *ngFor="let column of leftFakeColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
                 <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
                     <button nbButton status="primary">{{ createLeftRealColumns(column) | translate }}</button>
                 </th>
@@ -38,13 +37,8 @@
                 </td>
             </ng-container>
 
-            <ng-container *ngFor="let column of middleFakeColumns; let index = index" [nbTreeGridColumnDef]="column">
-                <th
-                    nbTreeGridHeaderCell
-                    [nbSortHeader]="getSortDirection(column)"
-                    *nbTreeGridHeaderCellDef
-                    [ngStyle]="{ display: !displayColumn(column) ? 'none' : 'table-cell' }"
-                >
+            <ng-container *ngFor="let column of middleFakeColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
+                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
                     <button nbButton status="primary">{{ createMiddleRealColumns(column) | translate }}</button>
                 </th>
                 <td
@@ -53,12 +47,11 @@
                     (click)="openDetail(row.data)"
                     nbTreeGridCell
                     *nbTreeGridCellDef="let row"
-                    [ngStyle]="{ display: !displayColumn(column) ? 'none' : 'table-cell' }"
-                    [style.max-width]="row.data[column] ? setWidth(row.data[column]) + 'px' : 'none'"
+                    [style.max-width]="row.data[column] ? row.data[column].max_width + 'px' : 'none'"
                     [style.white-space]="row.data[column] && row.data[column].property_data_type === 'text' ? 'nowrap' : 'pre-wrap'"
                 >
                     <div *ngIf="column.includes('column_*_')">
-                        <div *ngIf="checkProperty(row.data[column])" class="shorten-text">
+                        <div *ngIf="row.data[column] !== undefined" class="shorten-text">
                             <span
                                 *ngIf="!row.data[column].hasOwnProperty('dropdown_id')"
                                 [nbTooltip]="row.data[column] ? row.data[column].property_value : ''"
@@ -72,34 +65,37 @@
                                         {{ item }}
                                     </mat-chip>
                                 </mat-chip-list>
+                                <!-- {{  || '-' }} -->
                             </span>
                         </div>
                     </div>
+                    <!-- {{ row.data[column] }} -->
                 </td>
             </ng-container>
 
-            <ng-container *ngFor="let column of rightFakeColumns; let index = index" [nbTreeGridColumnDef]="column">
+            <ng-container *ngFor="let column of rightFakeColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
                 <th
-                    [ngStyle]="{ display: !displayColumn(column) ? 'none' : 'table-cell' }"
+                    [ngStyle]="{ display: column === 'file_authorized_users' ? 'none' : 'table-cell' }"
                     nbTreeGridHeaderCell
                     [nbSortHeader]="getSortDirection(column)"
                     *nbTreeGridHeaderCellDef
                 >
-                    <button nbButton status="primary">
-                        {{ createRightRealColumns(column) | translate }}
-                    </button>
+                    <button nbButton status="primary">{{ createRightRealColumns(column) | translate }}</button>
                 </th>
                 <td
-                    [ngStyle]="{ display: !displayColumn(column) ? 'none' : 'table-cell' }"
+                    [ngStyle]="{ display: column === 'file_authorized_users' ? 'none' : 'table-cell' }"
                     style="cursor: pointer; white-space: nowrap;"
                     (click)="openDetail(row.data)"
                     nbTreeGridCell
                     *nbTreeGridCellDef="let row"
                 >
-                    <span *ngIf="check(column)" class="data">
+                    <span
+                        *ngIf="column !== 'file_created_at' && column !== 'file_updated_at' && column !== 'file_file_name' && column !== 'file_is_deleted'"
+                        class="data"
+                    >
                         {{ row.data[column] || '-' }}
                     </span>
-                    <span *ngIf="check2(column)" class="data">
+                    <span *ngIf="column === 'file_created_at' || column === 'file_updated_at'" class="data">
                         {{ row.data[column] ? sharedService.dateTimeInString(row.data[column]) : '-' }}
                     </span>
                     <div *ngIf="column === 'file_file_name'">

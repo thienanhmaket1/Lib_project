@@ -76,7 +76,7 @@ export class DropdownDetailComponent implements OnInit {
         private foldersService: FolderDetailService,
         private dropDownService: DropdownService,
         public sharedService: SharedService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         const { user_permission_code } = this.authenticationService.getUserValue
@@ -129,7 +129,7 @@ export class DropdownDetailComponent implements OnInit {
     }
 
     getFolders() {
-        this.foldersService.getChildFolders().subscribe((res) => {
+        this.foldersService.getFolders().subscribe((res) => {
             this.allFolders = res.data
         })
     }
@@ -157,9 +157,9 @@ export class DropdownDetailComponent implements OnInit {
             id:
                 this.dropdown.drop_down_data.length !== 0
                     ? `${Math.max.apply(
-                          Math,
-                          this.dropdown.drop_down_data.map((o) => o.id)
-                      ) + 1}`
+                        Math,
+                        this.dropdown.drop_down_data.map((o) => o.id)
+                    ) + 1}`
                     : `1`,
             name: '',
         }

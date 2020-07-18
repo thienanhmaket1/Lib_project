@@ -1,24 +1,25 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SearchFileComponent } from './search-file.component'
+import { SearchFileComponent } from './search-file.component';
 
 describe('SearchFileComponent', () => {
-    let component: SearchFileComponent
-    let fixture: ComponentFixture<SearchFileComponent>
+  let component: SearchFileComponent;
+  let fixture: ComponentFixture<SearchFileComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [SearchFileComponent],
-        }).compileComponents()
-    }))
-
-    beforeEach(() => {
-        fixture = TestBed.createComponent(SearchFileComponent)
-        component = fixture.componentInstance
-        fixture.detectChanges()
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ SearchFileComponent ]
     })
+    .compileComponents();
+  }));
 
-    it('should create', () => {
-        expect(component).toBeTruthy()
-    })
-})
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SearchFileComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

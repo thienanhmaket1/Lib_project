@@ -24,7 +24,7 @@ import { AdminSettingsComponent } from './components/settings/admin-settings/adm
 import { ModOfficeGuard } from './guard/modOffice.guard'
 import { ModQCGuard } from './guard/modQC.guard'
 import { ManageDropdownComponent } from './dashboard/manage-dropdown/manage-dropdown.component'
-import { ManageHigherFolderComponent } from './dashboard/office/manage-higher-folder/manage-higher-folder.component'
+// import { ManageHigherFolderComponent } from './dashboard/office/manage-higher-folder/manage-higher-folder.component'
 
 const routes: Routes = [
     {
@@ -55,14 +55,9 @@ const routes: Routes = [
                         component: SearchFileComponent,
                     },
                     {
-                        path: 'manage-higher-folder',
-                        component: ManageHigherFolderComponent,
-                        // canActivate: [ModOfficeGuard],
-                    },
-                    {
-                        path: 'manage-folder/:folder_id',
+                        path: 'manage-folder',
                         component: ManageFolderComponent,
-                        // canActivate: [ModOfficeGuard],
+                        canActivate: [ModOfficeGuard],
                         children: [
                             {
                                 path: 'create-folder',
@@ -77,9 +72,9 @@ const routes: Routes = [
                         ],
                     },
                     {
-                        path: 'manage-file/:folder_id',
+                        path: 'manage-file',
                         component: ManageFileComponent,
-                        // canActivate: [ModOfficeGuard],
+                        canActivate: [ModOfficeGuard],
                         children: [
                             {
                                 path: 'create-file',
@@ -161,4 +156,4 @@ const routes: Routes = [
     imports: [RouterModule.forRoot(routes)], // , { useHash: true }
     exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

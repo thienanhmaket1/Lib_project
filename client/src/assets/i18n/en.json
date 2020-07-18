@@ -23,9 +23,9 @@
     },
     "menu": {
         "home": "Home",
-        "office": "Office",
+        "office": "Library",
         "search_files": "Search",
-        "office_admin": "Office Admin",
+        "office_admin": "Library Manament",
         "manage_folders": "Categories",
         "manage_files": "Document",
         "manage_office_settings": "Settings",
@@ -49,8 +49,8 @@
         "notification": {
             "title": "Notifications",
             "admin": "Admin",
-            "qc": "QC",
-            "office": "Office",
+            "qc": "Bookstore",
+            "office": "Library Manament",
             "message_form": {
                 "head_title": "Message Detail",
                 "title": "Title",
@@ -119,6 +119,7 @@
             "property_data_type": "Data type",
             "property_is_show_in_list": "Show in list",
             "property_is_show_in_detail": "Show in detail",
+            "number_of_characters": "Number Of Characters",
             "folder_status_yes": "Yes",
             "folder_status_no": "No",
             "max_width": "Number of Characters",
@@ -135,7 +136,7 @@
         }
     },
     "office_settings": {
-        "title": "Office Admin Settings",
+        "title": "Library Manament Settings",
         "messages": {
             "title": "Messages",
             "new_message_title": "Title",
@@ -249,7 +250,7 @@
         },
         "path_setting": {
             "title": "Path settings",
-            "path_office": "Office",
+            "path_office": "Thư viện",
             "path_qc": "QC"
         },
         "common_setting": {

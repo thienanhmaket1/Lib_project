@@ -1,6 +1,5 @@
 const express = require('express')
 const db = require('../../../../services/db')
-const fileService = require('../../../../services/file')
 
 const manageFilesRouter = express.Router()
 
@@ -8,20 +7,18 @@ manageFilesRouter.post('/get-files/:group', async (req, res) => {
     try {
         const { group } = req.params
         const query = `
-            SELECT f.file_id
-                , file_created_at
-                , file_updated_at
-                , file_updated_by
-                , file_is_deleted
-                , f.folder_id
-                , file_rule_id
-                , file_file_name
-                , file_properties
-                , file_authorized_users
-                , u.user_fullname as file_created_by
-                , tfh.file_updated_count
-                , file_department_id
-                , fo.folder_name
+            SELECT f.file_id,
+                file_created_at,
+                file_updated_at,
+                file_updated_by,
+                file_is_deleted,
+                folder_id,
+                file_rule_id,
+                file_file_name,
+                file_properties,
+                file_authorized_users,
+                u.user_fullname as file_created_by,
+                tfh.file_updated_count
             FROM tbl_files f
             LEFT JOIN (
                     SELECT COUNT(file_id) as file_updated_count, file_id
@@ -29,7 +26,6 @@ manageFilesRouter.post('/get-files/:group', async (req, res) => {
                     GROUP BY file_id
                 ) tfh ON tfh.file_id = f.file_id
             LEFT JOIN tbl_users u ON u.user_id = f.file_created_by
-            LEFT JOIN tbl_folders fo ON fo.folder_id = f.folder_id
             WHERE file_group = $1
             ORDER BY file_id
         `
@@ -40,35 +36,9 @@ manageFilesRouter.post('/get-files/:group', async (req, res) => {
 
         if (result) {
             const { rows } = result
-            let newRows = []
-            /** Kiểm tra xem các drawing này có drawing file ở mức vật lý chưa */
-            const settingQuery = `
-                SELECT *
-                FROM tbl_settings
-                LIMIT 1;
-            `
-            const settingResult = await db.postgre.run(settingQuery).catch(() => null)
-
-            if (settingResult) {
-                const settings = settingResult.rows[0]
-                const tasks = []
-                rows.forEach((e) => {
-                    tasks.push(fileService.checkExistFile(settings, e, 'office'))
-                })
-                newRows = await Promise.all(
-                    tasks.map((e) =>
-                        e.catch((error1) => {
-                            console.log(error1)
-                        })
-                    )
-                )
-            }
-            newRows.forEach((element) => {
-                console.log(element.file_file_name)
-            })
             return res.status(200).json({
                 code: 0,
-                files: newRows,
+                files: rows,
             })
         }
 
@@ -134,7 +104,7 @@ manageFilesRouter.post('/get-files-by-folder-id', async (req, res) => {
                 file_updated_at,
                 file_updated_by,
                 file_is_deleted,
-                f.folder_id,
+                folder_id,
                 file_rule_id,
                 file_file_name,
                 file_properties,
@@ -142,7 +112,7 @@ manageFilesRouter.post('/get-files-by-folder-id', async (req, res) => {
                 u.user_fullname as file_created_by
             FROM tbl_files f
             LEFT JOIN tbl_users u ON u.user_id = f.file_created_by
-            WHERE f.folder_id = $1
+            WHERE folder_id = $1
         `
 
         const result = await db.postgre.runWithPrepare(query, [folder_id]).catch(() => {
@@ -168,7 +138,7 @@ manageFilesRouter.post('/get-files-by-folder-id', async (req, res) => {
 
 manageFilesRouter.post('/create-file', async (req, res) => {
     try {
-        const { file_created_by, folder_id, file_properties, file_file_name, file_authorized_users, file_rule_id, file_department_id } = req.body
+        const { file_created_by, folder_id, file_properties, file_file_name, file_authorized_users, file_rule_id } = req.body
         const tasks = []
         const file_group = 'office'
         let arrCells = []
@@ -221,25 +191,15 @@ manageFilesRouter.post('/create-file', async (req, res) => {
                 file_authorized_users,
                 file_group,
                 file_rule_id,
-                Number(file_department_id),
             ]
             query = `
-                    INSERT INTO tbl_files(file_created_by
-                        , file_created_at
-                        , folder_id
-                        , file_properties
-                        , file_file_name
-                        , file_authorized_users
-                        , file_group
-                        , file_rule_id
-                        , file_department_id)
-                    VALUES($1, now(), $2, $3, $4, $5, $6, $7, $8)
+                    INSERT INTO tbl_files(file_created_by, file_created_at, folder_id, file_properties, file_file_name, file_authorized_users, file_group, file_rule_id)
+                    VALUES($1, now(), $2, $3, $4, $5, $6, $7)
                     RETURNING file_id;
                     `
 
-            const result = await db.postgre.runWithPrepare(query, arrCells).catch((err) => {
-                console.log(err)
-                return err
+            const result = await db.postgre.runWithPrepare(query, arrCells).catch(() => {
+                return null
             })
             if (result.rows) {
                 const { rows } = result
@@ -250,14 +210,6 @@ manageFilesRouter.post('/create-file', async (req, res) => {
                     })
                 }
             }
-
-            if (result.name === 'error') {
-                return res.status(200).json({
-                    code: 1,
-                    detail: result.detail,
-                })
-            }
-
             return res.status(500).json({
                 code: 2,
             })
@@ -277,17 +229,7 @@ manageFilesRouter.post('/create-file', async (req, res) => {
 manageFilesRouter.post('/update-file', async (req, res) => {
     try {
         // const { user_id } = req.user
-        const {
-            file_id,
-            file_updated_by,
-            file_properties,
-            file_file_name,
-            file_authorized_users,
-            file_rule_id,
-            folder_id,
-            file_changed,
-            file_department_id,
-        } = req.body
+        const { file_id, file_updated_by, file_properties, file_file_name, file_authorized_users, file_rule_id, folder_id, file_changed } = req.body
         let arrCells = []
         const tasks = []
         const listFileNameFromInput = []
@@ -310,7 +252,7 @@ manageFilesRouter.post('/update-file', async (req, res) => {
             const resultCheck = await Promise.all(
                 tasks.map((e) =>
                     e.catch((error1) => {
-                        console.log(error1)
+                        console.log('error1', error1)
                     })
                 )
             )
@@ -373,29 +315,19 @@ manageFilesRouter.post('/update-file', async (req, res) => {
             })
             if (resultToHistory) {
                 if (resultToHistory.rowCount !== 0) {
-                    arrCells = [
-                        file_updated_by,
-                        JSON.stringify(file_properties),
-                        JSON.stringify(file_file_name),
-                        file_authorized_users,
-                        file_rule_id,
-                        file_id,
-                        Number(file_department_id),
-                    ]
+                    arrCells = [file_updated_by, JSON.stringify(file_properties), JSON.stringify(file_file_name), file_authorized_users, file_rule_id, file_id]
                     const query = `
                         UPDATE tbl_files
-                        SET file_updated_by = $1
-                            , file_updated_at = now()
-                            , file_properties = $2
-                            , file_file_name = $3
-                            , file_authorized_users = $4
-                            , file_rule_id = $5
-                            , file_department_id = $7
+                        SET file_updated_by = $1,
+                            file_updated_at = now(),
+                            file_properties = $2,
+                            file_file_name = $3,
+                            file_authorized_users = $4,
+                            file_rule_id = $5
                         WHERE file_id = $6
                         --RETURNING *;
                     `
-                    const result = await db.postgre.runWithPrepare(query, arrCells).catch((err) => {
-                        console.log(err)
+                    const result = await db.postgre.runWithPrepare(query, arrCells).catch(() => {
                         return null
                     })
 
@@ -427,15 +359,14 @@ manageFilesRouter.post('/update-file', async (req, res) => {
 
 manageFilesRouter.post('/delete-file', async (req, res) => {
     try {
-        const { file_id, status, file_file_name } = req.body
-        const arrCells = [file_id, !status, JSON.stringify(file_file_name)]
+        const { file_id, status } = req.body
+        const arrCells = [file_id, !status]
         const query = `
             UPDATE tbl_files
-            SET file_is_deleted = $2, file_file_name = $3
+            SET file_is_deleted = $2
             WHERE file_id = $1;
         `
-        const result = await db.postgre.runWithPrepare(query, arrCells).catch((err) => {
-            console.log(err)
+        const result = await db.postgre.runWithPrepare(query, arrCells).catch(() => {
             return null
         })
         if (result) {

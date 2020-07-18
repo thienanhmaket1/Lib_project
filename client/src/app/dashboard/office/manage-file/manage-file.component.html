@@ -3,21 +3,7 @@
         <div class="div-filter">
             <div [formGroup]="filterFormGroup" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; flex-direction: row; flex: 1">
-                    <div class="div-go-to">
-                        <a class="btn-go-to" (click)="goToHigherFolder()" status="primary">
-                            {{ 'object.folder' | translate }}
-                        </a>
-                        <span style="margin-right: 0.5rem;">/</span>
-                        <a class="btn-go-to" (click)="goToFolder()" status="primary">
-                            {{ currentHigherFolder }}
-                        </a>
-                        <span style="margin-right: 0.5rem;">/</span>
-                        <a class="btn-go-to" status="primary">
-                            {{ currentFolder }}
-                        </a>
-                    </div>
-
-                    <!-- <nb-select
+                    <nb-select
                         [placeholder]="'office_manage_file.filter_form_choose_folder' | translate"
                         formControlName="selectedFolder"
                         filled
@@ -26,18 +12,17 @@
                     >
                         <nb-option [value]="null">{{ 'app.select_none' | translate }}</nb-option>
                         <nb-option *ngFor="let folder of folders" [value]="folder">{{ folder.folder_name }} </nb-option>
-                    </nb-select> -->
+                    </nb-select>
                     <input
                         nbInput
                         style="flex: 1; max-width: none; margin-left: 1rem;"
                         formControlName="searchFileFormControl"
                         [placeholder]="'office_manage_file.filter_form_input' | translate"
-                        id="input-search-file"
                     />
-                    <button *ngIf="checkPermission()" style="margin-left: 1rem" (click)="addFile()" nbButton status="primary">
+                    <button style="margin-left: 1rem" (click)="addFile()" *ngIf="allColumns.length !== 0" nbButton status="primary">
                         {{ 'office_manage_file.filter_form_add_file' | translate }}
                     </button>
-                    <nb-toggle style="margin-left: 1rem;" formControlName="activationFormControl" id="toggle-show-activate">
+                    <nb-toggle style="margin-left: 1rem;" formControlName="activationFormControl">
                         {{ (activationToggleStatus ? 'app.toggle.activation.all' : 'app.toggle.activation.activating') | translate }}
                     </nb-toggle>
                 </div>
@@ -46,34 +31,27 @@
     </nb-card-header>
 
     <nb-card-body *ngIf="allColumns.length !== 0" class="div-files nb-card-body-has-fixed-header">
-        <table
-            class="nb-tree-grid-table-fixed-header"
-            [nbTreeGrid]="dataSource"
-            [nbSort]="dataSource"
-            (sort)="updateSort($event)"
-            *ngIf="filterFormGroup.get('selectedFolder').value !== null"
-        >
+        <table class="nb-tree-grid-table-fixed-header" [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
             <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
-            <ng-container *ngFor="let column of leftFakeColumns; let index = index" [nbTreeGridColumnDef]="column">
+            <ng-container *ngFor="let column of leftFakeColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
                 <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
                     <button nbButton status="primary">{{ createLeftRealColumns(column) | translate }}</button>
                 </th>
                 <td style="cursor: pointer;" (click)="openDetail(row.data)" nbTreeGridCell *nbTreeGridCellDef="let row">
-                    <span *ngIf="column !== 'file_department_id'">{{ row.data[column] }}</span>
-                    <span *ngIf="column === 'file_department_id'">{{ row.data[column]['name'] }}</span>
+                    {{ row.data[column] }}
                 </td>
             </ng-container>
 
-            <ng-container *ngFor="let column of middleFakeColumns; let index = index" [nbTreeGridColumnDef]="column">
+            <ng-container *ngFor="let column of middleFakeColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
                 <th
                     nbTreeGridHeaderCell
                     [nbSortHeader]="getSortDirection(column)"
                     *nbTreeGridHeaderCellDef
                     [ngStyle]="{ display: !displayColumn(column) ? 'none' : 'table-cell' }"
                 >
-                    <button nbButton status="primary">{{ createMiddleRealColumns(column) | translate }}</button>
+                    <button nbButton status="primary">{{ createRealMiddleColumns(column) | translate }}</button>
                 </th>
                 <td
                     [id]="column"
@@ -82,6 +60,7 @@
                     nbTreeGridCell
                     *nbTreeGridCellDef="let row"
                     [ngStyle]="{ display: !displayColumn(column) ? 'none' : 'table-cell' }"
+                    [style.max-width]="row.data[column] ? setWidth(row.data[column]) + 'px' : 'none'"
                     [style.white-space]="row.data[column] && row.data[column].property_data_type === 'text' ? 'nowrap' : 'pre-wrap'"
                 >
                     <div *ngIf="column.includes('column_*_')">
@@ -91,8 +70,7 @@
                                 [nbTooltip]="row.data[column] ? row.data[column].property_value : ''"
                                 nbTooltipStatus="success"
                             >
-                                <!-- {{ row.data[column].property_value || '-' }} -->
-                                {{ setValue(row.data[column] || '-') }}
+                                {{ row.data[column].property_value || '-' }}
                             </span>
                             <span *ngIf="row.data[column].hasOwnProperty('dropdown_id')">
                                 <mat-chip-list #chipList aria-label="Item selection">
@@ -106,7 +84,7 @@
                 </td>
             </ng-container>
 
-            <ng-container *ngFor="let column of rightFakeColumns; let index = index" [nbTreeGridColumnDef]="column">
+            <ng-container *ngFor="let column of rightFakeColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
                 <th
                     [ngStyle]="{ display: !displayColumn(column) ? 'none' : 'table-cell' }"
                     nbTreeGridHeaderCell
@@ -120,26 +98,22 @@
                 <td
                     [ngStyle]="{ display: !displayColumn(column) ? 'none' : 'table-cell' }"
                     style="cursor: pointer; white-space: nowrap;"
+                    (click)="openDetail(row.data)"
                     nbTreeGridCell
                     *nbTreeGridCellDef="let row"
                 >
-                    <span *ngIf="check(column)" class="data" (click)="openDetail(row.data)">
+                    <span *ngIf="check(column)" class="data">
                         {{ row.data[column] || '-' }}
                     </span>
-                    <span *ngIf="check2(column)" class="data" (click)="openDetail(row.data)">
+                    <span *ngIf="check2(column)" class="data">
                         {{ row.data[column] ? sharedService.dateTimeInString(row.data[column]) : '-' }}
                     </span>
                     <div *ngIf="column === 'file_file_name'">
-                        <a
-                            *ngFor="let item of row.data[column]"
-                            (click)="openFileName(item)"
-                            style="display: block; margin-bottom: 4px; text-decoration: none;"
-                            class="data"
-                        >
+                        <span *ngFor="let item of row.data[column]" style="display: block;" class="data">
                             {{ item.file_title }}
-                        </a>
+                        </span>
                     </div>
-                    <div *ngIf="column === 'file_is_deleted'" (click)="openDetail(row.data)">
+                    <div *ngIf="column === 'file_is_deleted'">
                         <nb-toggle disabled [checked]="row.data[column]"></nb-toggle>
                     </div>
                 </td>

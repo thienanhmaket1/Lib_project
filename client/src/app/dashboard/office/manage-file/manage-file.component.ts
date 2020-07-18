@@ -1,18 +1,17 @@
+import { dateTimeInString } from './../../../../common/functions'
 import { Component, OnInit } from '@angular/core'
 import { createMiddleFakeColumns, createMiddleRealColumns, createLeftRealColumns, createRightRealColumns } from 'src/common/functions'
 import { FormGroup, FormControl } from '@angular/forms'
 import { NbTreeGridDataSource, NbSortDirection, NbTreeGridDataSourceBuilder, NbDialogService, NbSortRequest } from '@nebular/theme'
 import { FileDetailComponent } from 'src/app/components/file-detail/file-detail.component'
 import { office } from 'src/common/constants'
+import { AuthenticationService } from 'src/app/authentication/authentication.service'
 import { FileDetailService } from 'src/app/services/file-detail.service'
 import { ManageUserService } from 'src/app/services/manage-user.service'
 import { FolderDetailService } from '@app/services/folder-detail.service'
 import { DropdownService } from '@app/services/dropdown.service'
 import { TranslateService } from '@ngx-translate/core'
 import { SharedService } from '@app/services/shared.service'
-import { Router, ActivatedRoute } from '@angular/router'
-import { SettingsService } from '@app/services/settings.service'
-import { AuthenticationService } from '@app/authentication/authentication.service'
 
 @Component({
     selector: 'app-manage-file',
@@ -20,6 +19,8 @@ import { AuthenticationService } from '@app/authentication/authentication.servic
     styleUrls: ['./manage-file.component.scss'],
 })
 export class ManageFileComponent implements OnInit {
+    // folders = testFolders
+    // files = testFiles
     activationToggleStatus
     files
     folders
@@ -48,30 +49,18 @@ export class ManageFileComponent implements OnInit {
     filesCount = 0
     dropdownList
     maxWidth = 0
-    pathFromFolderStructure
-    department
-    currentFolder
-    currentHigherFolder
-    user
 
     constructor(
         private dataSourceBuilder: NbTreeGridDataSourceBuilder<any>,
         private nbDialogService: NbDialogService,
+        private authenticationService: AuthenticationService,
         private fileService: FileDetailService,
         private manageUserService: ManageUserService,
         private foldersService: FolderDetailService,
         private dropdownService: DropdownService,
         public sharedService: SharedService,
-        private translateService: TranslateService,
-        private route: ActivatedRoute,
-        private router: Router,
-        private settingsService: SettingsService,
-        private authenticationService: AuthenticationService
+        private translateService: TranslateService
     ) {
-        this.authenticationService.getUser.subscribe((res) => {
-            this.user = this.authenticationService.getUserValue
-        })
-
         this.filterFormGroup.valueChanges.subscribe((res) => {
             this._filter(res)
         })
@@ -89,19 +78,18 @@ export class ManageFileComponent implements OnInit {
         if (selectedFolder) {
             const responseNumberOfFiles = await this.fileService.getFilesByFolderID(selectedFolder.folder_id).toPromise()
             this.filesCount = responseNumberOfFiles.files.length
-            // this.middleFakeColumns = [...createMiddleFakeColumns(selectedFolder.folder_properties, this.translateService.currentLang)] || []
+            this.middleFakeColumns = [...createMiddleFakeColumns(selectedFolder.folder_properties, this.translateService.currentLang)] || []
 
-            // const index = this.leftFakeColumns.indexOf(`file_rule_id`)
-            // if (index > -1) {
-            //     this.leftFakeColumns.splice(index, 1)
-            // }
+            const index = this.leftFakeColumns.indexOf(`file_rule_id`)
+            if (index > -1) {
+                this.leftFakeColumns.splice(index, 1)
+            }
 
-            // if (this.leftRealColumns[this.leftRealColumns.length - 1] !== 'office_manage_file.file_detail.file_file_no') {
-            //     this.leftRealColumns.pop()
-            // }
-            // this.leftFakeColumns.push(`file_rule_id`)
-            // this.leftRealColumns.push(`${selectedFolder.folder_document_no}`)
-            this.additionalLeftColumn()
+            if (this.leftRealColumns[this.leftRealColumns.length - 1] !== 'office_manage_file.file_detail.file_file_no') {
+                this.leftRealColumns.pop()
+            }
+            this.leftFakeColumns.push(`file_rule_id`)
+            this.leftRealColumns.push(`${selectedFolder.folder_document_no}`)
 
             this.allColumns = [...this.leftFakeColumns, ...this.middleFakeColumns, ...this.rightFakeColumns]
 
@@ -141,6 +129,7 @@ export class ManageFileComponent implements OnInit {
                 selectedFolder
             )
             this.applyNewData(this.data)
+            // this.measureWidth(selectedFolder)
             return
             // if (this.leftRealColumns[this.leftRealColumns.length - 1] !== 'office_manage_file.file_detail.file_file_no') {
             //     this.leftRealColumns.pop()
@@ -177,9 +166,8 @@ export class ManageFileComponent implements OnInit {
         this.getFolderList()
         this.getUserList()
         this.getDropdown()
-        this.getDepartment()
         this.getFiles()
-        this.translateService.onLangChange.subscribe(() => {
+        this.translateService.onLangChange.subscribe((res) => {
             const filteredFormGroup = this.filterFormGroup.getRawValue()
             this._filter(filteredFormGroup)
         })
@@ -194,23 +182,12 @@ export class ManageFileComponent implements OnInit {
     getFiles() {
         this.fileService.getFiles('office').subscribe((res) => {
             this.files = res.files
-            console.log(this.files)
         })
     }
 
     getFolderList() {
-        const folder_id = this.route.snapshot.params.folder_id
-        // this.foldersService.getFolders(false).subscribe((res) => {
-        //     this.folders = res.data
-        // })
-        this.foldersService.getFolderDetail(folder_id).subscribe((res) => {
-            if (res.data.length !== 0) {
-                const folderDetail = res.data[0]
-                this.filterFormGroup.get('selectedFolder').patchValue(folderDetail)
-                this.currentFolder = folderDetail.folder_name
-                this.currentHigherFolder = folderDetail.higher_folder_name
-                this.pathFromFolderStructure = `${folderDetail.folder_name}`
-            }
+        this.foldersService.getFolders(false).subscribe((res) => {
+            this.folders = res.data
         })
     }
 
@@ -220,41 +197,11 @@ export class ManageFileComponent implements OnInit {
         })
     }
 
-    getDepartment() {
-        this.dropdownService.getDepartment().subscribe((res) => {
-            this.department = res.data
-        })
-    }
-
-    additionalLeftColumn() {
-        const { selectedFolder } = this.filterFormGroup.getRawValue()
-
-        /** folder_name */
-        const index2 = this.leftFakeColumns.indexOf(`file_department_id`)
-        if (index2 > -1) {
-            this.leftFakeColumns.splice(index2, 1)
-        }
-
-        if (this.leftRealColumns[this.leftRealColumns.length - 1] !== 'office_manage_file.file_detail.file_file_no') {
-            this.leftRealColumns.pop()
-        }
-        this.leftFakeColumns.push(`file_department_id`)
-        this.leftRealColumns.push(`office_manage_file.file_detail.file_department_id`)
-        /** file_rule_id */
-        const index = this.leftFakeColumns.indexOf(`file_rule_id`)
-        if (index > -1) {
-            this.leftFakeColumns.splice(index, 1)
-        }
-
-        if (this.leftRealColumns[this.leftRealColumns.length - 2] === 'office_manage_file.file_detail.file_department_id') {
-            this.leftRealColumns.pop()
-        }
-        this.leftFakeColumns.push(`file_rule_id`)
-        this.leftRealColumns.push(`${selectedFolder.folder_document_no}`)
-    }
-
-    createMiddleRealColumns(flagColumnName) {
+    createRealMiddleColumns(flagColumnName) {
         const columnName = createMiddleRealColumns(flagColumnName)
+        if (columnName.includes('!@#$%^&*()')) {
+            return columnName.split('!@#$%^&*()')[this.translateService.currentLang === 'en' ? 0 : 1]
+        }
         return columnName
     }
 
@@ -310,20 +257,16 @@ export class ManageFileComponent implements OnInit {
                 authorized_user_with_name.push(i)
             })
 
-            const departmentId = e.file_department_id ? this.department.drop_down_data.find((info) => info.id === e.file_department_id.toString()) : {}
-
             return {
                 data: {
                     no,
-                    folder_name: selectedFolder.folder_name,
                     file_rule_id: e.file_rule_id,
-                    file_department_id: departmentId,
                     ...newE,
                     file_file_name: e.file_file_name,
                     file_created_by: e.file_created_by,
                     file_created_at: e.file_created_at,
                     file_id: e.file_id,
-                    file_authorized_users: e.file_authorized_users,
+                    file_authorized_users: e.file_authorized_users, // authorized_user_with_name, //
                     file_updated_count: e.file_updated_count,
                     file_updated_at: e.file_updated_at,
                     file_is_deleted: e.file_is_deleted,
@@ -333,6 +276,14 @@ export class ManageFileComponent implements OnInit {
     }
 
     applyNewData(data) {
+        // data.map((e) => {
+        //     const newData = []
+        //     e.data.file_authorized_users.forEach(element => {
+        //         newData.push(element.fullname)
+        //     });
+        //     e.data.file_authorized_users = newData
+        //     return e
+        // })
         this.dataSource = this.dataSourceBuilder.create(data)
     }
 
@@ -358,9 +309,11 @@ export class ManageFileComponent implements OnInit {
         const { selectedFolder, searchFileFormControl, activationFormControl } = this.filterFormGroup.getRawValue()
         this.nbDialogService
             .open(FileDetailComponent, {
-                context: { data: file, type: 'edit', folder: selectedFolder, dropdown: this.dropdownList, department: this.department },
+                context: { data: file, type: 'edit', folder: selectedFolder, dropdown: this.dropdownList },
+                hasBackdrop: true,
+                autoFocus: false,
             })
-            .onClose.subscribe(async () => {
+            .onClose.subscribe(async (res) => {
                 const response = await this.fileService.getFiles('office').toPromise()
                 this.files = response.files
                 const data = this.files.filter((e) => e.folder_id === selectedFolder.folder_id)
@@ -380,9 +333,12 @@ export class ManageFileComponent implements OnInit {
         const newData = { file_count: this.filesCount + 1, ...selectedFolder }
         this.nbDialogService
             .open(FileDetailComponent, {
-                context: { folder: selectedFolder, type: 'create', data: newData, dropdown: this.dropdownList, department: this.department },
+                context: { folder: selectedFolder, type: 'create', data: newData, dropdown: this.dropdownList },
+                hasBackdrop: true,
+                autoFocus: true,
             })
-            .onClose.subscribe(async () => {
+            .onClose.subscribe(async (res) => {
+                // this.files = this.files.concat([res.data])
                 const response = await this.fileService.getFiles('office').toPromise()
                 this.files = response.files
                 const responseNumberOfFiles = await this.fileService.getFilesByFolderID(selectedFolder.folder_id).toPromise()
@@ -399,16 +355,13 @@ export class ManageFileComponent implements OnInit {
     dropdownDetail(input) {
         const findDropdown = this.dropdownList.find((e) => e.drop_down_id === Number(input.dropdown_id))
         const list = []
-        if (findDropdown) {
-            input.property_value.forEach((element) => {
-                findDropdown.drop_down_data.find((e2) => {
-                    if (e2.id === element) {
-                        list.push(e2.name)
-                    }
-                })
+        input.property_value.forEach((element) => {
+            findDropdown.drop_down_data.find((e2) => {
+                if (e2.id === element) {
+                    list.push(e2.name)
+                }
             })
-        }
-
+        })
         return list
     }
 
@@ -420,24 +373,19 @@ export class ManageFileComponent implements OnInit {
         return input
     }
 
-    openFileName(input) {
-        if (input && !input.drawing_is_exist_on_hardisk) {
-            this.sharedService.showMessage({
-                content: {
-                    value: 'office_manage_file.alert_not_exists_drawing',
-                },
-                title: 'Alert',
-                status: 'warning',
-            })
-            return
-        }
-        if (!input.file_name.includes('Browse file') && input.file_name !== '') {
-            const fileName = `${this.pathFromFolderStructure}/${input.file_name}`
-            window.open(this.settingsService.openFile(`get-office-file/${encodeURIComponent(fileName)}`))
-        }
+    measureWidth(input) {
+        const fontSize = '12'
+        input.folder_properties.map((e) => {
+            e.max_width = this.getTextWidth('i'.repeat(e.max_width))
+            return { ...e }
+        })
+        // return this.maxWidth
+        // console.log(input)
     }
 
     getTextWidth(text, font = '14pt roboto') {
+        // if given, use cached canvas for better performance
+        // else, create new canvas
         const canvas = document.createElement('canvas')
         const context = canvas.getContext('2d')
         context.font = font
@@ -446,15 +394,7 @@ export class ManageFileComponent implements OnInit {
     }
 
     setWidth(input) {
-        // console.log(input.property_value.length)
         return this.getTextWidth('a'.repeat(input.max_width))
-    }
-
-    setValue(input) {
-        if (input.property_value.length > input.max_width) {
-            return input.property_value.substring(0, input.max_width) + '...'
-        }
-        return input.property_value
     }
 
     check(column) {
@@ -468,6 +408,7 @@ export class ManageFileComponent implements OnInit {
     }
 
     check2(column) {
+        // console.log(column)
         const { selectedFolder } = this.filterFormGroup.getRawValue()
         if (column === 'file_created_at') {
             return selectedFolder.folder_is_show_created_at
@@ -509,21 +450,5 @@ export class ManageFileComponent implements OnInit {
             }
         }
         return true
-    }
-
-    goToFolder() {
-        const { selectedFolder } = this.filterFormGroup.getRawValue()
-        this.router.navigate([`/dashboard/office/manage-folder/${selectedFolder.folder_root_id}`])
-    }
-
-    goToHigherFolder() {
-        this.router.navigate([`/dashboard/office/manage-higher-folder`])
-    }
-
-    checkPermission() {
-        if (this.user.user_permission_code === '99' || this.user.user_permission_code === '09') {
-            return true
-        }
-        return false
     }
 }

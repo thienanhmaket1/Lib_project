@@ -2,39 +2,28 @@
     <nb-card-header>
         <div class="div-filter">
             <div class="div-header" style="display: flex; width: 100%; flex-direction: row;" [formGroup]="filterFormGroup">
-                <div class="div-go-to">
-                    <a class="btn-go-to" (click)="goToHigherFolder()" status="primary">
-                        {{ 'object.folder' | translate }}
-                    </a>
-                    <span style="margin-right: 0.5rem;">/</span>
-                    <a class="btn-go-to" status="primary">
-                        {{ currentHigherFolder }}
-                    </a>
-                </div>
-
                 <input
                     nbInput
-                    style="flex: 1; max-width: none; margin-left: 1rem;"
+                    style="flex: 1; max-width: none;"
                     (keyup)="searchFolder()"
                     formControlName="folderFormControl"
                     [placeholder]="'office_manage_folder.filter_form_input' | translate"
-                    id="input-search-folder"
                 />
-                <button *ngIf="checkPermission()" style="margin-left: 1rem" (click)="addFolder()" nbButton status="primary">
+                <button style="margin-left: 1rem" (click)="addFolder()" nbButton status="primary">
                     {{ 'office_manage_folder.filter_form_add_folder' | translate }}
                 </button>
-                <nb-toggle style="margin-left: 1rem;" formControlName="activationFormControl" id="toggle-show-activate">
+                <nb-toggle style="margin-left: 1rem;" formControlName="activationFormControl">
                     {{ (activationToggleStatus ? 'app.toggle.activation.all' : 'app.toggle.activation.activating') | translate }}
                 </nb-toggle>
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body *ngIf="allColumns.length !== 0" class="nb-card-body-has-fixed-header">
+    <nb-card-body class="nb-card-body-has-fixed-header">
         <table class="nb-tree-grid-table-fixed-header" [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
             <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
-            <ng-container *ngFor="let column of fixedColumns; let index = index" [nbTreeGridColumnDef]="column">
+            <ng-container *ngFor="let column of fixedColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
                 <th
                     [ngStyle]="{ display: column === 'folder_authorized_users' ? 'none' : 'table-cell' }"
                     nbTreeGridHeaderCell
@@ -46,28 +35,17 @@
                 <td
                     [ngStyle]="{ display: column === 'folder_authorized_users' ? 'none' : 'table-cell' }"
                     style="cursor: pointer;"
-                    (click)="btnClick(column, row.data)"
+                    (click)="openDetail(row.data)"
                     nbTreeGridCell
                     *nbTreeGridCellDef="let row"
                 >
                     <span
                         class="data"
-                        *ngIf="
-                            column !== 'file_latest_update' &&
-                            !booleanColumn.includes(column) &&
-                            column !== 'folder_is_deleted' &&
-                            column !== 'folder_name' &&
-                            column !== 'higher_folder_name'
-                        "
+                        *ngIf="column !== 'folder_created_at' && !booleanColumn.includes(column) && column !== 'folder_is_deleted'"
+                        class="data"
                         >{{ row.data[column] || '-' }}</span
                     >
-                    <a class="data" *ngIf="column === 'folder_name' || column === 'higher_folder_name'" style="text-decoration: none;">
-                        {{ row.data[column] || '-' }}
-                    </a>
-                    <span class="data" *ngIf="column === 'file_latest_update'" class="data">
-                        {{ row.data[column] ? sharedService.dateTimeInString(row.data[column]) : '-' }}
-                    </span>
-                    <!-- <span class="data" *ngIf="column === 'folder_created_at'" class="data">
+                    <span class="data" *ngIf="column === 'folder_created_at'" class="data">
                         {{ dateTimeInString(row.data[column]) }}
                     </span>
                     <span class="data" *ngIf="column === 'folder_is_deleted'">
@@ -76,18 +54,18 @@
                     <div *ngIf="booleanColumn.includes(column)">
                         <span *ngIf="row.data[column] === true" class="data">{{ status_yes | translate }}</span>
                         <span *ngIf="row.data[column] === false" class="data">{{ status_no | translate }}</span>
-                    </div> -->
+                    </div>
                 </td>
             </ng-container>
 
-            <!-- <ng-container *ngFor="let column of customColumns; let index = index" [nbTreeGridColumnDef]="column">
+            <ng-container *ngFor="let column of customColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
                 <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef style="display:'table-cell'; width: '5%'">
                     <button nbButton status="primary">{{ createCustomRealColumns(column) | translate }}</button>
                 </th>
                 <td style="cursor: pointer;" (click)="openDetail(row.data)" nbTreeGridCell *nbTreeGridCellDef="let row">
-                    {{ row.data['property_name_' + column] }}
+                    {{ translatePropertyName(row.data['property_name_' + column]) }}
                 </td>
-            </ng-container> -->
+            </ng-container>
         </table>
     </nb-card-body>
 </nb-card>

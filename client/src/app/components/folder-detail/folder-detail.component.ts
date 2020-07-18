@@ -33,7 +33,6 @@ export class FolderDetailComponent implements OnInit {
         'property_data_type',
         'property_is_show_in_list',
         'property_is_show_in_detail',
-        'max_width',
     ]
     realFolderProperties = [
         // 'office_manage_folder.folder_detail.folder_no',
@@ -50,7 +49,6 @@ export class FolderDetailComponent implements OnInit {
         'office_manage_folder.folder_detail.property_data_type',
         'office_manage_folder.folder_detail.property_is_show_in_list',
         'office_manage_folder.folder_detail.property_is_show_in_detail',
-        'office_manage_folder.folder_detail.max_width',
     ]
 
     folder
@@ -74,10 +72,6 @@ export class FolderDetailComponent implements OnInit {
         'folder_updated_at',
         'folder_group',
         'max',
-        'folder_authorized_users',
-        'folder_root_id',
-        'higher_folder_name',
-        'file_latest_update',
     ]
 
     booleanColumn = ['folder_is_show_updated_count', 'folder_is_show_created_at', 'folder_is_show_updated_at']
@@ -93,9 +87,8 @@ export class FolderDetailComponent implements OnInit {
         private dialogService: NbDialogService,
         private sharedService: SharedService,
         private dropdownService: DropdownService,
-        private translateService: TranslateService,
-        private nbToastrService: NbToastrService
-    ) {}
+        private translateService: TranslateService
+    ) { }
 
     ngOnInit(): void {
         this.getUserList()
@@ -103,11 +96,8 @@ export class FolderDetailComponent implements OnInit {
         const { user_permission_code } = this.authenticationService.getUserValue
         this.folder = { ...this.data }
         delete this.folder.folder_group
-
         this.booleanColumn.forEach((element) => {
-            if (this.folder[element]) {
-                this.folder[element] = this.folder[element].toString()
-            }
+            this.folder[element] = this.folder[element].toString()
         })
         for (let index = 0; index < this.folder.max; index++) {
             delete this.folder[`property_name_${index + 1}`]
@@ -139,6 +129,7 @@ export class FolderDetailComponent implements OnInit {
     async saveFolder() {
         const { user_id } = this.authenticationService.getUserValue
         const editFolderInfo = this.editFolderFormGroup.getRawValue()
+
         const {
             folder_name,
             folder_short_name,
@@ -147,7 +138,6 @@ export class FolderDetailComponent implements OnInit {
             folder_is_show_updated_count,
             folder_document_no,
             folder_authorized_users,
-            folder_root_id,
         } = editFolderInfo
 
         if (this.editFolderFormGroup.invalid) {
@@ -165,8 +155,7 @@ export class FolderDetailComponent implements OnInit {
         let index = 0
         this.secondRows.forEach((e) => {
             const newE = {
-                // property_name: `${editFolderInfo[`property_name_en_${index}`]}!@#$%^&*()${editFolderInfo[`property_name_jp_${index}`]}`,
-                property_name: `${editFolderInfo[`property_name_${index}`]}`,
+                property_name: `${editFolderInfo[`property_name_en_${index}`]}!@#$%^&*()${editFolderInfo[`property_name_jp_${index}`]}`,
                 property_data_type: editFolderInfo[`property_data_type_${index}`],
                 property_is_show_in_list: editFolderInfo[`property_is_show_in_list_${index}`],
                 property_is_show_in_detail: editFolderInfo[`property_is_show_in_detail_${index}`],
@@ -180,16 +169,15 @@ export class FolderDetailComponent implements OnInit {
         })
         const folder = {
             folder_id: this.data.folder_id,
-            folder_name: folder_name.trim(),
-            folder_short_name: folder_short_name.trim(),
-            folder_document_no: folder_document_no.trim(),
+            folder_name,
+            folder_short_name,
+            folder_document_no,
             folder_is_show_updated_count,
             folder_is_show_created_at,
             folder_is_show_updated_at,
             folder_properties,
             folder_updated_by: user_id,
             folder_authorized_users: folder_authorized_users || [],
-            folder_root_id,
         }
         const obsvSaveFolder = await this.folderService
             .updateFolder(folder)
@@ -204,13 +192,10 @@ export class FolderDetailComponent implements OnInit {
 
             this.nbDialogRef.close({ data: folder })
         } else if (obsvSaveFolder.detail) {
-            // this.nbToastrService.show(obsvSaveFolder.detail, 'Error', {
-            //     status: 'danger',
-            // })
             this.sharedService.showMessage({
                 type: 'update',
                 title: 0,
-                object: 'response_text.common.folder_already_exists',
+                object: 'object.folder',
             })
         } else {
             this.sharedService.showMessage({
@@ -242,40 +227,9 @@ export class FolderDetailComponent implements OnInit {
             folder_is_show_updated_count,
             folder_document_no,
             folder_authorized_users,
-            folder_root_id,
         } = editFolderInfo
-
-        this.editFolderFormGroup.get('folder_name').patchValue(folder_name.trim())
-        this.editFolderFormGroup.get('folder_short_name').patchValue(folder_short_name.trim())
-        this.editFolderFormGroup.get('folder_document_no').patchValue(folder_document_no.trim())
-
-        // let index = 0
+        let index = 0
         const folder_properties = []
-
-        this.secondRows.forEach((e) => {
-            const index = e.id - 1
-
-            if (this.editFolderFormGroup.get(`property_name_${index}`)) {
-                this.editFolderFormGroup.get(`property_name_${index}`).patchValue(`${editFolderInfo[`property_name_${index}`]}`.trim())
-            }
-            const newE = {
-                // property_name: `${editFolderInfo[`property_name_en_${index}`]}!@#$%^&*()${editFolderInfo[`property_name_jp_${index}`]}`,
-                property_name: `${editFolderInfo[`property_name_${index}`]}`.trim(),
-                property_data_type: editFolderInfo[`property_data_type_${index}`],
-                property_is_show_in_list: editFolderInfo[`property_is_show_in_list_${index}`],
-                property_is_show_in_detail: editFolderInfo[`property_is_show_in_detail_${index}`],
-                max_width: editFolderInfo[`max_width_${index}`],
-                id: editFolderInfo[`id_${index}`],
-            }
-
-            folder_properties.push(newE)
-
-            // index += 1
-        })
-        // this.secondRows.forEach((e) => {
-        //     const index = this.getPosition(e)
-        //     e.property_name = this.editFolderFormGroup.get(`property_name_${index}`).value
-        // })
         if (this.editFolderFormGroup.invalid) {
             const config = {
                 content: {
@@ -286,18 +240,35 @@ export class FolderDetailComponent implements OnInit {
             this.sharedService.showMessage(config)
             return
         }
+        this.secondRows.forEach((e) => {
+            const newE = {
+                property_name: `${editFolderInfo[`property_name_en_${index}`]}!@#$%^&*()${editFolderInfo[`property_name_jp_${index}`]}`,
+                property_data_type: editFolderInfo[`property_data_type_${index}`],
+                property_is_show_in_list: editFolderInfo[`property_is_show_in_list_${index}`],
+                property_is_show_in_detail: editFolderInfo[`property_is_show_in_detail_${index}`],
+                max_width: editFolderInfo[`max_width_${index}`],
+                id: editFolderInfo[`id_${index}`],
+            }
+
+            folder_properties.push(newE)
+
+            index += 1
+        })
+        // this.secondRows.forEach((e) => {
+        //     const index = this.getPosition(e)
+        //     e.property_name = this.editFolderFormGroup.get(`property_name_${index}`).value
+        // })
         const folder = {
             folder_id: '',
-            folder_name: folder_name.trim(),
-            folder_short_name: folder_short_name.trim(),
-            folder_document_no: folder_document_no.trim(),
+            folder_name,
+            folder_short_name,
+            folder_document_no,
             folder_is_show_updated_count: convertStringBooleanToBoolean(folder_is_show_updated_count),
             folder_is_show_created_at: convertStringBooleanToBoolean(folder_is_show_created_at),
             folder_is_show_updated_at: convertStringBooleanToBoolean(folder_is_show_updated_at),
             folder_properties,
             folder_created_by: user_id,
             folder_authorized_users,
-            folder_root_id,
         }
 
         const obsvCreateFolder = await this.folderService
@@ -312,13 +283,10 @@ export class FolderDetailComponent implements OnInit {
             })
             this.nbDialogRef.close({ data: folder })
         } else if (obsvCreateFolder.detail) {
-            // this.nbToastrService.show(obsvCreateFolder.detail, 'Error', {
-            //     status: 'danger',
-            // })
             this.sharedService.showMessage({
                 type: 'create',
                 title: 0,
-                object: 'response_text.common.folder_already_exists',
+                object: 'object.folder',
             })
         } else {
             this.sharedService.showMessage({
@@ -383,7 +351,7 @@ export class FolderDetailComponent implements OnInit {
             //         this.editFolderFormGroup.addControl(e1, new FormControl(this.data[e][e1]))
             //     })
             // } else {
-            if (e !== 'folder_authorized_users' && e !== 'file_latest_update') {
+            if (e !== 'folder_authorized_users') {
                 this.editFolderFormGroup.addControl(e, new FormControl(this.folder[e], { validators: Validators.required }))
             } else {
                 this.editFolderFormGroup.addControl(e, new FormControl(this.folder[e]))
@@ -393,28 +361,28 @@ export class FolderDetailComponent implements OnInit {
         })
 
         let index = 0
-        // console.log(this.secondRows)
-        if (this.secondRows.length !== 0) {
-            this.secondRows.forEach((e) => {
-                // this.editFolderFormGroup.addControl(
-                //     `property_name_en_${index}`,
-                //     new FormControl(e.property_name.split('!@#$%^&*()')[0], { validators: Validators.required })
-                // )
-                // this.editFolderFormGroup.addControl(
-                //     `property_name_jp_${index}`,
-                //     new FormControl(e.property_name.split('!@#$%^&*()')[0], { validators: Validators.required })
-                // )
-                this.editFolderFormGroup.addControl(`property_name_${index}`, new FormControl(e.property_name))
-                this.editFolderFormGroup.addControl(`property_data_type_${index}`, new FormControl(e.property_data_type))
-                this.editFolderFormGroup.addControl(`property_is_show_in_list_${index}`, new FormControl(!!e.property_is_show_in_list))
-                this.editFolderFormGroup.addControl(`property_is_show_in_detail_${index}`, new FormControl(!!e.property_is_show_in_detail))
-                this.editFolderFormGroup.addControl(`max_width_${index}`, new FormControl(e.max_width))
-                this.editFolderFormGroup.addControl(`id_${index}`, new FormControl(e.id))
-                index += 1
-            })
-        } else {
-            this.addProperty()
-        }
+        this.secondRows.forEach((e) => {
+            // this.editFolderFormGroup.addControl(`property_name_${index}`, new FormControl(e.property_name))
+            // this.editFolderFormGroup.addControl(`property_data_type_${index}`, new FormControl(e.property_data_type))
+            // this.editFolderFormGroup.addControl(`property_is_show_in_list_${index}`, new FormControl(e.property_is_show_in_list ? '1' : '0'))
+            // this.editFolderFormGroup.addControl(`property_is_show_in_detail_${index}`, new FormControl(e.property_is_show_in_detail ? '1' : '0'))
+            this.editFolderFormGroup.addControl(
+                `property_name_en_${index}`,
+                new FormControl(e.property_name.split('!@#$%^&*()')[0], { validators: Validators.required })
+            )
+            this.editFolderFormGroup.addControl(
+                `property_name_jp_${index}`,
+                new FormControl(e.property_name.split('!@#$%^&*()')[1], { validators: Validators.required })
+            )
+            // this.editFolderFormGroup.addControl(`property_name_${index}`, new FormControl())
+            this.editFolderFormGroup.addControl(`property_data_type_${index}`, new FormControl(e.property_data_type))
+            this.editFolderFormGroup.addControl(`property_is_show_in_list_${index}`, new FormControl(!!e.property_is_show_in_list))
+            this.editFolderFormGroup.addControl(`property_is_show_in_detail_${index}`, new FormControl(!!e.property_is_show_in_detail))
+            this.editFolderFormGroup.addControl(`max_width_${index}`, new FormControl(e.max_width))
+            this.editFolderFormGroup.addControl(`id_${index}`, new FormControl(e.id))
+            index += 1
+        })
+        console.log(this.editFolderFormGroup.getRawValue())
     }
 
     getPosition(row) {
@@ -432,19 +400,14 @@ export class FolderDetailComponent implements OnInit {
             property_data_type: 'text',
             property_is_show_in_detail: true,
             property_is_show_in_list: true,
-            // property_name: `${countNext}!@#$%^&*()${countNext}`,
-            property_name: `${countNext}`,
+            property_name: `${countNext}!@#$%^&*()${countNext}`,
             max_width: '20',
             id: countNext,
         }
-
         this.secondRows.push(newProperty)
-        // this.editFolderFormGroup.addControl(`property_name_jp_${this.propertiesCount}`, new FormControl('', { validators: Validators.required }))
-        // this.editFolderFormGroup.addControl(`property_name_en_${this.propertiesCount}`, new FormControl('', { validators: Validators.required }))
-        this.editFolderFormGroup.addControl(
-            `property_name_${this.propertiesCount}`,
-            new FormControl(newProperty.property_name, { validators: Validators.required })
-        )
+        this.editFolderFormGroup.addControl(`property_name_jp_${this.propertiesCount}`, new FormControl('', { validators: Validators.required }))
+        this.editFolderFormGroup.addControl(`property_name_en_${this.propertiesCount}`, new FormControl('', { validators: Validators.required }))
+        this.editFolderFormGroup.addControl(`property_name_${this.propertiesCount}`, new FormControl(newProperty.property_name))
         this.editFolderFormGroup.addControl(`property_data_type_${this.propertiesCount}`, new FormControl(newProperty.property_data_type))
         this.editFolderFormGroup.addControl(`property_is_show_in_list_${this.propertiesCount}`, new FormControl(true))
         this.editFolderFormGroup.addControl(`property_is_show_in_detail_${this.propertiesCount}`, new FormControl(true))
@@ -463,18 +426,14 @@ export class FolderDetailComponent implements OnInit {
 
     removeProperty(input) {
         const index = this.getPosition(input)
-        this.secondRows.splice(index, 1)
-
+        // this.secondRows.splice(index, 1)
+        this.secondRows[index] = null
+        this.secondRows = this.secondRows.map((e) => null)
+        this.editFolderFormGroup.removeControl(`property_name_jp_${index}`)
+        this.editFolderFormGroup.removeControl(`property_name_en_${index}`)
         this.editFolderFormGroup.removeControl(`property_name_${index}`)
         this.editFolderFormGroup.removeControl(`property_data_type_${index}`)
         this.editFolderFormGroup.removeControl(`property_is_show_in_list_${index}`)
         this.editFolderFormGroup.removeControl(`property_is_show_in_detail_${index}`)
-        this.editFolderFormGroup.removeControl(`max_width_${index}`)
-        this.editFolderFormGroup.removeControl(`id_${index}`)
-        // console.log(this.secondRows)
-    }
-
-    closeDialog() {
-        this.nbDialogRef.close()
     }
 }

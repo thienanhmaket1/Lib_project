@@ -176,11 +176,6 @@ export class ManageDrawingComponent implements OnInit {
         isNotExistOnHardiskControl,
         data = this.data
     ) => {
-        // console.log(drawingsFormControl)
-        // console.log(selectedFolderFormControl)
-        // console.log(activationFormControl)
-        // console.log(isNotExistOnHardiskControl)
-        // console.log(data)
         let newData: any = data
         if (drawingsFormControl) {
             const drawingsFormControlLower = drawingsFormControl.toString().toLocaleLowerCase()
@@ -221,8 +216,6 @@ export class ManageDrawingComponent implements OnInit {
                         .toString()
                         .toLocaleLowerCase()
                         .includes(drawingsFormControlLower)
-
-                // const updateCountSearch = Number(e.drawing_updated_count) === drawingsFormControlLower
 
                 return fileNameSearch || customerSearch || koubanSearch || partNameSearch || createdBySearch || updateBySearch
             })

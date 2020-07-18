@@ -64,8 +64,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader'
 import { ProfileDetailComponent } from './components/profile-detail/profile-detail.component'
 import { MessageDetailComponent } from './components/message-detail/message-detail.component'
 import { ConfirmationComponent } from './components/confirmation/confirmation.component'
-import { ManageHigherFolderComponent } from './dashboard/office/manage-higher-folder/manage-higher-folder.component'
-import { HigherFolderDetailComponent } from './components/higher-folder-detail/higher-folder-detail.component'
+// import { ManageHigherFolderComponent } from './dashboard/office/manage-higher-folder/manage-higher-folder.component'
+// import { HigherFolderDetailComponent } from './components/higher-folder-detail/higher-folder-detail.component'
 
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json')
@@ -105,8 +105,8 @@ export function createTranslateLoader(http: HttpClient) {
         ProfileDetailComponent,
         MessageDetailComponent,
         ConfirmationComponent,
-        ManageHigherFolderComponent,
-        HigherFolderDetailComponent,
+        // ManageHigherFolderComponent,
+        // HigherFolderDetailComponent,
     ],
     imports: [
         BrowserModule,
@@ -153,4 +153,4 @@ export function createTranslateLoader(http: HttpClient) {
     providers: [httpInterceptorProviders],
     bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

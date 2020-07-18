@@ -7,24 +7,26 @@
         "
         class="detail-view"
     >
-        <div style="display: flex; ">
-            <h5>
-                {{ (historyStatus === 'hide' ? 'office_manage_file.file_detail.title' : 'office_manage_file.file_history.title') | translate }}
-            </h5>
-            <mat-icon
-                [@openClose1]="historyStatus === 'show' ? 'open' : 'closed'"
-                *ngIf="isViewing"
-                style="cursor: pointer; font-size: 1.75rem; margin-left: 10px"
-                class="material-icons"
-                (click)="showHistory()"
-                [nbTooltip]="historyStatus === 'show' ? 'File Detail' : 'File History'"
-                nbTooltipStatus="primary"
-            >
-                {{ historyStatus === 'show' ? 'info' : 'history' }}
-            </mat-icon>
-        </div>
-
-        <nb-icon style="font-size: 1.5rem; cursor: pointer;" icon="close" (click)="closeDialog()"> </nb-icon>
+        <h5>
+            {{ (historyStatus === 'hide' ? 'office_manage_file.file_detail.title' : 'office_manage_file.file_history.title') | translate }}
+        </h5>
+        <!-- <nb-icon
+            [@openClose1]="historyStatus === 'show' ? 'open' : 'closed'"
+            style="display: none; flex: 1"
+            *ngIf="isViewing"
+            style="font-size: 1.5rem; cursor: pointer;"
+            icon="arrow-circle-down"
+            (click)="showHistory()"
+        >
+        </nb-icon> -->
+        <nb-icon
+            [@openClose1]="historyStatus === 'show' ? 'open' : 'closed'"
+            *ngIf="isViewing"
+            style="cursor: pointer; font-size: 1.75rem;"
+            icon="arrow-circle-down"
+            (click)="showHistory()"
+        >
+        </nb-icon>
     </nb-card-header>
     <!-- <div *ngFor="let row of rows">
             <div class="each-row" style="display: flex; flex-direction: row; padding: 1rem">
@@ -58,7 +60,7 @@
                                 border-radius: 1rem;
                                 margin: 0 1rem 0 1rem;
                             "
-                            onerror="this.src='assets/images/default.png'"
+                            onerror="this.onerror=null; this.src='assets/images/default.png'"
                         />
                         <span style="font-weight: bold;">{{ history.file_updated_by_full_name }}</span>
                     </div>
@@ -76,10 +78,6 @@
 
                 <div class="div-data-right">
                     <input *ngIf="checkCondition(row)" readonly nbInput fullWidth [value]="file[row]" />
-                    <nb-select *ngIf="row === 'file_department_id'" [(selected)]="file[row]['id']" style="display:flex; flex: 1; max-width: 100%; width: 100%;">
-                        <nb-option disabled [value]="null">{{ 'app.select_none' | translate }}</nb-option>
-                        <nb-option disabled [value]="item.id" *ngFor="let item of department.drop_down_data">{{ item.name }} </nb-option>
-                    </nb-select>
                     <div *ngIf="file[row] && file[row].property_data_type && !file[row].dropdown_id" style="display: flex; flex: 1; ">
                         <input
                             readonly
@@ -105,12 +103,7 @@
                         [formGroup]="fileFormGroup"
                     >
                         <!-- <input nbInput fullWidth [value]="file[row].property_value" autofocus [formControlName]="row" /> -->
-                        <nb-select
-                            multiple
-                            placeholder="{{ 'app.select_none' | translate }}"
-                            [formControlName]="row + '_dropdown_id_' + file[row].dropdown_id"
-                            style="max-width: 100%; width: 100%;"
-                        >
+                        <nb-select multiple placeholder="None" [formControlName]="row + '_dropdown_id_' + file[row].dropdown_id" style="flex: 1;">
                             <nb-option disabled [value]="item.id" *ngFor="let item of getDropdownDetailById(file[row].dropdown_id)"> {{ item.name }}</nb-option>
                         </nb-select>
                     </div>
@@ -124,29 +117,20 @@
                             <button
                                 (click)="openFileName(item.file_name)"
                                 style="
-                                        flex: 1;
-                                        text-overflow: ellipsis;
-                                        white-space: nowrap;
-                                        overflow: hidden;
-                                        width: 100%;
-                                        margin-top: 0.5rem;
-                                        display: flex;
-                                        justify-content: flex-start;
-                                        align-items: center;
-                                    "
+                                    flex: 1;
+                                    text-overflow: ellipsis;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    width: 100%;
+                                    margin-top: 0.5rem;
+                                    display: flex;
+                                    justify-content: flex-start;
+                                    align-items: flex-start;
+                                "
                                 nbButton
                                 status="warning"
                             >
-                                <img
-                                    [src]="
-                                        item.file_name
-                                            ? '../../../assets/file-type-icons/' +
-                                              item.file_name.split('.')[item.file_name.split('.').length - 1].toLowerCase() +
-                                              '.png'
-                                            : ''
-                                    "
-                                />
-                                <span>{{ item.file_name !== '' ? item.file_name : ('app.button_browse' | translate) }}</span>
+                                {{ item.file_name !== '' ? item.file_name : ('app.button_browse' | translate) }}
                             </button>
                         </div>
                     </div>
@@ -176,20 +160,7 @@
                 <div style="display: flex; width: 1rem;"></div>
 
                 <div class="div-data-right">
-                    <nb-select *ngIf="row === 'file_department_id'" [formControlName]="row" style="display:flex; flex: 1; max-width: 100%; width: 100%;">
-                        <nb-option [value]="null">{{ 'app.select_none' | translate }}</nb-option>
-                        <nb-option [value]="item.id" *ngFor="let item of department.drop_down_data">{{ item.name }} </nb-option>
-                    </nb-select>
-                    <input
-                        *ngIf="checkCondition(row)"
-                        nbInput
-                        fullWidth
-                        [value]="file[row]"
-                        autofocus
-                        [formControlName]="row"
-                        [type]="row === 'file_updated_count' ? 'number' : 'text'"
-                        [id]="row"
-                    />
+                    <input *ngIf="checkCondition(row)" nbInput fullWidth [value]="file[row]" autofocus [formControlName]="row" />
                     <div *ngIf="file[row] && file[row].property_data_type && file[row] && !file[row].dropdown_id" style="display: flex; flex: 1; ">
                         <input
                             *ngIf="file[row] && file[row].property_data_type === 'text'"
@@ -198,7 +169,6 @@
                             [value]="file[row].property_value"
                             autofocus
                             [formControlName]="row + '_property_value'"
-                            [id]="row + '_property_value'"
                         />
                         <textarea
                             *ngIf="file[row] && file[row].property_data_type === 'textarea'"
@@ -207,31 +177,24 @@
                             [value]="file[row].property_value"
                             autofocus
                             [formControlName]="row + '_property_value'"
-                            [id]="row + '_property_value'"
                         ></textarea>
                     </div>
 
                     <div style="flex: 1; display: flex; justify-content: flex-start; align-items: center;" *ngIf="file[row] && file[row].dropdown_id">
                         <!-- <input nbInput fullWidth [value]="file[row].property_value" autofocus [formControlName]="row" /> -->
-                        <nb-select
-                            multiple
-                            placeholder="{{ 'app.select_none' | translate }}"
-                            [formControlName]="row + '_dropdown_id_' + file[row].dropdown_id"
-                            style="max-width: 100%; width: 100%;"
-                            [id]="row + '_dropdown_id_' + file[row].dropdown_id"
-                        >
+                        <nb-select multiple placeholder="Choose some" [formControlName]="row + '_dropdown_id_' + file[row].dropdown_id" style="flex: 1;">
                             <nb-option [value]="item.id" *ngFor="let item of getDropdownDetailById(file[row].dropdown_id)"> {{ item.name }}</nb-option>
                         </nb-select>
                     </div>
                     <div *ngIf="row === 'file_file_name'" style="display: flex; flex-direction: column; flex: 1; width: 100%; margin-bottom: 1.5rem;">
                         <div *ngFor="let item of file[row]" style="margin-top: 1.5rem; display: flex; flex-direction: column; flex: 1; width: 100%;">
-                            <input nbInput [value]="item.file_title" [formControlName]="'file_title_' + item.id" fullWidth [id]="'file_title_' + item.id" />
+                            <input nbInput [value]="item.file_title" [formControlName]="'file_title_' + item.id" fullWidth />
 
                             <ngx-file-drop
-                                dropZoneLabel="Drop files here"
+                                dropZoneLabel="Drop csv files here"
                                 (onFileDrop)="droppedFile($event, item.id)"
-                                (onFileOver)="fileOver()"
-                                (onFileLeave)="fileLeave()"
+                                (onFileOver)="fileOver($event)"
+                                (onFileLeave)="fileLeave($event)"
                                 style="margin-top: 0.5rem;"
                             >
                                 <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
@@ -245,21 +208,12 @@
                                             width: 100%;
                                             display: flex;
                                             justify-content: flex-start;
-                                            align-items: center;
+                                            align-items: flex-start;
                                         "
                                         nbButton
                                         status="warning"
                                     >
-                                        <img
-                                            [src]="
-                                                item.file_name
-                                                    ? '../../../assets/file-type-icons/' +
-                                                      item.file_name.split('.')[item.file_name.split('.').length - 1].toLowerCase() +
-                                                      '.png'
-                                                    : ''
-                                            "
-                                        />
-                                        <span>{{ item.file_name !== '' ? item.file_name : ('app.button_browse' | translate) }}</span>
+                                        {{ item.file_name !== '' ? item.file_name : ('app.button_browse' | translate) }}
                                     </button>
                                 </ng-template>
                             </ngx-file-drop>
@@ -273,19 +227,18 @@
                         multiple
                         [placeholder]="'office_manage_file.select_authorized_users' | translate"
                         [formControlName]="row"
-                        [id]="row"
                     >
                         <nb-option [disabled]="isReadOnly" [value]="item.user_id" *ngFor="let item of userList"> {{ item.fullname }}</nb-option>
                     </nb-select>
 
-                    <nb-toggle *ngIf="row === 'file_is_deleted'" disabled [checked]="file[row]" [id]="row"></nb-toggle>
+                    <nb-toggle *ngIf="row === 'file_is_deleted'" disabled [checked]="file[row]"></nb-toggle>
                 </div>
             </nb-list-item>
         </nb-list>
     </nb-card-body>
 
     <nb-card-footer style="display: flex; justify-content: space-evenly;" *ngIf="isEditable">
-        <button *ngIf="!isEditing" style="flex: 0.35" nbButton [status]="data.file_is_deleted ? 'success' : 'danger'" (click)="deleteFile()">
+        <button *ngIf="!isEditing" style="flex: 0.35" nbButton status="danger" (click)="deleteFile()">
             {{ (data.file_is_deleted ? 'app.button_un_delete' : 'app.button_delete') | translate }}
         </button>
         <button *ngIf="!isEditing" style="flex: 0.35" nbButton status="info" (click)="editFile()">{{ 'app.button_edit' | translate }}</button>

@@ -1,8 +1,9 @@
 import { defaultSetting } from './../../../common/constants'
-import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef } from '@angular/core'
+import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core'
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms'
 import { AuthenticationService } from 'src/app/authentication/authentication.service'
-import { NbDialogRef, NbToastrService, NbDialogService, NbGlobalPhysicalPosition } from '@nebular/theme'
+import { NbDialogRef, NbToastrService, NbGlobalPhysicalPosition, NbDialogService } from '@nebular/theme'
+import { environment } from 'src/environments/environment'
 import { SettingsService } from '../../services/settings.service'
 import { FileDetailService } from '../../services/file-detail.service'
 import { ManageUserService } from 'src/app/services/manage-user.service'
@@ -63,7 +64,6 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
     @Input() folder: any
     @Input() dropdown: any
     @Input() isAuthorized: any
-    @Input() department: any
     @ViewChild('editFileFakeInput') editFileFakeInput: ElementRef
     // @ViewChildren('editFileFakeInput') editFileFakeInput: QueryList<ElementRef>
     files = []
@@ -92,11 +92,10 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
     fileURL: any
     pathFromFolderStructure: any
     userList: any
-    hiddenColumn = ['no', 'file_id', 'file_created_by', 'file_created_at', 'file_updated_at', 'folder_name']
+    hiddenColumn = ['no', 'file_id', 'file_created_by', 'file_created_at', 'file_updated_at']
     originalFile
     file_histories = []
     historyStatus = 'hide'
-    inputType = 'text'
 
     constructor(
         private authenticationService: AuthenticationService,
@@ -104,12 +103,12 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
         private settingsService: SettingsService,
         private fileDetailService: FileDetailService,
         private formBuilder: FormBuilder,
+        private toastService: NbToastrService,
         private manageUserService: ManageUserService,
         private dialogService: NbDialogService,
         public sharedService: SharedService,
-        private translateService: TranslateService,
-        private nbToastrService: NbToastrService,
-        private dropdownService: DropdownService
+        private dropdownService: DropdownService,
+        private translateService: TranslateService
     ) {}
 
     ngOnInit(): void {
@@ -130,6 +129,8 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
         }
 
         this.file = file
+        console.log(this.file)
+        console.log(this.folder)
 
         if (!this.file.file_updated_at) {
             delete this.file.file_updated_at
@@ -152,7 +153,7 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
         this.rows = Object.keys(this.file)
 
         this.rows.forEach((e) => {
-            if (this.file[e] && e.includes(`column_*_`)) {
+            if (this.file[e]) {
                 if (this.file[e].dropdown_id) {
                     this.fileFormGroup.addControl(
                         `${e}_dropdown_id_${this.file[e].dropdown_id}`,
@@ -160,9 +161,6 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
                     )
                 }
                 this.fileFormGroup.addControl(`${e}_property_value`, new FormControl(this.file[e].property_value ? this.file[e].property_value : ''))
-            }
-            if (e === 'file_department_id') {
-                this.fileFormGroup.addControl(e, new FormControl(this.file[e][`id`]))
             }
             this.fileFormGroup.addControl(e, new FormControl(this.file[e]))
         })
@@ -178,7 +176,7 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
 
                 this.settingsInfo = data || defaultSetting
             },
-            () => {
+            (err) => {
                 this.settingsInfo = defaultSetting
             }
         )
@@ -197,9 +195,10 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
         if (this.hiddenColumn.includes(flagColumnName)) {
             return
         }
-        // if (flagColumnName.includes('!@#$%^&*()')) {
-        //     return createMiddleRealColumns(flagColumnName).split('!@#$%^&*()')[this.translateService.currentLang === 'en' ? 0 : 1]
-        // }
+        if (flagColumnName.includes('!@#$%^&*()')) {
+            return createMiddleRealColumns(flagColumnName).split('!@#$%^&*()')[this.translateService.currentLang === 'en' ? 0 : 1]
+        }
+
         return this.sharedService.translate(
             createLeftRealColumns(flagColumnName) || createMiddleRealColumns(flagColumnName) || createRightRealColumns(flagColumnName)
         )
@@ -236,7 +235,7 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
     handleFileInput(event) {
         if (event.target.files.length > 0) {
             const file = event.target.files[0]
-
+            // this.fileToUpload = file
             this.fileToUpload.push(file)
             // this.buttonUploadFileName = this.fileToUpload.name
             this.file.file_file_name = this.file.file_file_name.map((e) => {
@@ -265,16 +264,9 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
     // }
 
     async saveFile() {
-        const { user_id } = this.authenticationService.getUserValue
+        const { user_fullname, user_id } = this.authenticationService.getUserValue
         // const file_file_name = this.fileToUpload ? this.fileToUpload.name : this.data.file_file_name
-        const { file_rule_id, file_department_id } = this.fileFormGroup.getRawValue()
         this.file.file_file_name.forEach((element) => {
-            this.fileFormGroup.get(`file_title_${element.id}`).patchValue(
-                element.file_name
-                    .split('.')
-                    .slice(0, -1)
-                    .join('.')
-            )
             element.file_title = this.fileFormGroup.get(`file_title_${element.id}`).value
         })
 
@@ -290,14 +282,13 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
         const file_file_name = this.fileToUpload.length !== 0 ? this.file.file_file_name : this.data.file_file_name
         const newFile = {
             file_id: this.data.file_id,
-            file_rule_id: file_rule_id.trim(),
+            file_rule_id: this.fileFormGroup.get(`file_rule_id`).value,
             file_properties: [],
             file_updated_by: user_id,
             file_file_name,
             file_authorized_users: this.fileFormGroup.get('file_authorized_users').value || [],
             folder_id: this.folder.folder_id,
             file_changed: fileChanged,
-            file_department_id,
         }
 
         const obj = Object.keys(this.fileFormGroup.getRawValue())
@@ -305,17 +296,10 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
         this.rows.forEach((e) => {
             const propertyName = createMiddleRealColumns(e)
             if (propertyName) {
-                console.log(e)
                 const property_value = this.fileFormGroup.get(e).value
-                let trimValue = ''
-                if (property_value.property_data_type.includes('dropdown_')) {
-                    trimValue = this.fileFormGroup.get(`${e}_property_value`).value
-                } else {
-                    trimValue = this.fileFormGroup.get(`${e}_property_value`).value.trim()
-                }
                 const eachProperty = {
                     property_name: propertyName,
-                    property_value: trimValue,
+                    property_value: this.fileFormGroup.get(`${e}_property_value`).value,
                     property_data_type: property_value.property_data_type,
                     property_is_show_in_detail: property_value.property_is_show_in_detail,
                     max_width: property_value.max_width,
@@ -406,11 +390,6 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
                     }
                 }
             }
-        } else if (obsv1.detail) {
-            this.nbToastrService.show(obsv1.detail, 'Error', {
-                status: 'danger',
-                position: NbGlobalPhysicalPosition.BOTTOM_RIGHT,
-            })
         } else if (obsv1.error.code === 3) {
             obsv1.error.data.forEach((element) => {
                 this.sharedService.showMessage({
@@ -433,21 +412,20 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
     }
 
     async createFile() {
-        const { user_id } = this.authenticationService.getUserValue
-        const { file_rule_id, file_department_id } = this.fileFormGroup.getRawValue()
+        const { user_fullname, user_id } = this.authenticationService.getUserValue
+
         this.file.file_file_name.forEach((element) => {
             element.file_title = this.fileFormGroup.get(`file_title_${element.id}`).value
         })
         const file_file_name = this.fileToUpload ? this.file.file_file_name : []
         const newFile = {
-            file_rule_id: file_rule_id.trim(),
+            file_rule_id: this.fileFormGroup.get(`file_rule_id`).value,
             file_created_by: user_id,
             folder_id: this.data.folder_id,
             file_properties: [],
             file_file_name,
             // file_file_name: this.fileToUpload ? this.fileToUpload.name : '',
             file_authorized_users: [],
-            file_department_id,
         }
         const obj = Object.keys(this.fileFormGroup.getRawValue())
 
@@ -455,15 +433,9 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
             const propertyName = createMiddleRealColumns(e)
             if (propertyName) {
                 const property_value = this.fileFormGroup.get(e).value
-                let trimValue = ''
-                if (property_value.property_data_type.includes('dropdown_')) {
-                    trimValue = this.fileFormGroup.get(`${e}_property_value`).value
-                } else {
-                    trimValue = this.fileFormGroup.get(`${e}_property_value`).value.trim()
-                }
                 const eachProperty = {
                     property_name: propertyName,
-                    property_value: trimValue,
+                    property_value: this.fileFormGroup.get(`${e}_property_value`).value,
                     property_data_type: property_value.property_data_type,
                     property_is_show_in_detail: property_value.property_is_show_in_detail,
                     max_width: property_value.max_width,
@@ -499,8 +471,7 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
             tempPath,
             bkFolderName: 'backup',
         }
-        console.log(newFile)
-        // return
+
         const obsv1 = await this.fileDetailService
             .createFile(newFile)
             .toPromise()
@@ -534,11 +505,6 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
                     await this.fileDetailService.reverseCreatedFile(obsv1.data.file_id).toPromise()
                 }
             }
-        } else if (obsv1.detail) {
-            this.nbToastrService.show(obsv1.detail, 'Error', {
-                status: 'danger',
-                position: NbGlobalPhysicalPosition.BOTTOM_RIGHT,
-            })
         } else if (obsv1.error.code === 3) {
             obsv1.error.data.forEach((element) => {
                 this.sharedService.showMessage({
@@ -571,18 +537,6 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
         const input = {
             file_id: this.file.file_id,
             status: this.file.file_is_deleted,
-            file_file_name: [
-                {
-                    id: '1',
-                    file_title: '',
-                    file_name: '',
-                },
-                {
-                    id: '2',
-                    file_title: '',
-                    file_name: '',
-                },
-            ],
         }
 
         this.dialogService.open(ConfirmationComponent, {
@@ -593,7 +547,7 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
                         this.fileDetailService.deleteFile(input).subscribe(
                             (res) => {
                                 if (res.code === 0) {
-                                    this.fileDetailService.updateTempPath(dataTest).subscribe(() => {
+                                    this.fileDetailService.updateTempPath(dataTest).subscribe((res2) => {
                                         if (res.code === 0) {
                                             this.sharedService.showMessage({
                                                 type: contentType === 2 ? 'undelete' : 'delete',
@@ -618,7 +572,7 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
                                     })
                                 }
                             },
-                            () => {
+                            (err) => {
                                 this.sharedService.showMessage({
                                     type: contentType === 2 ? 'undelete' : 'delete',
                                     title: 0,
@@ -639,11 +593,8 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
             .toString()
             .substr(2, 2)
         const idNumber = (this.data.file_count < 10 ? '0' : '') + this.data.file_count
+        const currentLang = this.translateService.currentLang
         newFile[`file_rule_id`] = `${this.folder.folder_short_name}${last2DigitOfFullYear}-0${idNumber}`
-        newFile[`file_department_id`] = {
-            id: '1',
-            name: '',
-        }
         fromFolder.folder_properties.forEach((e) => {
             const dropdown_id = e.property_data_type.split('dropdown_')[e.property_data_type.split('dropdown_').length - 1]
             newFile[`column_*_${e.property_name}`] = e.property_data_type.includes('dropdown')
@@ -722,6 +673,7 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
             if (droppedFile.fileEntry.isFile) {
                 const fileEntry = droppedFile.fileEntry as FileSystemFileEntry
                 fileEntry.file((file: File) => {
+                    // console.log(file)
                     this.fileToUpload.push(file)
                     this.file.file_file_name = this.file.file_file_name.map((e) => {
                         if (e.id === this.selectedButtonUpload) {
@@ -760,18 +712,17 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
                     // })
                 })
             } else {
+                /** It was a directory (empty directories are added, otherwise only files) */
+                const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry
             }
         }
     }
 
-    fileOver() {}
+    fileOver(event) {}
 
-    fileLeave() {}
+    fileLeave(event) {}
 
     checkCondition(row) {
-        if (row === 'file_updated_count' && this.file[row] >= 0) {
-            return true
-        }
         if (
             row !== 'file_file_name' &&
             row !== 'file_authorized_users' &&
@@ -779,8 +730,7 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
             this.file[row] &&
             !this.file[row].dropdown_id &&
             this.file[row] &&
-            !this.file[row].property_data_type &&
-            row !== 'file_department_id'
+            !this.file[row].property_data_type
         ) {
             return true
         }
@@ -795,9 +745,5 @@ export class FileDetailComponent implements OnInit, AfterViewInit {
             return this.file[row].property_is_show_in_detail
         }
         return true
-    }
-
-    closeDialog() {
-        this.nbDialogRef.close()
     }
 }

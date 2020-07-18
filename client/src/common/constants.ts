@@ -3,23 +3,14 @@ export const office = {
         leftFakeColumns: ['no'], //  'file_rule_id'
         leftRealColumns: ['office_manage_file.file_detail.file_file_no'], // '規程要則No.'
 
-        rightFakeColumns: [
-            // 'folder_name',
-            'file_updated_count',
-            'file_file_name',
-            'file_created_at',
-            'file_updated_at',
-            'file_authorized_users',
-            // 'file_is_deleted',
-        ],
+        rightFakeColumns: ['file_file_name', 'file_updated_count', 'file_created_at', 'file_updated_at', 'file_authorized_users', 'file_is_deleted'],
         rightRealColumns: [
-            // 'office_manage_folder.folder_detail.folder_name',
-            'office_manage_file.file_detail.file_updated_count',
             'office_manage_file.file_detail.file_file_name',
+            'office_manage_file.file_detail.file_updated_count',
             'office_manage_file.file_detail.file_created_at',
             'office_manage_file.file_detail.file_updated_at',
             'office_manage_file.file_detail.file_authorized_users',
-            // 'office_manage_file.file_detail.file_is_deleted',
+            'office_manage_file.file_detail.file_is_deleted',
         ],
 
         hiddenColumnsInDetailUpdate: [],
@@ -27,9 +18,23 @@ export const office = {
     },
 
     folder: {
+        // fixedFakeColumns: [
+        //     'no',
+        //     'folder_name',
+        //     'folder_term_year',
+        //     'folder_report',
+        //     'folder_note',
+        //     'folder_authorized_users',
+        //     'folder_created_by',
+        //     'folder_created_at',
+        // ],
+        // fixedRealColumns: ['No.', 'Folder Name（台帳）', '年度', 'Reportee', 'Note', 'Authorized Users', 'Creator', 'Created at'],
+
+        // customFakeColumns: ['folder_structure'],
+        // customRealColumns: ['Folder Structure'],
+
         fixedFakeColumns: [
             'no',
-            'higher_folder_name',
             'folder_name',
             'folder_document_no',
             'folder_created_by',
@@ -43,11 +48,9 @@ export const office = {
             'property_data_type',
             'property_is_show_in_list',
             'property_is_show_in_detail',
-            'file_latest_update',
         ],
         fixedRealColumns: [
             'office_manage_folder.folder_detail.folder_no',
-            'office_manage_folder.folder_detail.higher_folder_name',
             'office_manage_folder.folder_detail.folder_name',
             'office_manage_folder.folder_detail.folder_document_no',
             'office_manage_folder.folder_detail.folder_created_by',
@@ -61,7 +64,6 @@ export const office = {
             'office_manage_folder.folder_detail.property_data_type',
             'office_manage_folder.folder_detail.property_is_show_in_list',
             'office_manage_folder.folder_detail.property_is_show_in_detail',
-            'office_manage_folder.folder_detail.file_latest_update',
         ],
         fixedColumnsWidth: [5, 5, 5, 5, 5, 5, 5, 5],
 
@@ -208,28 +210,40 @@ export const defaultBottomItemsEN: any = [
 ]
 
 export const officeUserItemsEN: any = [
-    // {
-    //     title: 'Office',
-    //     expanded: true,
-    //     children: [
-    //         // {
-    //         //     title: 'Search',
-    //         //     link: '/dashboard/office/search-file',
-    //         //     icon: 'search',
-    //         //     pathMatch: 'full',
-    //         // },
-    //     ],
-    // },
+    {
+        // title: 'Office',
+        // expanded: true,
+        // children: [
+        //     {
+        //         title: 'Search',
+        //         link: '/dashboard/office/search-file',
+        //         icon: 'search',
+        //         pathMatch: 'full',
+        //     },
+        // ],
+    },
 ]
 
-export const officeAdminItemsEN: any = officeUserItemsEN.concat([
+export const officeAdminItemsEN: any = [
     {
-        title: 'Document',
-        link: '/dashboard/office/manage-higher-folder', // goes into angular `routerLink`
-        icon: 'folder',
-        pathMatch: 'full',
+        title: 'Library',
+        expanded: true,
+        children: [
+            {
+                title: 'Categories',
+                link: '/dashboard/office/manage-folder', // goes into angular `routerLink`
+                icon: 'folder',
+                pathMatch: 'full',
+            },
+            {
+                title: 'Document',
+                link: '/dashboard/office/manage-file',
+                icon: 'book',
+                pathMatch: 'full',
+            },
+        ],
     },
-])
+]
 
 export const qcUserItemsEN: any = officeAdminItemsEN.concat([
     {
@@ -472,23 +486,22 @@ export const officeUserItemsVN: any = [
 
 export const officeAdminItemsVN: any = officeUserItemsVN.concat([
     {
-        title: 'Quản lý tài liệu',
-        link: '/dashboard/office/manage-higher-folder', // goes into angular `routerLink`
-        icon: 'folder',
-        pathMatch: 'full',
-
-        // {    
-        //     title: 'Quản lý file',
-        //     link: '/dashboard/office/manage-file',
-        //     icon: 'file-text-outline',
-        //     pathMatch: 'full',
-        // },
-        // {
-        //     title: 'Thông báo',
-        //     link: '/dashboard/office/manage-message',
-        //     icon: 'bell',
-        //     pathMatch: 'full',
-        // },
+        title: 'Thư Viện',
+        expanded: true,
+        children: [
+            {
+                title: 'Danh mục',
+                link: '/dashboard/office/manage-folder', // goes into angular `routerLink`
+                icon: 'folder',
+                pathMatch: 'full',
+            },
+            {
+                title: 'Tài liệu',
+                link: '/dashboard/office/manage-file',
+                icon: 'book',
+                pathMatch: 'full',
+            },
+        ],
     },
 ])
 

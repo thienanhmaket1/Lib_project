@@ -88,7 +88,7 @@ export class DrawingDetailComponent implements OnInit {
         public sharedService: SharedService,
         private manageDrawingService: ManageDrawingService,
         private nbDialogService: NbDialogService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         const { user_permission_code } = this.authenticationService.getUserValue
@@ -147,8 +147,8 @@ export class DrawingDetailComponent implements OnInit {
 
                 this.drawing_histories = returnedData
             },
-            error: () => {},
-            complete: () => {},
+            error: () => { },
+            complete: () => { },
         })
     }
 
@@ -218,10 +218,8 @@ export class DrawingDetailComponent implements OnInit {
         }
     }
 
-    /** Can hop lai cho nay neu trung fileName, co search theo customer luon hay khong hay chi la search theo fileName */
     droppedDrawings(files: NgxFileDropEntry[]) {
         for (const droppedFile of files) {
-            /** Is it a file ? */
             if (droppedFile.fileEntry.isFile) {
                 const fileEntry = droppedFile.fileEntry as FileSystemFileEntry
                 fileEntry.file((file: File) => {
@@ -249,40 +247,15 @@ export class DrawingDetailComponent implements OnInit {
                             status: 'danger',
                         })
                     }
-                    /** Here you can access the real file */
-                    // const formData = new FormData()
-                    // formData.append('file', file, droppedFile.relativePath)
-                    // this.isLoadingSomething = true
-                    // this.manageDrawingService.searchDrawingByCSV(formData).subscribe({
-                    //     next: (next: any) => {
-                    //         const {
-                    //             data: { updating, missing, error },
-                    //         } = next
-                    //         const newData = {
-                    //             drawing_ids: updating.map((e) => e.drawing_id),
-                    //         }
-                    //         this.getDrawings(newData, true)
-                    //         this.showUpdatingDrawingToCSV(updating)
-                    //         this.showMissingDrawingToCSV(missing)
-                    //         this.showErrorDrawingToCSV(error)
-                    //     },
-                    //     error: (error) => {
-                    //         this.isLoadingSomething = false
-                    //         this.resetTable()
-                    //     },
-                    //     complete: () => {
-                    //         this.isLoadingSomething = false
-                    //     },
-                    // })
                 })
             } else {
             }
         }
     }
 
-    fileOverDrawings() {}
+    fileOverDrawings() { }
 
-    fileLeaveDrawings() {}
+    fileLeaveDrawings() { }
 
     createDrawingSample(data) {
         const newData = {
